@@ -64,6 +64,14 @@
      <Compile Include="Assets/Scripts/SimpleCameraController.cs" />
      <Compile Include="Assets/Scripts/VehicleController.cs" />
      <Compile Include="Assets/Wall.cs" />
+     <Compile Include="Assets/UGUIKit Flat/Content/Scripts/bl_ToggleSwitcher.cs" />
+     <Compile Include="Assets/UGUIKit Flat/Content/Scripts/bl_ProgressBar.cs" />
+     <Compile Include="Assets/UGUICrosshair/Content/Scripts/bl_UCrosshairUtils.cs" />
+     <Compile Include="Assets/UGUICrosshair/Content/Scripts/bl_UCrosshairInfo.cs" />
+     <Compile Include="Assets/UGUICrosshair/Content/Scripts/bl_UCrosshair.cs" />
+     <Compile Include="Assets/UGUICrosshair/Content/Scripts/bl_UCrosshairInput.cs" />
+     <None Include="Assets/UGUICrosshair/Documentation/ReadMe.txt" />
+     <None Include="Assets/UGUIKit Flat/ReadMe.txt" />
     <Reference Include="UnityEngine">
         <HintPath>/Applications/Unity/Hub/Editor/2020.3.22f1/Unity.app/Contents/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>

@@ -144,9 +144,6 @@ public class VehicleController : MonoBehaviour{
             height = hit.distance;
         }
 
-        float angle = Vector3.Angle(Vector3.up, transform.up);
-        Debug.Log(angle);
-
         rigidBody.maxAngularVelocity = maxRot;
         
         if(height<= maxHeight){
@@ -206,6 +203,8 @@ public class VehicleController : MonoBehaviour{
             rigidBody.drag = 0.1f;
             rigidBody.angularDrag = 0.1f;
         }
+
+        float angle = Vector3.Angle(Vector3.up, transform.up);
         if(angle>20f && height<= maxHeight && lastAngle<angle){
             rigidBody.drag=angle*0.03f;
         }
@@ -268,7 +267,7 @@ public class VehicleController : MonoBehaviour{
         var _crosshairPos = _mainCamera.transform.position + (_lookToHit * Vector3.forward);
         // disable the sight if the is not in front of the camera
         var _angleBetweenGunAndCamera = Mathf.Abs(Vector3.Angle(_gun.transform.forward, _mainCamera.transform.forward));
-        crossHair.GetComponent<Image>().enabled = _angleBetweenGunAndCamera > _mainCamera.fieldOfView ? false : true;
+        //crossHair.GetComponent<Image>().enabled = _angleBetweenGunAndCamera > _mainCamera.fieldOfView ? false : true;
         // convert the world position of the crosshairs to the position of the screen (smoothed)
         finalCrosshairPos = Vector3.Lerp(finalCrosshairPos, _mainCamera.WorldToScreenPoint(_crosshairPos), Time.deltaTime * 10f);
         crossHair.transform.position = finalCrosshairPos;

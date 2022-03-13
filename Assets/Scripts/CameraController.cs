@@ -137,8 +137,8 @@ public class CameraController : MonoBehaviour{
             sniperRigGun.transform.localRotation = Quaternion.Euler(_newGunRot);
 
             //control snipercam
-            camRotY = sniperSpeedY * _mouseY * Mathf.Sqrt((sniperCamera.fieldOfView/61f));
-            camRotX = sniperSpeedX * _mouseX * Mathf.Sqrt((sniperCamera.fieldOfView/61f));
+            camRotY = sniperSpeedY * _mouseY * (sniperCamera.fieldOfView/61f);
+            camRotX = sniperSpeedX * _mouseX * (sniperCamera.fieldOfView/61f);
             sniperRig.transform.eulerAngles += new Vector3(0f, camRotX, 0f);
             sniperRigGun.transform.eulerAngles -= new Vector3(camRotY, 0f, 0f);
             //attempt at clamping
@@ -180,6 +180,7 @@ public class CameraController : MonoBehaviour{
             _pos = sniperCamera.transform.position + (sniperCamera.transform.forward * 1000);
             if (Physics.Raycast(sniperCamera.transform.position, sniperCamera.transform.forward, out RaycastHit hit2, MaxDistance, ObstaclesLayer)){
                 _pos = hit2.point;
+                Debug.Log(hit2.distance.ToString());
             }
         }
         return _pos;
