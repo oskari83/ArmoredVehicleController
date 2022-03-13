@@ -1,0 +1,206 @@
+fileFormatVersion: 2
+guid: b25ee2b0181cf0c49866cbdb8a13f877
+ModelImporter:
+  serializedVersion: 22
+  fileIDToRecycleName:
+    100000: T34_85
+    100002: T34_85_Barrel
+    100004: T34_85_Gun
+    100006: T34_85_Tower
+    100008: T34_85_Tracks
+    100010: T34_85_Turret3
+    100012: //RootNode
+    100014: T34_85_Wheels
+    100016: duplicate1
+    100018: Track_L
+    100020: Track_R
+    100022: Wheel_L_01
+    100024: Wheel_L_01 1
+    100026: Wheel_L_02
+    100028: Wheel_L_02 1
+    100030: Wheel_L_03
+    100032: Wheel_L_03 1
+    100034: Wheel_L_04
+    100036: Wheel_L_04 1
+    100038: Wheel_L_05
+    100040: Wheel_L_05 1
+    100042: Wheel_L_06
+    100044: Wheel_L_06 1
+    100046: Wheel_L_07
+    100048: Wheel_L_07 1
+    100050: Wheels_L
+    100052: Wheels_R
+    400000: T34_85
+    400002: T34_85_Barrel
+    400004: T34_85_Gun
+    400006: T34_85_Tower
+    400008: T34_85_Tracks
+    400010: T34_85_Turret3
+    400012: //RootNode
+    400014: T34_85_Wheels
+    400016: duplicate1
+    400018: Track_L
+    400020: Track_R
+    400022: Wheel_L_01
+    400024: Wheel_L_01 1
+    400026: Wheel_L_02
+    400028: Wheel_L_02 1
+    400030: Wheel_L_03
+    400032: Wheel_L_03 1
+    400034: Wheel_L_04
+    400036: Wheel_L_04 1
+    400038: Wheel_L_05
+    400040: Wheel_L_05 1
+    400042: Wheel_L_06
+    400044: Wheel_L_06 1
+    400046: Wheel_L_07
+    400048: Wheel_L_07 1
+    400050: Wheels_L
+    400052: Wheels_R
+    2300000: T34_85
+    2300002: T34_85_Barrel
+    2300004: T34_85_Gun
+    2300006: T34_85_Tower
+    2300008: T34_85_Tracks
+    2300010: T34_85_Wheels
+    2300012: Track_L
+    2300014: Track_R
+    2300016: Wheel_L_01
+    2300018: Wheel_L_01 1
+    2300020: Wheel_L_02
+    2300022: Wheel_L_02 1
+    2300024: Wheel_L_03
+    2300026: Wheel_L_03 1
+    2300028: Wheel_L_04
+    2300030: Wheel_L_04 1
+    2300032: Wheel_L_05
+    2300034: Wheel_L_05 1
+    2300036: Wheel_L_06
+    2300038: Wheel_L_06 1
+    2300040: Wheel_L_07
+    2300042: Wheel_L_07 1
+    3300000: T34_85
+    3300002: T34_85_Barrel
+    3300004: T34_85_Gun
+    3300006: T34_85_Tower
+    3300008: T34_85_Tracks
+    3300010: T34_85_Wheels
+    3300012: Track_L
+    3300014: Track_R
+    3300016: Wheel_L_01
+    3300018: Wheel_L_01 1
+    3300020: Wheel_L_02
+    3300022: Wheel_L_02 1
+    3300024: Wheel_L_03
+    3300026: Wheel_L_03 1
+    3300028: Wheel_L_04
+    3300030: Wheel_L_04 1
+    3300032: Wheel_L_05
+    3300034: Wheel_L_05 1
+    3300036: Wheel_L_06
+    3300038: Wheel_L_06 1
+    3300040: Wheel_L_07
+    3300042: Wheel_L_07 1
+    4300000: T34_85
+    4300002: T34_85_Tower
+    4300004: T34_85_Gun
+    4300006: T34_85_Barrel
+    4300008: T34_85_Tracks
+    4300010: T34_85_Wheels
+    4300012: Wheel_L_01
+    4300014: Wheel_L_02
+    4300016: Wheel_L_03
+    4300018: Wheel_L_04
+    4300020: Wheel_L_05
+    4300022: Wheel_L_06
+    4300024: Wheel_L_07
+    4300026: Wheel_L_01
+    4300028: Wheel_L_02
+    4300030: Wheel_L_03
+    4300032: Wheel_L_04
+    4300034: Wheel_L_05
+    4300036: Wheel_L_06
+    4300038: Wheel_L_07
+    4300040: Track_R
+    4300042: Track_L
+  externalObjects: {}
+  materials:
+    importMaterials: 0
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 0
+    importBlendShapes: 1
+    importCameras: 0
+    importLights: 0
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 0
+  importAnimation: 0
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 1
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

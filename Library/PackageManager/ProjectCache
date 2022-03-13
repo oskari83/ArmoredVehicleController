@@ -5,7 +5,11 @@ m_ProjectFiles:
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
+<<<<<<< HEAD
       ticks: 637827662860000000
+=======
+      ticks: 637827656220000000
+>>>>>>> master
     m_Hash: 1206723745
   m_LockFileStatus:
     m_FilePath: /Users/oskaripeltonen/Desktop/ArmoredVehicleController/Packages/packages-lock.json
@@ -13,7 +17,11 @@ m_ProjectFiles:
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
+<<<<<<< HEAD
       ticks: 637827662880000000
+=======
+      ticks: 637827656240000000
+>>>>>>> master
     m_Hash: 3682739031
 m_EmbeddedPackageManifests:
   m_ManifestsStatus: {}
