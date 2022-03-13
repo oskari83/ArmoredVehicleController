@@ -1,0 +1,192 @@
+fileFormatVersion: 2
+guid: 852da06db9f8b2344b8bb5cc7e47e0c9
+ModelImporter:
+  serializedVersion: 22
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: BT_7_Barrel
+    100004: BT_7_Gun
+    100006: BT_7_Tracks
+    100008: BT_7_Turret
+    100010: BT_7_Wheels
+    100012: Tracks_L
+    100014: Tracks_R
+    100016: transform24
+    100018: Wheel_L_01
+    100020: Wheel_L_02
+    100022: Wheel_L_03
+    100024: Wheel_L_04
+    100026: Wheel_L_05
+    100028: Wheel_L_06
+    100030: Wheel_R_01
+    100032: Wheel_R_02
+    100034: Wheel_R_03
+    100036: Wheel_R_04
+    100038: Wheel_R_05
+    100040: Wheel_R_06
+    100042: Wheels_L
+    100044: Wheels_R
+    400000: //RootNode
+    400002: BT_7_Barrel
+    400004: BT_7_Gun
+    400006: BT_7_Tracks
+    400008: BT_7_Turret
+    400010: BT_7_Wheels
+    400012: Tracks_L
+    400014: Tracks_R
+    400016: transform24
+    400018: Wheel_L_01
+    400020: Wheel_L_02
+    400022: Wheel_L_03
+    400024: Wheel_L_04
+    400026: Wheel_L_05
+    400028: Wheel_L_06
+    400030: Wheel_R_01
+    400032: Wheel_R_02
+    400034: Wheel_R_03
+    400036: Wheel_R_04
+    400038: Wheel_R_05
+    400040: Wheel_R_06
+    400042: Wheels_L
+    400044: Wheels_R
+    2300000: //RootNode
+    2300002: BT_7_Barrel
+    2300004: BT_7_Gun
+    2300006: BT_7_Tracks
+    2300008: BT_7_Turret
+    2300010: BT_7_Wheels
+    2300012: Tracks_L
+    2300014: Tracks_R
+    2300016: Wheel_L_01
+    2300018: Wheel_L_02
+    2300020: Wheel_L_03
+    2300022: Wheel_L_04
+    2300024: Wheel_L_05
+    2300026: Wheel_L_06
+    2300028: Wheel_R_01
+    2300030: Wheel_R_02
+    2300032: Wheel_R_03
+    2300034: Wheel_R_04
+    2300036: Wheel_R_05
+    2300038: Wheel_R_06
+    3300000: //RootNode
+    3300002: BT_7_Barrel
+    3300004: BT_7_Gun
+    3300006: BT_7_Tracks
+    3300008: BT_7_Turret
+    3300010: BT_7_Wheels
+    3300012: Tracks_L
+    3300014: Tracks_R
+    3300016: Wheel_L_01
+    3300018: Wheel_L_02
+    3300020: Wheel_L_03
+    3300022: Wheel_L_04
+    3300024: Wheel_L_05
+    3300026: Wheel_L_06
+    3300028: Wheel_R_01
+    3300030: Wheel_R_02
+    3300032: Wheel_R_03
+    3300034: Wheel_R_04
+    3300036: Wheel_R_05
+    3300038: Wheel_R_06
+    4300000: BT_7
+    4300002: BT_7_Turret
+    4300004: BT_7_Gun
+    4300006: BT_7_Barrel
+    4300008: BT_7_Tracks
+    4300010: BT_7_Wheels
+    4300012: Wheel_L_01
+    4300014: Wheel_L_02
+    4300016: Wheel_L_03
+    4300018: Wheel_L_04
+    4300020: Wheel_L_05
+    4300022: Wheel_L_06
+    4300024: Wheel_R_06
+    4300026: Wheel_R_05
+    4300028: Wheel_R_04
+    4300030: Wheel_R_03
+    4300032: Wheel_R_02
+    4300034: Wheel_R_01
+    4300036: Tracks_L
+    4300038: Tracks_R
+  externalObjects: {}
+  materials:
+    importMaterials: 0
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 0
+    importBlendShapes: 1
+    importCameras: 0
+    importLights: 0
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 0
+  importAnimation: 0
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
