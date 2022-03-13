@@ -3,20 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SimpleTankController : MonoBehaviour{
+public class VehicleController : MonoBehaviour{
     [Header("Tank power settings")]
     public float turnTorque = 4f;
     public float driveTorque = 4f;
     public float brakeStrength = 2.5f;
     public float maxRot = 5f;
     public float maxSpeed = 40f;
-    public float numMagic = 1;
+    public float numMagic = 0.01f;
+
+    [Header("Tank Turning Friction")]
+    public float movementSidewaysFriction = 2.2f;
+    public float stillSidewaysFriction = 0.8f;
+    private WheelFrictionCurve[] sFrictionLeft;
+    private WheelFrictionCurve[] sFrictionRight;
 
     [Header("Turret and Gun Settings")]
     [SerializeField] private float turretTraverseSpeed = 0.5f;
     [SerializeField] private float gunTraverseSpeed = 1.5f;
-    [SerializeField] private int maxGunAngle = 35;
-    [SerializeField] private int minGunAngle = 5;
+    public int maxGunAngle = 35;
+    public int minGunAngle = 5;
     public Vector3 TurretTargetPosition {get; set;}
 
     private Vector3 targetPosition;
@@ -41,12 +47,9 @@ public class SimpleTankController : MonoBehaviour{
     public float maxHeight = 1.15f;
     private float driveInput;
     private float turnInput;
-
-    [Header("Tank Turning Friction")]
-    public float movementSidewaysFriction = 2.2f;
-    public float stillSidewaysFriction = 0.8f;
-    private WheelFrictionCurve[] sFrictionLeft;
-    private WheelFrictionCurve[] sFrictionRight;
+    private bool turnInputOff=false;
+    
+    private float lastAngle;
 
     #region variables
     [Header("Tank Wheel and Visual/Sound effects")]
@@ -119,6 +122,9 @@ public class SimpleTankController : MonoBehaviour{
     private void Update() {
         driveInput = Mathf.Clamp(Input.GetAxisRaw("Vertical"), -1, 1);
         turnInput = Mathf.Clamp(Input.GetAxisRaw("Horizontal"), -1, 1);
+        if(Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.D)){
+            turnInputOff = true;
+        }
         brakeInput = Input.GetKey("space");
 
         targetPosition = TurretTargetPosition;
@@ -132,62 +138,78 @@ public class SimpleTankController : MonoBehaviour{
 
         //how high off the groun are we
         RaycastHit hit;
-        Ray downRay = new Ray(transform.position, -Vector3.up);
+        Ray downRay = new Ray(transform.position, -transform.up);
+        //Debug.DrawRay(downRay.origin,downRay.direction * 100, Color.red);
         if (Physics.Raycast(downRay, out hit)){
             height = hit.distance;
         }
 
+        float angle = Vector3.Angle(Vector3.up, transform.up);
+        Debug.Log(angle);
+
         rigidBody.maxAngularVelocity = maxRot;
+        
         if(height<= maxHeight){
             if(driveInput<0){
                 rigidBody.AddTorque(transform.up * -turnInput * turnTorque * Time.deltaTime);
             }else{
                 rigidBody.AddTorque(transform.up * turnInput * turnTorque * Time.deltaTime);
             }
-            if(turnInput==0){
-                rigidBody.angularDrag=12;
+            if(turnInput==0 && turnInputOff){
+                //rigidBody.angularDrag=4.0f;
                 rigidBody.angularVelocity = Vector3.zero;
+                //rigidBody.constraints = RigidbodyConstraints.FreezeRotationY;
+                turnInputOff = false;
+            }else if(turnInput==0f){
+                //rigidBody.angularDrag=2.0f;
+                //rigidBody.angularVelocity = Vector3.zero;
+                rigidBody.angularVelocity *= 0.6f;
+                //rigidBody.constraints = RigidbodyConstraints.None;
             }else{
-                rigidBody.angularDrag=1;
+                rigidBody.angularDrag=0.1f;
             }
         }else{
             rigidBody.angularDrag=0.1f;
         }
+        
 
         //show our velocity and angular velocity in inspector
         aVeL = rigidBody.angularVelocity.magnitude;
         VeL = rigidBody.velocity.magnitude;
-
+        
         if(driveInput!=0f){
             SetLeftTrackTorque(driveInput * driveTorque);
             SetRightTrackTorque(driveInput * driveTorque);
-        }else if(turnInput!=0){
-            if(turnInput>0){
-                SetLeftTrackTorque(numMagic * driveTorque);
-                SetRightTrackTorque(-numMagic * driveTorque);
-            }else{
-                SetLeftTrackTorque(-numMagic * driveTorque);
-                SetRightTrackTorque(numMagic * driveTorque);
-            }
+        }else if(turnInput!=0f){
+            SetLeftTrackTorque(0.01f * driveTorque);
+            SetRightTrackTorque(0.01f * driveTorque);
         }else{
             SetLeftTrackTorque(0f);
             SetRightTrackTorque(0f);
         }
-
+        
         //limit our max velocity
         rigidBody.velocity = Vector3.ClampMagnitude(rigidBody.velocity, maxSpeed);
 
-        if((driveInput==0 && turnInput==0) || (driveInput<0f && rigidBody.velocity.magnitude>1f)){
+        if((driveInput==0 && turnInput==0) || (driveInput<0f && rigidBody.velocity.magnitude>5f)){
             rigidBody.drag = 2;
             SetBrakes(brakeStrength);
         }else if (driveInput==0 && turnInput!=0 && rigidBody.velocity.magnitude>1f){
-            rigidBody.drag = 0.5f;
+            rigidBody.drag = 2f;
             SetBrakes(brakeStrength);
         }else{
             rigidBody.drag = 0.1f;
             SetBrakes(0);
         }
 
+        if(height > maxHeight){
+            rigidBody.drag = 0.1f;
+            rigidBody.angularDrag = 0.1f;
+        }
+        if(angle>20f && height<= maxHeight && lastAngle<angle){
+            rigidBody.drag=angle*0.03f;
+        }
+        lastAngle = angle;
         //UpdateTurret();
     }
 
@@ -266,8 +288,10 @@ public class SimpleTankController : MonoBehaviour{
         float _gunVelocity = 1 / _angleBetweenGunAndTarget;
         var _horizontalSpeed = turretTraverseSpeed;
         _horizontalSpeed *= _turretVelocity;
+        _horizontalSpeed *= Time.deltaTime;
         var _verticalSpeed = gunTraverseSpeed;
         _verticalSpeed *= _gunVelocity;
+        _verticalSpeed *= Time.deltaTime;
         Quaternion _turretFinalRotation = Quaternion.Euler(gameObject.transform.eulerAngles - _lookAtTurret.eulerAngles);
         Quaternion _gunFinalRotation = Quaternion.Euler(turretGO.transform.eulerAngles - _lookAtGun.eulerAngles);
 

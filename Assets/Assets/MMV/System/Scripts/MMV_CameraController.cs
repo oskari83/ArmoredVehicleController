@@ -33,14 +33,14 @@ public class MMV_CameraController : MonoBehaviour{
         public LayerMask ObstaclesLayer { get => obstaclesLayer; set => obstaclesLayer = value; }
     }
 
-    [SerializeField] private SimpleTankController vehicle;
+    [SerializeField] private VehicleController vehicle;
     [SerializeField] private Position movement;
     [SerializeField] private ZoomCamera zoom;
     [SerializeField] private Crosshair gunCrosshair;
 
     //----------------------------------------------------------------
 
-    public SimpleTankController Vehicle { get => vehicle; set => vehicle = value; }
+    public VehicleController Vehicle { get => vehicle; set => vehicle = value; }
     public ZoomCamera Zoom { get => zoom; set => zoom = value; }
     public Crosshair GunCrosshair { get => gunCrosshair; set => gunCrosshair = value; }
     public Position CameraPosition { get => movement; set => movement = value; }

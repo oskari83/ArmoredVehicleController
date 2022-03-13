@@ -2,12 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Camera))]
 public class CameraController : MonoBehaviour{
-    // distance from the front of the camera radius collision
-    private const float CAMERA_COLLISION_FORWARD_HIT_OFFSET = 0.1f;
-
     [Header("Target")]
-    public SimpleTankController vehicle;
+    public VehicleController vehicle;
 
     [Header("Camera settings")]
     public float MaxCamDistance = 20f;
@@ -21,12 +19,16 @@ public class CameraController : MonoBehaviour{
     public float sniperSpeedX = 0.75f;
     public float sniperZoomSpeed = 200f;
     public LayerMask ObstaclesLayer = default;
+    public LayerMask StabilizerLayer = default;
 
     private Camera sniperCamera;
     [HideInInspector] public Camera ourCamera;
 
     [Header("Currently in snipermode?")]
     public bool inSniperMode = false;
+
+    // distance from the front of the camera radius collision
+    private const float CAMERA_COLLISION_FORWARD_HIT_OFFSET = 1.0f;
 
     private float camRotY = 0f;
     private float camRotX = 0f;
@@ -37,9 +39,13 @@ public class CameraController : MonoBehaviour{
     private float _mouseY;
     private float _mouseX;
     private float _mouseScroll;
+    private float minGunAngle;
+    private float maxGunAngle;
     private Vector3 aimTarget;
     private GameObject sniperRig;
     private GameObject sniperRigGun;
+    private Vector3 stabilizerPos;
+    private Vector3 stabilizerPos2;
 
     void Start(){
         //set cursor
@@ -53,6 +59,8 @@ public class CameraController : MonoBehaviour{
         ourCamera = gameObject.GetComponent<Camera>();
         sniperRig = vehicle.sniperTurret;
         sniperRigGun = vehicle.sniperGun;
+        minGunAngle = vehicle.minGunAngle;
+        maxGunAngle = vehicle.maxGunAngle;
         transform.position = (vehicle.transform.position + -vehicle.transform.forward) + (Vector3.up * 2);
         transform.LookAt(vehicle.transform.position + (Vector3.up * Height));
         currentDistance = MinCamDistance + (MaxCamDistance - MinCamDistance) / 2;
@@ -106,6 +114,8 @@ public class CameraController : MonoBehaviour{
                 inSniperMode = true;
                 sniperCamera.enabled = true;
                 ourCamera.enabled = false;
+                stabilizerPos = GetStabilizerPosition();
+                stabilizerPos2 = stabilizerPos;
             }
         }else{
             //zoom in or out
@@ -113,11 +123,29 @@ public class CameraController : MonoBehaviour{
             //make main camera look at target when we are not in sniper mode
             aimTarget = GetTargetPosition();
             gameObject.transform.LookAt(aimTarget);
+
+            sniperRig.transform.LookAt(stabilizerPos);
+            Vector3 _newTurretRot = sniperRig.transform.localEulerAngles;
+            _newTurretRot.x = 0;
+            _newTurretRot.z = 0;
+            sniperRig.transform.localRotation = Quaternion.Euler(_newTurretRot);
+
+            sniperRigGun.transform.LookAt(stabilizerPos2);
+            Vector3 _newGunRot = sniperRigGun.transform.localEulerAngles;
+            _newGunRot.y = 0;
+            _newGunRot.z = 0;
+            sniperRigGun.transform.localRotation = Quaternion.Euler(_newGunRot);
+
             //control snipercam
-            camRotY = -sniperSpeedY * _mouseY;
-            camRotX = sniperSpeedX * _mouseX;
+            camRotY = sniperSpeedY * _mouseY * Mathf.Sqrt((sniperCamera.fieldOfView/61f));
+            camRotX = sniperSpeedX * _mouseX * Mathf.Sqrt((sniperCamera.fieldOfView/61f));
             sniperRig.transform.eulerAngles += new Vector3(0f, camRotX, 0f);
-            sniperRigGun.transform.eulerAngles += new Vector3(camRotY, 0f, 0f);
+            sniperRigGun.transform.eulerAngles -= new Vector3(camRotY, 0f, 0f);
+            //attempt at clamping
+            Vector3 clampthis = sniperRigGun.transform.localEulerAngles;
+            if(clampthis.x>minGunAngle && clampthis.x<300f){ clampthis.x=minGunAngle;}
+            if(clampthis.x<(360f-maxGunAngle) && clampthis.x>300f){ clampthis.x=(360f-maxGunAngle);}
+            sniperRigGun.transform.localEulerAngles = clampthis;
             //get out of snipercam
             if(sniperCamera.fieldOfView >= 61){
                 inSniperMode = false;
@@ -125,6 +153,11 @@ public class CameraController : MonoBehaviour{
                 sniperCamera.fieldOfView = 60.5f;
                 ourCamera.enabled = true;
                 sniperCamera.enabled = false;
+            }
+
+            stabilizerPos=GetStabilizerPosition();
+            if(camRotY!=0f){
+                stabilizerPos2=stabilizerPos;
             }
         }
         //clamp fov
@@ -149,6 +182,24 @@ public class CameraController : MonoBehaviour{
                 _pos = hit2.point;
             }
         }
+        return _pos;
+    }
+
+    public Vector3 GetStabilizerPosition(){
+        Vector3 _pos;
+        if(!inSniperMode){
+            _pos = Camera.main.transform.position + (Camera.main.transform.forward * 1000);
+            if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out RaycastHit hit3, 100f, StabilizerLayer)){
+                _pos = hit3.point;
+                //Debug.DrawLine(Camera.main.transform.position, hit3.point, Color.blue);
+            }
+        }else{
+            _pos = sniperRigGun.transform.position + (sniperRigGun.transform.forward * 1000);
+            if (Physics.Raycast(sniperRigGun.transform.position, sniperRigGun.transform.forward, out RaycastHit hit2, 100f, StabilizerLayer)){
+                _pos = hit2.point;
+            }
+        }
+        //targetPos.transform.position = _pos;
         return _pos;
     }
 }

@@ -102,7 +102,7 @@ namespace MMV.Editor
         {
             serializedObject.Update();
 
-            cameraController.Vehicle = (SimpleTankController)EditorGUILayout.ObjectField("target", cameraController.Vehicle, typeof(SimpleTankController), true);
+            cameraController.Vehicle = (VehicleController)EditorGUILayout.ObjectField("target", cameraController.Vehicle, typeof(VehicleController), true);
             EditorGUILayout.Separator();
 
             if (!cameraController.Vehicle)
