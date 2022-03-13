@@ -36,12 +36,12 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
-     <Compile Include="Assets/MMV/System/Scripts/Editor/MMV_CameraControllerEditor.cs" />
-     <Compile Include="Assets/MMV/System/Scripts/Editor/MMV_UiManagerEditor.cs" />
-     <Compile Include="Assets/MMV/System/Scripts/Editor/MMV_MBT_ShooterEditor.cs" />
-     <Compile Include="Assets/MMV/System/Scripts/Editor/MMV_Editor.cs" />
-     <Compile Include="Assets/MMV/System/Scripts/Editor/MMV_EditorStyle.cs" />
-     <Compile Include="Assets/MMV/System/Scripts/Editor/MMV_MBT_VehicleEditor.cs" />
+     <Compile Include="Assets/Assets/MMV/System/Scripts/Editor/MMV_CameraControllerEditor.cs" />
+     <Compile Include="Assets/Assets/MMV/System/Scripts/Editor/MMV_UiManagerEditor.cs" />
+     <Compile Include="Assets/Assets/MMV/System/Scripts/Editor/MMV_MBT_ShooterEditor.cs" />
+     <Compile Include="Assets/Assets/MMV/System/Scripts/Editor/MMV_Editor.cs" />
+     <Compile Include="Assets/Assets/MMV/System/Scripts/Editor/MMV_EditorStyle.cs" />
+     <Compile Include="Assets/Assets/MMV/System/Scripts/Editor/MMV_MBT_VehicleEditor.cs" />
     <Reference Include="UnityEngine">
         <HintPath>/Applications/Unity/Hub/Editor/2020.3.22f1/Unity.app/Contents/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>

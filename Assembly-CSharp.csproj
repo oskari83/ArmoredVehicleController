@@ -36,32 +36,32 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
-     <Compile Include="Assets/MMV/System/Scripts/MMV_CameraController.cs" />
-     <Compile Include="Assets/SpookyLabs/Scorpion/Scripts/SimpleTankController.cs" />
-     <Compile Include="Assets/MMV/System/Scripts/MMV_MBT_InputVehicle.cs" />
-     <Compile Include="Assets/MMV/System/Scripts/MMV_InputCamera.cs" />
-     <Compile Include="Assets/MMV/Samples/Scripts/NavMeshAI.cs" />
-     <Compile Include="Assets/MMV/System/Scripts/MMV_Bullet.cs" />
-     <Compile Include="Assets/MMV/System/Scripts/MMV_MBT_Engine.cs" />
-     <Compile Include="Assets/MMV/System/Scripts/MMV_TurretController.cs" />
-     <Compile Include="Assets/MMV/Samples/Scripts/CameraFollower.cs" />
-     <Compile Include="Assets/MMV/System/Scripts/MMV_MBT_WheelManager.cs" />
-     <Compile Include="Assets/MMV/Samples/Scripts/WaypointsFollower.cs" />
-     <Compile Include="Assets/SpookyLabs/Scorpion/Scripts/RespawnController.cs" />
-     <Compile Include="Assets/SniperRigScript.cs" />
-     <Compile Include="Assets/MMV/System/Scripts/MMV_MBT_Vehicle.cs" />
-     <Compile Include="Assets/MMV/System/Scripts/MMV_UiManager.cs" />
-     <Compile Include="Assets/MMV/System/Scripts/MMV_Shooter.cs" />
-     <Compile Include="Assets/MMV/System/Scripts/MMV_Input.cs" />
-     <Compile Include="Assets/MMV/Samples/Scripts/CinematicController.cs" />
-     <Compile Include="Assets/SpookyLabs/Scorpion/Scripts/CameraOrbit.cs" />
-     <Compile Include="Assets/MMV/System/Scripts/MMV_MBT_Wheel.cs" />
-     <Compile Include="Assets/SpookyLabs/Scorpion/Scripts/VehicleLights.cs" />
-     <Compile Include="Assets/MMV/System/Scripts/MMV_ShootController.cs" />
-     <Compile Include="Assets/SpookyLabs/Scorpion/Scripts/CameraController.cs" />
-     <Compile Include="Assets/MMV/System/Scripts/MMV_MBT_ControllVehicle.cs" />
-     <Compile Include="Assets/MMV/Samples/Scripts/WaypointsSystem.cs" />
-     <Compile Include="Assets/SpookyLabs/Scorpion/Scripts/SimpleCameraController.cs" />
+     <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_CameraController.cs" />
+     <Compile Include="Assets/Scripts/SimpleTankController.cs" />
+     <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_MBT_InputVehicle.cs" />
+     <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_InputCamera.cs" />
+     <Compile Include="Assets/Assets/MMV/Samples/Scripts/NavMeshAI.cs" />
+     <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_Bullet.cs" />
+     <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_MBT_Engine.cs" />
+     <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_TurretController.cs" />
+     <Compile Include="Assets/Assets/MMV/Samples/Scripts/CameraFollower.cs" />
+     <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_MBT_WheelManager.cs" />
+     <Compile Include="Assets/Assets/MMV/Samples/Scripts/WaypointsFollower.cs" />
+     <Compile Include="Assets/Assets/SpookyLabs/Scorpion/Scripts/RespawnController.cs" />
+     <Compile Include="Assets/Scripts/SniperRigScript.cs" />
+     <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_MBT_Vehicle.cs" />
+     <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_UiManager.cs" />
+     <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_Shooter.cs" />
+     <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_Input.cs" />
+     <Compile Include="Assets/Assets/MMV/Samples/Scripts/CinematicController.cs" />
+     <Compile Include="Assets/Assets/SpookyLabs/Scorpion/Scripts/CameraOrbit.cs" />
+     <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_MBT_Wheel.cs" />
+     <Compile Include="Assets/Assets/SpookyLabs/Scorpion/Scripts/VehicleLights.cs" />
+     <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_ShootController.cs" />
+     <Compile Include="Assets/Scripts/CameraController.cs" />
+     <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_MBT_ControllVehicle.cs" />
+     <Compile Include="Assets/Assets/MMV/Samples/Scripts/WaypointsSystem.cs" />
+     <Compile Include="Assets/Scripts/SimpleCameraController.cs" />
     <Reference Include="UnityEngine">
         <HintPath>/Applications/Unity/Hub/Editor/2020.3.22f1/Unity.app/Contents/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>
