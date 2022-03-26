@@ -36,42 +36,45 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
-     <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_CameraController.cs" />
-     <Compile Include="Assets/SimpleTankController.cs" />
-     <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_MBT_InputVehicle.cs" />
      <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_InputCamera.cs" />
-     <Compile Include="Assets/Assets/MMV/Samples/Scripts/NavMeshAI.cs" />
-     <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_Bullet.cs" />
      <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_MBT_Engine.cs" />
-     <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_TurretController.cs" />
-     <Compile Include="Assets/Assets/MMV/Samples/Scripts/CameraFollower.cs" />
-     <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_MBT_WheelManager.cs" />
      <Compile Include="Assets/Assets/MMV/Samples/Scripts/WaypointsFollower.cs" />
-     <Compile Include="Assets/Assets/SpookyLabs/Scorpion/Scripts/RespawnController.cs" />
-     <Compile Include="Assets/Scripts/SniperRigScript.cs" />
-     <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_MBT_Vehicle.cs" />
-     <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_UiManager.cs" />
-     <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_Shooter.cs" />
-     <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_Input.cs" />
-     <Compile Include="Assets/Assets/MMV/Samples/Scripts/CinematicController.cs" />
-     <Compile Include="Assets/Assets/SpookyLabs/Scorpion/Scripts/CameraOrbit.cs" />
-     <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_MBT_Wheel.cs" />
-     <Compile Include="Assets/Assets/SpookyLabs/Scorpion/Scripts/VehicleLights.cs" />
-     <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_ShootController.cs" />
-     <Compile Include="Assets/Scripts/CameraController.cs" />
-     <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_MBT_ControllVehicle.cs" />
-     <Compile Include="Assets/Assets/MMV/Samples/Scripts/WaypointsSystem.cs" />
-     <Compile Include="Assets/Scripts/SimpleCameraController.cs" />
      <Compile Include="Assets/Scripts/VehicleController.cs" />
-     <Compile Include="Assets/Wall.cs" />
-     <Compile Include="Assets/UGUIKit Flat/Content/Scripts/bl_ToggleSwitcher.cs" />
+     <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_MBT_WheelManager.cs" />
+     <Compile Include="Assets/Scripts/SniperRigScript.cs" />
      <Compile Include="Assets/UGUIKit Flat/Content/Scripts/bl_ProgressBar.cs" />
+     <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_MBT_Vehicle.cs" />
+     <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_Shooter.cs" />
+     <Compile Include="Assets/Scripts/SimpleCameraController.cs" />
+     <Compile Include="Assets/Scripts/SimpleTankController.cs" />
+     <Compile Include="Assets/Assets/SpookyLabs/Scorpion/Scripts/RespawnController.cs" />
+     <Compile Include="Assets/Assets/MMV/Samples/Scripts/WaypointsSystem.cs" />
+     <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_Input.cs" />
+     <Compile Include="Assets/Assets/SpookyLabs/Scorpion/Scripts/CameraOrbit.cs" />
+     <Compile Include="Assets/Assets/MMV/Samples/Scripts/CinematicController.cs" />
      <Compile Include="Assets/UGUICrosshair/Content/Scripts/bl_UCrosshairUtils.cs" />
+     <Compile Include="Assets/Assets/MMV/Samples/Scripts/NavMeshAI.cs" />
+     <Compile Include="Assets/Scripts/CameraController.cs" />
      <Compile Include="Assets/UGUICrosshair/Content/Scripts/bl_UCrosshairInfo.cs" />
      <Compile Include="Assets/UGUICrosshair/Content/Scripts/bl_UCrosshair.cs" />
+     <Compile Include="Assets/Assets/MMV/Samples/Scripts/CameraFollower.cs" />
+     <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_MBT_InputVehicle.cs" />
+     <Compile Include="Assets/UGUIKit Flat/Content/Scripts/bl_ToggleSwitcher.cs" />
+     <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_MBT_Wheel.cs" />
      <Compile Include="Assets/UGUICrosshair/Content/Scripts/bl_UCrosshairInput.cs" />
+     <Compile Include="Assets/Assets/SpookyLabs/Scorpion/Scripts/VehicleLights.cs" />
+     <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_MBT_ControllVehicle.cs" />
+     <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_CameraController.cs" />
+     <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_Bullet.cs" />
+     <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_ShootController.cs" />
+     <Compile Include="Assets/Scripts/Wall.cs" />
+     <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_TurretController.cs" />
+     <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_UiManager.cs" />
+     <Compile Include="Assets/Scripts/ShootingController.cs" />
+     <Compile Include="Assets/Scripts/BulletScript.cs" />
      <None Include="Assets/UGUICrosshair/Documentation/ReadMe.txt" />
      <None Include="Assets/UGUIKit Flat/ReadMe.txt" />
+     <None Include="Assets/Scripts/todo.txt" />
     <Reference Include="UnityEngine">
         <HintPath>/Applications/Unity/Hub/Editor/2020.3.22f1/Unity.app/Contents/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>
@@ -648,6 +651,10 @@
       <Project>{0b22576f-a810-b3cf-6f21-644db97d6526}</Project>
       <Name>Unity.VSCode.Editor</Name>
     </ProjectReference>
+    <ProjectReference Include="Unity.Postprocessing.Runtime.csproj">
+      <Project>{89d8a673-9a9c-09ed-ad66-77e71b96ef83}</Project>
+      <Name>Unity.Postprocessing.Runtime</Name>
+    </ProjectReference>
     <ProjectReference Include="Unity.TextMeshPro.Editor.csproj">
       <Project>{e3e45636-efc8-e666-6549-047702d1854e}</Project>
       <Name>Unity.TextMeshPro.Editor</Name>
@@ -668,6 +675,10 @@
       <Project>{0ba20da1-18f6-6ee4-536b-11a0884b80db}</Project>
       <Name>Unity.TextMeshPro</Name>
     </ProjectReference>
+    <ProjectReference Include="Unity.Postprocessing.Editor.csproj">
+      <Project>{b4a64ff7-cc73-6291-8b86-d97c17b2d33f}</Project>
+      <Name>Unity.Postprocessing.Editor</Name>
+    </ProjectReference>
     <ProjectReference Include="UnityEditor.UI.csproj">
       <Project>{8febc547-9516-30aa-632d-78eb39e5cfa2}</Project>
       <Name>UnityEditor.UI</Name>
@@ -683,14 +694,6 @@
     <ProjectReference Include="UnityEngine.UI.csproj">
       <Project>{234dcf9c-5190-c126-f573-998fc22c2955}</Project>
       <Name>UnityEngine.UI</Name>
-    </ProjectReference>
-    <ProjectReference Include="Unity.Postprocessing.Editor.csproj">
-      <Project>{b4a64ff7-cc73-6291-8b86-d97c17b2d33f}</Project>
-      <Name>Unity.Postprocessing.Editor</Name>
-    </ProjectReference>
-    <ProjectReference Include="Unity.Postprocessing.Runtime.csproj">
-      <Project>{89d8a673-9a9c-09ed-ad66-77e71b96ef83}</Project>
-      <Name>Unity.Postprocessing.Runtime</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

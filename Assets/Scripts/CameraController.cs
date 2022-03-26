@@ -11,6 +11,7 @@ public class CameraController : MonoBehaviour{
     public float MaxCamDistance = 20f;
     public float MinCamDistance = 2f;
     public float CamZoomSpeed = -10f;
+    public float[] zoomSteps = new float[5];
     public float MinAngle = 10f;
     public float MaxAngle = 45f;
     public float RotSpeed = 2f;
@@ -46,8 +47,9 @@ public class CameraController : MonoBehaviour{
     private GameObject sniperRigGun;
     private Vector3 stabilizerPos;
     private Vector3 stabilizerPos2;
+    private int zoomPointer = 0;
 
-    void Start(){
+    private void Start(){
         //set cursor
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -66,7 +68,7 @@ public class CameraController : MonoBehaviour{
         currentDistance = MinCamDistance + (MaxCamDistance - MinCamDistance) / 2;
     }
 
-    void Update(){
+    private void Update(){
         _mouseY = Input.GetAxis("Mouse Y");
         _mouseX = Input.GetAxis("Mouse X");
         _mouseScroll = Input.GetAxis("Mouse ScrollWheel");
@@ -118,8 +120,7 @@ public class CameraController : MonoBehaviour{
                 stabilizerPos2 = stabilizerPos;
             }
         }else{
-            //zoom in or out
-            sniperCamera.fieldOfView -= _mouseScroll * sniperZoomSpeed;
+            ZoomInSniperMode();
             //make main camera look at target when we are not in sniper mode
             aimTarget = GetTargetPosition();
             gameObject.transform.LookAt(aimTarget);
@@ -146,14 +147,6 @@ public class CameraController : MonoBehaviour{
             if(clampthis.x>minGunAngle && clampthis.x<300f){ clampthis.x=minGunAngle;}
             if(clampthis.x<(360f-maxGunAngle) && clampthis.x>300f){ clampthis.x=(360f-maxGunAngle);}
             sniperRigGun.transform.localEulerAngles = clampthis;
-            //get out of snipercam
-            if(sniperCamera.fieldOfView >= 61){
-                inSniperMode = false;
-                currentDistance = MinCamDistance + 1.5f;
-                sniperCamera.fieldOfView = 60.5f;
-                ourCamera.enabled = true;
-                sniperCamera.enabled = false;
-            }
 
             stabilizerPos=GetStabilizerPosition();
             if(camRotY!=0f){
@@ -162,6 +155,36 @@ public class CameraController : MonoBehaviour{
         }
         //clamp fov
         sniperCamera.fieldOfView = Mathf.Clamp(sniperCamera.fieldOfView, 10, 61);
+    }
+
+    private void ZoomInSniperMode(){
+        //check if we used scrollwheel
+        if(_mouseScroll!=0f){
+            if(_mouseScroll>0f){
+                zoomPointer+=1;
+            }else{
+                zoomPointer-=1;
+            }
+        }
+        //get out of snipercam if we are below 0 on the index
+        if(zoomPointer<0){
+            zoomPointer=0;
+            GetOutOfSniperMode();
+        }
+        //stop at highest level of zoom
+        if(zoomPointer>zoomSteps.Length-1){
+            zoomPointer=zoomSteps.Length-1;
+        }
+        //actually change fov which is the zoom
+        sniperCamera.fieldOfView = zoomSteps[zoomPointer];
+    }
+
+    private void GetOutOfSniperMode(){
+        inSniperMode = false;
+        currentDistance = MinCamDistance + 1.5f;
+        sniperCamera.fieldOfView = zoomSteps[0];
+        ourCamera.enabled = true;
+        sniperCamera.enabled = false;
     }
 
     private void ControlTurret(Vector3 target){
@@ -180,7 +203,7 @@ public class CameraController : MonoBehaviour{
             _pos = sniperCamera.transform.position + (sniperCamera.transform.forward * 1000);
             if (Physics.Raycast(sniperCamera.transform.position, sniperCamera.transform.forward, out RaycastHit hit2, MaxDistance, ObstaclesLayer)){
                 _pos = hit2.point;
-                Debug.Log(hit2.distance.ToString());
+                //Debug.Log(hit2.distance.ToString());
             }
         }
         return _pos;
@@ -189,10 +212,10 @@ public class CameraController : MonoBehaviour{
     public Vector3 GetStabilizerPosition(){
         Vector3 _pos;
         if(!inSniperMode){
-            _pos = Camera.main.transform.position + (Camera.main.transform.forward * 1000);
-            if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out RaycastHit hit3, 100f, StabilizerLayer)){
+            _pos = transform.position + (transform.forward * 1000);
+            if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit3, 100f, StabilizerLayer)){
                 _pos = hit3.point;
-                //Debug.DrawLine(Camera.main.transform.position, hit3.point, Color.blue);
+                //Debug.DrawLine(transform.position, hit3.point, Color.blue);
             }
         }else{
             _pos = sniperRigGun.transform.position + (sniperRigGun.transform.forward * 1000);

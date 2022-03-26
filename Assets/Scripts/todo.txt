@@ -1,0 +1,3 @@
+TODO List:
+ - Fix zooming in general mode, make it similar to sniper mode
+ - refactor everything

@@ -33,6 +33,7 @@ public class VehicleController : MonoBehaviour{
     public CameraController camController;
     public GameObject turretGO;
     public GameObject gunGO;
+    public GameObject gunShootPos;
     public GameObject crossHair;
     public GameObject sniperTurret;
     public GameObject sniperGun;
@@ -50,6 +51,7 @@ public class VehicleController : MonoBehaviour{
     private bool turnInputOff=false;
     
     private float lastAngle;
+    private float curAngle;
 
     #region variables
     [Header("Tank Wheel and Visual/Sound effects")]
@@ -68,7 +70,6 @@ public class VehicleController : MonoBehaviour{
     [SerializeField] public float centerOfMassYOffset = -1.0f;
     [SerializeField] public float roadWheelSpinMultiplier = 250.0f;
     [SerializeField] public float dummyWheelSpinMultiplier = 150.0f;
-    [SerializeField] public ParticleSystem[] groundFxs; 
     [SerializeField] public AudioSource engineAudioSource;
     [SerializeField] public float maxPitch;
     [SerializeField] public float idlePitch;
@@ -94,7 +95,6 @@ public class VehicleController : MonoBehaviour{
         rigidBody = this.GetComponent<Rigidbody>();
         leftTrackMaterial = leftTrack.GetComponent<Renderer>().material;
         rightTrackMaterial = rightTrack.GetComponent<Renderer>().material;
-        SetGroundFxsState(false);
 
         TurretTargetPosition = transform.position + (transform.forward * 2);
         targetPosition = TurretTargetPosition;
@@ -153,14 +153,16 @@ public class VehicleController : MonoBehaviour{
                 rigidBody.AddTorque(transform.up * turnInput * turnTorque * Time.deltaTime);
             }
             if(turnInput==0 && turnInputOff){
-                //rigidBody.angularDrag=4.0f;
-                rigidBody.angularVelocity = Vector3.zero;
+                rigidBody.angularDrag=20.0f;
+                //Debug.Log("here");
+                //rigidBody.angularVelocity = Vector3.zero;
                 //rigidBody.constraints = RigidbodyConstraints.FreezeRotationY;
                 turnInputOff = false;
             }else if(turnInput==0f){
-                //rigidBody.angularDrag=2.0f;
-                //rigidBody.angularVelocity = Vector3.zero;
+                //rigidBody.angularDrag=1.0f;
                 rigidBody.angularVelocity *= 0.6f;
+                rigidBody.angularDrag *= 0.7f;
+                //Debug.Log(rigidBody.angularDrag.ToString());
                 //rigidBody.constraints = RigidbodyConstraints.None;
             }else{
                 rigidBody.angularDrag=0.1f;
@@ -172,7 +174,7 @@ public class VehicleController : MonoBehaviour{
 
         //show our velocity and angular velocity in inspector
         aVeL = rigidBody.angularVelocity.magnitude;
-        VeL = rigidBody.velocity.magnitude;
+        VeL = rigidBody.velocity.magnitude * 3.6f;
         
         if(driveInput!=0f){
             SetLeftTrackTorque(driveInput * driveTorque);
@@ -204,22 +206,15 @@ public class VehicleController : MonoBehaviour{
             rigidBody.angularDrag = 0.1f;
         }
 
-        float angle = Vector3.Angle(Vector3.up, transform.up);
-        if(angle>20f && height<= maxHeight && lastAngle<angle){
-            rigidBody.drag=angle*0.03f;
+        curAngle = Vector3.Angle(Vector3.up, transform.up);
+        if(curAngle>20f && height<= maxHeight && lastAngle<curAngle){
+            rigidBody.drag=curAngle*0.03f;
         }
-        lastAngle = angle;
+        lastAngle = curAngle;
         //UpdateTurret();
     }
 
-    #region Torque, brake and groundFX
-    private void SetGroundFxsState(bool state) {
-        foreach (ParticleSystem fx in groundFxs) {
-            ParticleSystem.EmissionModule eMod = fx.emission;
-            eMod.enabled = state;
-        }
-    }
-
+    #region Torque, brake
     private void SetLeftTrackTorque(float speed) {
         for (int i = 0; i < leftWheelColliders.Length; i++) {
             leftWheelColliders[i].motorTorque = speed;
@@ -245,16 +240,16 @@ public class VehicleController : MonoBehaviour{
 
     #region crosshair
     private void CrosshairMovement(){
-        var _mainCamera = mainCam;
+        Camera _mainCamera = mainCam;
         if(camController.inSniperMode){
             _mainCamera = sniperCam;
         }else{
             _mainCamera = mainCam;
         }
         //get gun object
-        var _gun = gunGO;
-        var _maxCrosshairDistance = 5000f;
-        var _forwardGun = _gun.transform.position + (_gun.transform.forward * _maxCrosshairDistance);
+        GameObject _gun = gunGO;
+        float _maxCrosshairDistance = 5000f;
+        Vector3 _forwardGun = _gun.transform.position + (_gun.transform.forward * _maxCrosshairDistance);
         // check for obstacles in front of the cannon
         Ray crossHairRay;
         crossHairRay = new Ray(_gun.transform.position,  _gun.transform.forward);
@@ -263,11 +258,16 @@ public class VehicleController : MonoBehaviour{
             Debug.DrawLine(crossHairRay.origin, hit.point, Color.green);
         }
         // placing the target's sprite in front of the cannon
-        var _lookToHit = Quaternion.LookRotation(_forwardGun - _mainCamera.transform.position);
-        var _crosshairPos = _mainCamera.transform.position + (_lookToHit * Vector3.forward);
+        Quaternion _lookToHit = Quaternion.LookRotation(_forwardGun - _mainCamera.transform.position);
+        Vector3 _crosshairPos = _mainCamera.transform.position + (_lookToHit * Vector3.forward);
         // disable the sight if the is not in front of the camera
-        var _angleBetweenGunAndCamera = Mathf.Abs(Vector3.Angle(_gun.transform.forward, _mainCamera.transform.forward));
+        float _angleBetweenGunAndCamera = Mathf.Abs(Vector3.Angle(_gun.transform.forward, _mainCamera.transform.forward));
         //crossHair.GetComponent<Image>().enabled = _angleBetweenGunAndCamera > _mainCamera.fieldOfView ? false : true;
+        if(_angleBetweenGunAndCamera > _mainCamera.fieldOfView){
+            crossHair.SetActive(false);
+        }else{
+            crossHair.SetActive(true);
+        }
         // convert the world position of the crosshairs to the position of the screen (smoothed)
         finalCrosshairPos = Vector3.Lerp(finalCrosshairPos, _mainCamera.WorldToScreenPoint(_crosshairPos), Time.deltaTime * 10f);
         crossHair.transform.position = finalCrosshairPos;
@@ -285,10 +285,10 @@ public class VehicleController : MonoBehaviour{
         float _angleBetweenGunAndTarget = Vector3.Angle(gunLocalRotation * Vector3.forward, _gunRelativeRotTarget * Vector3.forward);
         float _turretVelocity = 1 / _angleBetweenTurretAndTarget;
         float _gunVelocity = 1 / _angleBetweenGunAndTarget;
-        var _horizontalSpeed = turretTraverseSpeed;
+        float _horizontalSpeed = turretTraverseSpeed;
         _horizontalSpeed *= _turretVelocity;
         _horizontalSpeed *= Time.deltaTime;
-        var _verticalSpeed = gunTraverseSpeed;
+        float _verticalSpeed = gunTraverseSpeed;
         _verticalSpeed *= _gunVelocity;
         _verticalSpeed *= Time.deltaTime;
         Quaternion _turretFinalRotation = Quaternion.Euler(gameObject.transform.eulerAngles - _lookAtTurret.eulerAngles);
@@ -333,17 +333,17 @@ public class VehicleController : MonoBehaviour{
         for (int i = 0; i < leftWheelColliders.Length; i++) {
             leftWheelColliders[i].GetWorldPose(out colliderPos, out colliderRot);
             leftWheelMeshes[i].position = colliderPos + new Vector3 (0, trackThiccness, 0);
-            leftTrackBones[i].position = leftWheelMeshes[i].position + transform.up * -1.0f * leftWheelColliders[i].radius;
+            //leftTrackBones[i].position = leftWheelMeshes[i].position + transform.up * -1.0f * leftWheelColliders[i].radius;
         }
 
         for (int i = 0; i < rightWheelColliders.Length; i++) {
             rightWheelColliders[i].GetWorldPose(out colliderPos, out colliderRot);
             rightWheelMeshes[i].position = colliderPos + new Vector3 (0, trackThiccness, 0);
-            rightTrackBones[i].position = rightWheelMeshes[i].position + transform.up * -1.0f * leftWheelColliders[i].radius;
+            //rightTrackBones[i].position = rightWheelMeshes[i].position + transform.up * -1.0f * leftWheelColliders[i].radius;
 		}
 
         //If we are still or almost still reduce sideways friction
-        if (rigidBody.velocity.magnitude <= 1f) {
+        if (rigidBody.velocity.magnitude <= 1f || curAngle > 22f) {
             for (int i = 0; i < leftWheelColliders.Length; i++) {
                 sFrictionLeft[i].stiffness = stillSidewaysFriction;
                 leftWheelColliders[i].sidewaysFriction = sFrictionLeft[i];
@@ -385,11 +385,6 @@ public class VehicleController : MonoBehaviour{
         leftTrackMaterial.SetTextureOffset("_MainTex", new Vector2(0, leftTrackMaterial.mainTextureOffset.y + (leftDirectionalMultiplier * -1.0f * rigidBody.velocity.magnitude * trackSpeed * Mathf.Sign(localZVelocity))));
         rightTrackMaterial.SetTextureOffset("_MainTex", new Vector2(0, rightTrackMaterial.mainTextureOffset.y + (rightDirectionalMultiplier * -1.0f * rigidBody.velocity.magnitude * trackSpeed * Mathf.Sign(localZVelocity))));
    
-        //We toggle the ground dust particle effect depending on our speed
-        if (rigidBody.velocity.magnitude > 4) {
-            SetGroundFxsState(true);
-        }
-        else SetGroundFxsState(false);
         //set audio
         curPitch = Mathf.Clamp(idlePitch + rigidBody.velocity.magnitude / 40.0f, idlePitch, maxPitch);
         engineAudioSource.pitch = curPitch;
