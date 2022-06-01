@@ -694,7 +694,7 @@ MonoBehaviour:
   MaxAngle: 45
   RotSpeed: 2
   Height: 3
-  sniperSpeedY: 0.75
+  sniperSpeedY: 1
   sniperSpeedX: 0.75
   sniperZoomSpeed: 450
   ObstaclesLayer:

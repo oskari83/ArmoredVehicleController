@@ -6,11 +6,14 @@ public class BulletScript : MonoBehaviour{
     [Header("Bullet Speed")]
     public float bulletSpeed = 5f;
 
-    private void FixedUpdate(){
-        transform.Translate(Vector3.forward * bulletSpeed);
+    private Rigidbody child;
+
+    private void Start(){
+        child = gameObject.transform.GetChild(0).GetComponent<Rigidbody>();
     }
 
-    void OnCollisionEnter(Collision collision){
-        Destroy(gameObject);
+    private void FixedUpdate(){
+        //child.MovePosition(transform.position + Vector3.forward * bulletSpeed);
+        transform.Translate(Vector3.forward * bulletSpeed);
     }
 }

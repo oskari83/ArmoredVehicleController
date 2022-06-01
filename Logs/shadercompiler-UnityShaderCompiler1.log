@@ -2,3 +2,5 @@ Base path: '/Applications/Unity/Hub/Editor/2020.3.22f1/Unity.app/Contents', plug
 Cmd: initializeCompiler
 
 Cmd: shutdown
+
+Quitting shader compiler process

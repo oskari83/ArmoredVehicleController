@@ -62,6 +62,7 @@
      <Compile Include="Assets/UGUIKit Flat/Content/Scripts/bl_ToggleSwitcher.cs" />
      <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_MBT_Wheel.cs" />
      <Compile Include="Assets/UGUICrosshair/Content/Scripts/bl_UCrosshairInput.cs" />
+     <Compile Include="Assets/Scripts/BulletScript.cs" />
      <Compile Include="Assets/Assets/SpookyLabs/Scorpion/Scripts/VehicleLights.cs" />
      <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_MBT_ControllVehicle.cs" />
      <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_CameraController.cs" />
@@ -69,9 +70,9 @@
      <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_ShootController.cs" />
      <Compile Include="Assets/Scripts/Wall.cs" />
      <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_TurretController.cs" />
-     <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_UiManager.cs" />
      <Compile Include="Assets/Scripts/ShootingController.cs" />
-     <Compile Include="Assets/Scripts/BulletScript.cs" />
+     <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_UiManager.cs" />
+     <Compile Include="Assets/BulletCollisionScript.cs" />
      <None Include="Assets/UGUICrosshair/Documentation/ReadMe.txt" />
      <None Include="Assets/UGUIKit Flat/ReadMe.txt" />
      <None Include="Assets/Scripts/todo.txt" />
