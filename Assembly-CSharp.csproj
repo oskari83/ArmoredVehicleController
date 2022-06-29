@@ -40,6 +40,7 @@
      <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_MBT_Engine.cs" />
      <Compile Include="Assets/Assets/MMV/Samples/Scripts/WaypointsFollower.cs" />
      <Compile Include="Assets/Scripts/VehicleController.cs" />
+     <Compile Include="Assets/BulletCollisionScript.cs" />
      <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_MBT_WheelManager.cs" />
      <Compile Include="Assets/Scripts/SniperRigScript.cs" />
      <Compile Include="Assets/UGUIKit Flat/Content/Scripts/bl_ProgressBar.cs" />
@@ -72,7 +73,6 @@
      <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_TurretController.cs" />
      <Compile Include="Assets/Scripts/ShootingController.cs" />
      <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_UiManager.cs" />
-     <Compile Include="Assets/BulletCollisionScript.cs" />
      <None Include="Assets/UGUICrosshair/Documentation/ReadMe.txt" />
      <None Include="Assets/UGUIKit Flat/ReadMe.txt" />
      <None Include="Assets/Scripts/todo.txt" />

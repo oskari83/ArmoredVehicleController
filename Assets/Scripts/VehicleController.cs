@@ -136,7 +136,7 @@ public class VehicleController : MonoBehaviour{
         rigidBody.centerOfMass = new Vector3(0, centerOfMassYOffset, 0);
         localZVelocity = transform.InverseTransformDirection(rigidBody.velocity).z;
 
-        //how high off the groun are we
+        //how high off the ground are we
         RaycastHit hit;
         Ray downRay = new Ray(transform.position, -transform.up);
         //Debug.DrawRay(downRay.origin,downRay.direction * 100, Color.red);
@@ -152,8 +152,9 @@ public class VehicleController : MonoBehaviour{
             }else{
                 rigidBody.AddTorque(transform.up * turnInput * turnTorque * Time.deltaTime);
             }
+
             if(turnInput==0 && turnInputOff){
-                rigidBody.angularDrag=20.0f;
+                //rigidBody.angularDrag=20.0f;
                 //Debug.Log("here");
                 //rigidBody.angularVelocity = Vector3.zero;
                 //rigidBody.constraints = RigidbodyConstraints.FreezeRotationY;
@@ -161,7 +162,7 @@ public class VehicleController : MonoBehaviour{
             }else if(turnInput==0f){
                 //rigidBody.angularDrag=1.0f;
                 rigidBody.angularVelocity *= 0.6f;
-                rigidBody.angularDrag *= 0.7f;
+                //rigidBody.angularDrag *= 0.7f;
                 //Debug.Log(rigidBody.angularDrag.ToString());
                 //rigidBody.constraints = RigidbodyConstraints.None;
             }else{
@@ -212,6 +213,8 @@ public class VehicleController : MonoBehaviour{
         }
         lastAngle = curAngle;
         //UpdateTurret();
+
+        Debug.Log(rigidBody.angularVelocity.y);
     }
 
     #region Torque, brake
