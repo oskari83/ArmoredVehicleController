@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3740775446937717601}
   - component: {fileID: 3740775446937717602}
   - component: {fileID: 3740775446937717603}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -205,7 +205,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3740775447057437717}
   - component: {fileID: 5753816651598040623}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: BulletGO
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -239,4 +239,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01a0fd09ebe444fa08fa0a3e572bfd32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletSpeed: 3
+  bulletSpeed: 1

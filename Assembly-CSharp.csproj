@@ -73,9 +73,13 @@
      <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_TurretController.cs" />
      <Compile Include="Assets/Scripts/ShootingController.cs" />
      <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_UiManager.cs" />
+     <Compile Include="Assets/QuickOutline/Scripts/Outline.cs" />
      <None Include="Assets/UGUICrosshair/Documentation/ReadMe.txt" />
      <None Include="Assets/UGUIKit Flat/ReadMe.txt" />
+     <None Include="Assets/QuickOutline/Resources/Shaders/OutlineMask.shader" />
      <None Include="Assets/Scripts/todo.txt" />
+     <None Include="Assets/QuickOutline/Readme.txt" />
+     <None Include="Assets/QuickOutline/Resources/Shaders/OutlineFill.shader" />
     <Reference Include="UnityEngine">
         <HintPath>/Applications/Unity/Hub/Editor/2020.3.22f1/Unity.app/Contents/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>

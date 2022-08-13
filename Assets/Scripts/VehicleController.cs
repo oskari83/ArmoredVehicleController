@@ -214,7 +214,7 @@ public class VehicleController : MonoBehaviour{
         lastAngle = curAngle;
         //UpdateTurret();
 
-        Debug.Log(rigidBody.angularVelocity.y);
+        //Debug.Log(rigidBody.angularVelocity.y);
     }
 
     #region Torque, brake
@@ -336,13 +336,13 @@ public class VehicleController : MonoBehaviour{
         for (int i = 0; i < leftWheelColliders.Length; i++) {
             leftWheelColliders[i].GetWorldPose(out colliderPos, out colliderRot);
             leftWheelMeshes[i].position = colliderPos + new Vector3 (0, trackThiccness, 0);
-            //leftTrackBones[i].position = leftWheelMeshes[i].position + transform.up * -1.0f * leftWheelColliders[i].radius;
+            leftTrackBones[i].position = leftWheelMeshes[i].position + transform.up * -1.0f * leftWheelColliders[i].radius;
         }
 
         for (int i = 0; i < rightWheelColliders.Length; i++) {
             rightWheelColliders[i].GetWorldPose(out colliderPos, out colliderRot);
             rightWheelMeshes[i].position = colliderPos + new Vector3 (0, trackThiccness, 0);
-            //rightTrackBones[i].position = rightWheelMeshes[i].position + transform.up * -1.0f * leftWheelColliders[i].radius;
+            rightTrackBones[i].position = rightWheelMeshes[i].position + transform.up * -1.0f * leftWheelColliders[i].radius;
 		}
 
         //If we are still or almost still reduce sideways friction
