@@ -11,7 +11,8 @@ public class CameraController : MonoBehaviour{
     public float MaxCamDistance = 20f;
     public float MinCamDistance = 2f;
     public float CamZoomSpeed = -10f;
-    public float[] zoomSteps = new float[5];
+    public float[] zoomStepsSniperMode = new float[5] {60,45,32,20,10};
+    public float[] zoomStepsNormal = new float[8] {20,17.4f,14.8f,12.2f,9.6f,7f,4.4f,1.8f};
     public float MinAngle = 10f;
     public float MaxAngle = 45f;
     public float RotSpeed = 2f;
@@ -20,7 +21,7 @@ public class CameraController : MonoBehaviour{
     public float sniperSpeedX = 0.75f;
     public float sniperZoomSpeed = 200f;
     public LayerMask ObstaclesLayer = default;
-    public LayerMask StabilizerLayer = default;
+    public LayerMask StabilizerLayer = default; //nothing in inspector
 
     private Camera sniperCamera;
     [HideInInspector] public Camera ourCamera;
@@ -48,6 +49,7 @@ public class CameraController : MonoBehaviour{
     private Vector3 stabilizerPos;
     private Vector3 stabilizerPos2;
     private int zoomPointer = 0;
+    private int zoomPointerNormal = 0;
 
     private void Start(){
         //set cursor
@@ -65,7 +67,9 @@ public class CameraController : MonoBehaviour{
         maxGunAngle = vehicle.maxGunAngle;
         transform.position = (vehicle.transform.position + -vehicle.transform.forward) + (Vector3.up * 2);
         transform.LookAt(vehicle.transform.position + (Vector3.up * Height));
-        currentDistance = MinCamDistance + (MaxCamDistance - MinCamDistance) / 2;
+        //old
+        //currentDistance = MinCamDistance + (MaxCamDistance - MinCamDistance) / 2;
+        currentDistance = zoomStepsNormal[zoomPointerNormal];
     }
 
     private void Update(){
@@ -84,10 +88,10 @@ public class CameraController : MonoBehaviour{
     }
 
     private void ControlCamera(){
+        //do camera zoom
+        Zoom(inSniperMode);
+
         if(!inSniperMode){
-            //zoom in or out on tank
-            currentDistance += _mouseScroll * CamZoomSpeed;
-            currentDistance = Mathf.Clamp(currentDistance, MinCamDistance, MaxCamDistance);
             //get and set out rotation
             currentRotX = _mouseX * RotSpeed;   
             currentRotY = -(_mouseY * RotSpeed);
@@ -99,43 +103,22 @@ public class CameraController : MonoBehaviour{
             transform.eulerAngles = clampthis;
             //set our snipercam rotation while we are not in it
             aimTarget = GetTargetPosition();
-            //rotate snipercam turret
+            //rotate the sniperRig turret -> does not affect our camera
             sniperRig.transform.LookAt(aimTarget);
-            Vector3 _newTurretRotation2 = sniperRig.transform.localEulerAngles;
-            _newTurretRotation2.x = 0;
-            _newTurretRotation2.z = 0;
-            sniperRig.transform.localRotation = Quaternion.Euler(_newTurretRotation2);
-            //rotate snipercam gun
+            sniperRig.transform.localRotation = Quaternion.Euler(SniperRigTurretEulerSingleAxis());
+            //rotate the sniperRig gun -> does not affect our camera
             sniperRigGun.transform.LookAt(aimTarget);
-            Vector3 _newGunRot = sniperRigGun.transform.localEulerAngles;
-            _newGunRot.y = 0;
-            _newGunRot.z = 0;
-            sniperRigGun.transform.localRotation = Quaternion.Euler(_newGunRot);
-            //change to sniperCam
-            if(currentDistance < MinCamDistance + 1.5f){
-                inSniperMode = true;
-                sniperCamera.enabled = true;
-                ourCamera.enabled = false;
-                stabilizerPos = GetStabilizerPosition();
-                stabilizerPos2 = stabilizerPos;
-            }
+            sniperRigGun.transform.localRotation = Quaternion.Euler(SniperRigGunEulerSingleAxis());
         }else{
-            ZoomInSniperMode();
             //make main camera look at target when we are not in sniper mode
             aimTarget = GetTargetPosition();
             gameObject.transform.LookAt(aimTarget);
-
+            //rotate the sniperRig turret -> affects our camera
             sniperRig.transform.LookAt(stabilizerPos);
-            Vector3 _newTurretRot = sniperRig.transform.localEulerAngles;
-            _newTurretRot.x = 0;
-            _newTurretRot.z = 0;
-            sniperRig.transform.localRotation = Quaternion.Euler(_newTurretRot);
-
+            sniperRig.transform.localRotation = Quaternion.Euler(SniperRigTurretEulerSingleAxis());
+            //rotate the sniperRig gun -> affects our camera
             sniperRigGun.transform.LookAt(stabilizerPos2);
-            Vector3 _newGunRot = sniperRigGun.transform.localEulerAngles;
-            _newGunRot.y = 0;
-            _newGunRot.z = 0;
-            sniperRigGun.transform.localRotation = Quaternion.Euler(_newGunRot);
+            sniperRigGun.transform.localRotation = Quaternion.Euler(SniperRigGunEulerSingleAxis());
 
             //control snipercam
             camRotY = sniperSpeedY * _mouseY * (sniperCamera.fieldOfView/61f);
@@ -147,44 +130,77 @@ public class CameraController : MonoBehaviour{
             if(clampthis.x>minGunAngle && clampthis.x<300f){ clampthis.x=minGunAngle;}
             if(clampthis.x<(360f-maxGunAngle) && clampthis.x>300f){ clampthis.x=(360f-maxGunAngle);}
             sniperRigGun.transform.localEulerAngles = clampthis;
-
+            //I dont remember what this is 
             stabilizerPos=GetStabilizerPosition();
             if(camRotY!=0f){
                 stabilizerPos2=stabilizerPos;
             }
         }
-        //clamp fov
-        sniperCamera.fieldOfView = Mathf.Clamp(sniperCamera.fieldOfView, 10, 61);
     }
 
-    private void ZoomInSniperMode(){
+    private Vector3 SniperRigTurretEulerSingleAxis(){
+        Vector3 _newTurretRot = sniperRig.transform.localEulerAngles;
+        _newTurretRot.x = 0;
+        _newTurretRot.z = 0;
+        return _newTurretRot;
+    }
+
+    private Vector3 SniperRigGunEulerSingleAxis(){
+        Vector3 _newGunRot = sniperRigGun.transform.localEulerAngles;
+        _newGunRot.y = 0;
+        _newGunRot.z = 0;
+        return _newGunRot;
+    }
+
+    private void Zoom(bool isSniperMode){
+        int pointer,maxlen;
+        pointer = isSniperMode ? zoomPointer : zoomPointerNormal;
+        maxlen = isSniperMode ? zoomStepsSniperMode.Length-1 : zoomStepsNormal.Length-1;
         //check if we used scrollwheel
         if(_mouseScroll!=0f){
             if(_mouseScroll>0f){
-                zoomPointer+=1;
+                pointer+=1;
             }else{
-                zoomPointer-=1;
+                pointer-=1;
             }
         }
-        //get out of snipercam if we are below 0 on the index
-        if(zoomPointer<0){
-            zoomPointer=0;
-            GetOutOfSniperMode();
+        //check whether we exceeded limits and wanted to change modes
+        if(pointer<0){
+            pointer=0;
+            if(isSniperMode){
+                GetOutOfSniperMode();
+            }
         }
-        //stop at highest level of zoom
-        if(zoomPointer>zoomSteps.Length-1){
-            zoomPointer=zoomSteps.Length-1;
+        if(pointer>maxlen){
+            pointer=maxlen;
+            if(!isSniperMode){
+                GetOutOfNormalMode();
+            }
         }
-        //actually change fov which is the zoom
-        sniperCamera.fieldOfView = zoomSteps[zoomPointer];
+        //apply zoom
+        if(isSniperMode){
+            sniperCamera.fieldOfView = zoomStepsSniperMode[pointer];
+            zoomPointer = pointer;
+        }else{
+            currentDistance = zoomStepsNormal[pointer];
+            zoomPointerNormal = pointer;
+        }
     }
 
     private void GetOutOfSniperMode(){
         inSniperMode = false;
-        currentDistance = MinCamDistance + 1.5f;
-        sniperCamera.fieldOfView = zoomSteps[0];
+        currentDistance = zoomStepsNormal[zoomPointerNormal];
+        sniperCamera.fieldOfView = zoomStepsSniperMode[0];
         ourCamera.enabled = true;
         sniperCamera.enabled = false;
+    }
+
+    private void GetOutOfNormalMode(){
+        inSniperMode = true;
+        sniperCamera.enabled = true;
+        ourCamera.enabled = false;
+        stabilizerPos = GetStabilizerPosition();
+        stabilizerPos2 = stabilizerPos;
     }
 
     private void ControlTurret(Vector3 target){

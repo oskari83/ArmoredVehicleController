@@ -5,21 +5,122 @@ m_ProjectFiles:
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 637827699850000000
-    m_Hash: 3843514620
+      ticks: 637960190910000000
+    m_Hash: 2749174057
   m_LockFileStatus:
     m_FilePath: /Users/oskaripeltonen/Desktop/ArmoredVehicleController/Packages/packages-lock.json
     m_PathExists: 1
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 637827699850000000
-    m_Hash: 2316654160
+      ticks: 637960190960000000
+    m_Hash: 2525463595
 m_EmbeddedPackageManifests:
   m_ManifestsStatus: {}
 m_PackageAssets:
   m_Packages:
     m_ResolvedPackages:
+    - packageId: com.unity.2d.sprite@1.0.0
+      testable: 0
+      isDirectDependency: 1
+      version: 1.0.0
+      source: 2
+      resolvedPath: /Users/oskaripeltonen/Desktop/ArmoredVehicleController/Library/PackageCache/com.unity.2d.sprite@1.0.0
+      assetPath: Packages/com.unity.2d.sprite
+      name: com.unity.2d.sprite
+      displayName: 2D Sprite
+      author:
+        name: 
+        email: 
+        url: 
+      category: 2D
+      type: 
+      description: Use Unity Sprite Editor Window to create and edit Sprite asset
+        properties like pivot, borders and Physics shape
+      status: 4
+      errors: []
+      versions:
+        all:
+        - 1.0.0
+        compatible:
+        - 1.0.0
+        verified: 1.0.0
+      dependencies: []
+      resolvedDependencies: []
+      keywords:
+      - 2d
+      - sprite
+      - sprite editor window
+      registry:
+        id: 
+        name: 
+        url: 
+        scopes: []
+        isDefault: 0
+        capabilities: 0
+      hasRegistry: 0
+      hideInEditor: 1
+      entitlements:
+        isAllowed: 1
+      isAssetStorePackage: 0
+      datePublishedTicks: 0
+      documentationUrl: 
+      hasRepository: 0
+      repository:
+        type: 
+        url: 
+        revision: 
+        path: 
+    - packageId: com.unity.2d.tilemap@1.0.0
+      testable: 0
+      isDirectDependency: 1
+      version: 1.0.0
+      source: 2
+      resolvedPath: /Users/oskaripeltonen/Desktop/ArmoredVehicleController/Library/PackageCache/com.unity.2d.tilemap@1.0.0
+      assetPath: Packages/com.unity.2d.tilemap
+      name: com.unity.2d.tilemap
+      displayName: 2D Tilemap Editor
+      author:
+        name: 
+        email: 
+        url: 
+      category: 2D
+      type: 
+      description: 2D Tilemap Editor is a package that contains editor functionalities
+        for editing Tilemaps.
+      status: 4
+      errors: []
+      versions:
+        all:
+        - 1.0.0
+        compatible:
+        - 1.0.0
+        verified: 1.0.0
+      dependencies: []
+      resolvedDependencies: []
+      keywords:
+      - 2d
+      - Tilemap
+      registry:
+        id: 
+        name: 
+        url: 
+        scopes: []
+        isDefault: 0
+        capabilities: 0
+      hasRegistry: 0
+      hideInEditor: 1
+      entitlements:
+        isAllowed: 1
+      isAssetStorePackage: 0
+      datePublishedTicks: 0
+      documentationUrl: 
+      hasRepository: 0
+      repository:
+        type: 
+        url: 
+        revision: 
+        path: 
     - packageId: com.unity.collab-proxy@1.13.5
       testable: 0
       isDirectDependency: 1
@@ -76,12 +177,23 @@ m_PackageAssets:
         - 1.14.9
         - 1.14.12
         - 1.14.13
+        - 1.14.15
+        - 1.14.16
+        - 1.14.17
+        - 1.14.18
         - 1.15.1
         - 1.15.4
         - 1.15.7
         - 1.15.9
         - 1.15.12
         - 1.15.13
+        - 1.15.15
+        - 1.15.16
+        - 1.15.17
+        - 1.15.18
+        - 1.17.0
+        - 1.17.1
+        - 1.17.2
         - 2.0.0-preview.6
         - 2.0.0-preview.8
         - 2.0.0-preview.15
@@ -100,12 +212,23 @@ m_PackageAssets:
         - 1.14.9
         - 1.14.12
         - 1.14.13
+        - 1.14.15
+        - 1.14.16
+        - 1.14.17
+        - 1.14.18
         - 1.15.1
         - 1.15.4
         - 1.15.7
         - 1.15.9
         - 1.15.12
         - 1.15.13
+        - 1.15.15
+        - 1.15.16
+        - 1.15.17
+        - 1.15.18
+        - 1.17.0
+        - 1.17.1
+        - 1.17.2
         - 2.0.0-preview.6
         - 2.0.0-preview.8
         - 2.0.0-preview.15
@@ -213,6 +336,9 @@ m_PackageAssets:
         - 3.0.9
         - 3.0.10
         - 3.0.12
+        - 3.0.13
+        - 3.0.14
+        - 3.0.15
         compatible:
         - 1.0.2
         - 1.0.6
@@ -242,6 +368,9 @@ m_PackageAssets:
         - 3.0.9
         - 3.0.10
         - 3.0.12
+        - 3.0.13
+        - 3.0.14
+        - 3.0.15
         verified: 2.0.7
       dependencies:
       - name: com.unity.test-framework
@@ -315,6 +444,8 @@ m_PackageAssets:
         - 2.0.11
         - 2.0.12
         - 2.0.14
+        - 2.0.15
+        - 2.0.16
         compatible:
         - 1.0.2
         - 1.0.3
@@ -333,7 +464,9 @@ m_PackageAssets:
         - 2.0.11
         - 2.0.12
         - 2.0.14
-        verified: 2.0.14
+        - 2.0.15
+        - 2.0.16
+        verified: 2.0.16
       dependencies:
       - name: com.unity.test-framework
         version: 1.1.9
@@ -497,6 +630,7 @@ m_PackageAssets:
         - 3.1.1
         - 3.2.0
         - 3.2.1
+        - 3.2.2
         compatible:
         - 2.3.0
         - 3.0.1
@@ -505,6 +639,7 @@ m_PackageAssets:
         - 3.1.1
         - 3.2.0
         - 3.2.1
+        - 3.2.2
         verified: 3.1.1
       dependencies:
       - name: com.unity.modules.physics
@@ -532,6 +667,79 @@ m_PackageAssets:
         type: git
         url: git+https://github.com/Unity-Technologies/Graphics.git
         revision: 075b452f2c4bf910a168632b3cedbd6835477ddd
+        path: 
+    - packageId: com.unity.progrids@3.0.3-preview.4
+      testable: 0
+      isDirectDependency: 1
+      version: 3.0.3-preview.4
+      source: 1
+      resolvedPath: /Users/oskaripeltonen/Desktop/ArmoredVehicleController/Library/PackageCache/com.unity.progrids@3.0.3-preview.4
+      assetPath: Packages/com.unity.progrids
+      name: com.unity.progrids
+      displayName: ProGrids
+      author:
+        name: 
+        email: 
+        url: 
+      category: 
+      type: 
+      description: 'Advanced grid and object snapping for the scene view. ProGrids
+        is a dynamically placed grid, available on all 3 axes and at any position
+        in the scene.
+
+
+        ProGrids snaps objects in world space, ensuring consistent
+        placement of objects in your level.
+
+
+        In addition, ProGrids is completely
+        customizable. Change the colors of your grid, the snap sizing, unit of measurement,
+        and more!'
+      status: 4
+      errors: []
+      versions:
+        all:
+        - 3.0.1-preview
+        - 3.0.2-preview
+        - 3.0.3-preview.0
+        - 3.0.3-preview.4
+        - 3.0.3-preview.5
+        - 3.0.3-preview.6
+        compatible:
+        - 3.0.1-preview
+        - 3.0.2-preview
+        - 3.0.3-preview.0
+        - 3.0.3-preview.4
+        - 3.0.3-preview.5
+        - 3.0.3-preview.6
+        verified: 
+      dependencies: []
+      resolvedDependencies: []
+      keywords:
+      - grid
+      - snap
+      - manipulation
+      - array
+      - align
+      registry:
+        id: main
+        name: 
+        url: https://packages.unity.com
+        scopes: []
+        isDefault: 1
+        capabilities: 7
+      hasRegistry: 1
+      hideInEditor: 1
+      entitlements:
+        isAllowed: 1
+      isAssetStorePackage: 0
+      datePublishedTicks: 636898903000000000
+      documentationUrl: 
+      hasRepository: 1
+      repository:
+        type: git
+        url: https://github.com/Unity-Technologies/com.unity.progrids.git
+        revision: 8c99f5e31791759316786f77c64cfa9b57f03ff6
         path: 
     - packageId: com.unity.test-framework@1.1.29
       testable: 0
@@ -586,15 +794,19 @@ m_PackageAssets:
         - 1.1.29
         - 1.1.30
         - 1.1.31
+        - 1.1.33
+        - 2.0.1-exp.1
         - 2.0.1-pre.12
         - 2.0.1-pre.18
         compatible:
         - 1.1.29
         - 1.1.30
         - 1.1.31
+        - 1.1.33
+        - 2.0.1-exp.1
         - 2.0.1-pre.12
         - 2.0.1-pre.18
-        verified: 1.1.31
+        verified: 1.1.33
       dependencies:
       - name: com.unity.ext.nunit
         version: 1.0.6
@@ -2797,6 +3009,7 @@ m_PackageAssets:
         - 1.0.5
         - 1.0.6
         - 2.0.2
+        - 2.0.3
         compatible:
         - 0.1.5-preview
         - 0.1.6-preview
@@ -2805,6 +3018,7 @@ m_PackageAssets:
         - 1.0.5
         - 1.0.6
         - 2.0.2
+        - 2.0.3
         verified: 1.0.6
       dependencies: []
       resolvedDependencies: []
@@ -2873,6 +3087,7 @@ m_PackageAssets:
         - 2.0.1-preview.1
         - 2.0.2
         - 3.0.1
+        - 3.0.2
         compatible:
         - 1.0.0-preview.2
         - 1.0.0-preview.3
@@ -2886,6 +3101,7 @@ m_PackageAssets:
         - 2.0.1-preview.1
         - 2.0.2
         - 3.0.1
+        - 3.0.2
         verified: 2.0.2
       dependencies: []
       resolvedDependencies: []
@@ -2943,6 +3159,12 @@ m_PackageAssets:
         - 1.1.0-pre.41
         - 1.1.0-pre.69
         - 1.2.0
+        - 1.3.1
+        - 1.3.2
+        - 1.4.0
+        - 1.4.1
+        - 1.4.2
+        - 1.4.3
         compatible:
         - 1.0.1
         - 1.1.0-pre.7
@@ -2953,6 +3175,12 @@ m_PackageAssets:
         - 1.1.0-pre.41
         - 1.1.0-pre.69
         - 1.2.0
+        - 1.3.1
+        - 1.3.2
+        - 1.4.0
+        - 1.4.1
+        - 1.4.2
+        - 1.4.3
         verified: 1.0.1
       dependencies:
       - name: com.unity.modules.unitywebrequest

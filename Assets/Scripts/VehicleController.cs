@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class VehicleController : MonoBehaviour{
     [Header("Tank power settings")]
     public float turnTorque = 4f;
+    public float turnMultiplier = 1f;
     public float driveTorque = 4f;
     public float brakeStrength = 2.5f;
     public float maxRot = 5f;
@@ -148,9 +149,9 @@ public class VehicleController : MonoBehaviour{
         
         if(height<= maxHeight){
             if(driveInput<0){
-                rigidBody.AddTorque(transform.up * -turnInput * turnTorque * Time.deltaTime);
+                //rigidBody.AddTorque(transform.up * -turnInput * turnTorque * Time.deltaTime);
             }else{
-                rigidBody.AddTorque(transform.up * turnInput * turnTorque * Time.deltaTime);
+                //rigidBody.AddTorque(transform.up * turnInput * turnTorque * Time.deltaTime);
             }
 
             if(turnInput==0 && turnInputOff){
@@ -161,15 +162,16 @@ public class VehicleController : MonoBehaviour{
                 turnInputOff = false;
             }else if(turnInput==0f){
                 //rigidBody.angularDrag=1.0f;
-                rigidBody.angularVelocity *= 0.6f;
+                //rigidBody.angularVelocity *= 0.6f;
                 //rigidBody.angularDrag *= 0.7f;
+                rigidBody.angularVelocity = transform.up * 0;
                 //Debug.Log(rigidBody.angularDrag.ToString());
                 //rigidBody.constraints = RigidbodyConstraints.None;
             }else{
-                rigidBody.angularDrag=0.1f;
+                //rigidBody.angularDrag=0.1f;
             }
         }else{
-            rigidBody.angularDrag=0.1f;
+            //rigidBody.angularDrag=0.1f;
         }
         
 
@@ -204,7 +206,7 @@ public class VehicleController : MonoBehaviour{
 
         if(height > maxHeight){
             rigidBody.drag = 0.1f;
-            rigidBody.angularDrag = 0.1f;
+            //rigidBody.angularDrag = 0.1f;
         }
 
         curAngle = Vector3.Angle(Vector3.up, transform.up);
@@ -249,7 +251,7 @@ public class VehicleController : MonoBehaviour{
         }else{
             _mainCamera = mainCam;
         }
-        //get gun object
+        //get gun shoot pos object
         GameObject _gun = gunGO;
         float _maxCrosshairDistance = 5000f;
         Vector3 _forwardGun = _gun.transform.position + (_gun.transform.forward * _maxCrosshairDistance);
