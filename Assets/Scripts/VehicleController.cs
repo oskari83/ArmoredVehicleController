@@ -6,12 +6,10 @@ using UnityEngine.UI;
 public class VehicleController : MonoBehaviour{
     [Header("Tank power settings")]
     public float turnTorque = 4f;
-    public float turnMultiplier = 1f;
     public float driveTorque = 4f;
     public float brakeStrength = 2.5f;
-    public float maxRot = 5f;
-    public float maxSpeed = 40f;
-    public float numMagic = 0.01f;
+    public float maxRot = 0.75f;
+    public float maxSpeed = 20f;
 
     [Header("Tank Turning Friction")]
     public float movementSidewaysFriction = 2.2f;
@@ -141,31 +139,30 @@ public class VehicleController : MonoBehaviour{
     private void FixedUpdate() {
         rigidBody.centerOfMass = new Vector3(0, centerOfMassYOffset, 0);
         localZVelocity = transform.InverseTransformDirection(rigidBody.velocity).z;
-        Vector3 av = rigidBody.angularVelocity;
-        Vector3 localAngularVelocity = transform.InverseTransformDirection(av);
 
         //set boolean to indicate whether we are on the ground
         GetHeight();
         grounded = (height<= maxHeight) ? true : false;
 
+        //only turn if we are on the groun
         if(grounded){
             if(driveInput<0){
-                rigidBody.AddTorque(transform.up * -turnInput * turnTorque * Time.deltaTime);
+                rigidBody.AddTorque(transform.up * -turnInput * turnTorque * Time.fixedDeltaTime);
             }else{
-                rigidBody.AddTorque(transform.up * turnInput * turnTorque * Time.deltaTime);
+                rigidBody.AddTorque(transform.up * turnInput * turnTorque * Time.fixedDeltaTime);
             }
 
             if(turnInput==0){
-                // Calculate damping torques based on that angular velocity and apply it in the opposite direction (negative)
-                Vector3 dampingTorque = localAngularVelocity * -dampingCoefficient;
-                rigidBody.AddRelativeTorque(dampingTorque);
-                //rigidBody.angularVelocity *= 0.6f;
+                //for responsive feel so that tank doest continue turning after input
+                rigidBody.AddTorque(transform.up * turnTorque * Time.fixedDeltaTime * -rigidBody.angularVelocity.y);
             }
         }
+        
 
         //show our velocity and angular velocity in inspector
         aVeL = rigidBody.angularVelocity.magnitude;
         VeL = rigidBody.velocity.magnitude * 3.6f;
+
         
         if(driveInput!=0f){
             SetLeftTrackTorque(driveInput * driveTorque);
@@ -182,6 +179,7 @@ public class VehicleController : MonoBehaviour{
         rigidBody.velocity = Vector3.ClampMagnitude(rigidBody.velocity, maxSpeed);
         rigidBody.angularVelocity = Vector3.ClampMagnitude(rigidBody.angularVelocity, maxRot);
         
+        
         if((driveInput==0 && turnInput==0) || (driveInput<0f && rigidBody.velocity.magnitude>5f)){
             rigidBody.drag = 2;
             SetBrakes(brakeStrength);
@@ -192,6 +190,7 @@ public class VehicleController : MonoBehaviour{
             rigidBody.drag = 0.1f;
             SetBrakes(0);
         }
+        
 
         //get out current climb angle
         GetClimbAngle();
@@ -248,7 +247,7 @@ public class VehicleController : MonoBehaviour{
         }
         //get gun shoot pos object
         GameObject _gun = gunGO;
-        float _maxCrosshairDistance = 5000f;
+        float _maxCrosshairDistance = 10000f;
         Vector3 _forwardGun = _gun.transform.position + (_gun.transform.forward * _maxCrosshairDistance);
         // check for obstacles in front of the cannon
         Ray crossHairRay;

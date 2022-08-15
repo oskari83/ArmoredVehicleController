@@ -120,11 +120,12 @@ public class CameraController : MonoBehaviour{
             sniperRigGun.transform.LookAt(stabilizerPos2);
             sniperRigGun.transform.localRotation = Quaternion.Euler(SniperRigGunEulerSingleAxis());
 
-            //control snipercam
+            //control snipercam (I dont know why 61 is the float there)
             camRotY = sniperSpeedY * _mouseY * (sniperCamera.fieldOfView/61f);
             camRotX = sniperSpeedX * _mouseX * (sniperCamera.fieldOfView/61f);
-            sniperRig.transform.eulerAngles += new Vector3(0f, camRotX, 0f);
-            sniperRigGun.transform.eulerAngles -= new Vector3(camRotY, 0f, 0f);
+            // localEulerAngles so that when our tank is rotated e.g. on a hill the mouse movement is natural
+            sniperRig.transform.localEulerAngles += new Vector3(0f, camRotX, 0f);
+            sniperRigGun.transform.localEulerAngles -= new Vector3(camRotY, 0f, 0f);
             //attempt at clamping
             Vector3 clampthis = sniperRigGun.transform.localEulerAngles;
             if(clampthis.x>minGunAngle && clampthis.x<300f){ clampthis.x=minGunAngle;}

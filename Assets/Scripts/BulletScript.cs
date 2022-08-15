@@ -31,7 +31,7 @@ public class BulletScript : MonoBehaviour{
             //Debug.DrawLine(transform.position, hit2.point, Color.magenta);
             float dst = hit2.distance;
             dst *=dst;
-            if(dst<(vel.sqrMagnitude/50f)){
+            if(dst<(vel.sqrMagnitude/10000f)){
                 Debug.Log("hit something");
                 Destroy(gameObject);
             }
