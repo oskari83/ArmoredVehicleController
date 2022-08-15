@@ -40,7 +40,10 @@ public class VehicleController : MonoBehaviour{
     public GameObject sniperGun;
     public Camera sniperCam;
 
+    [HideInInspector]
+    public Camera cameraInUse;
     private Camera mainCam;
+
 
     [Header("Inputs and velocity")]
     public float aVeL;
@@ -49,7 +52,6 @@ public class VehicleController : MonoBehaviour{
     public float maxHeight = 1.15f;
     private float driveInput;
     private float turnInput;
-    private bool turnInputOff=false;
     
     private float lastAngle;
     private float curAngle;
@@ -89,10 +91,14 @@ public class VehicleController : MonoBehaviour{
     private Vector3 finalCrosshairPos;
     #endregion
 
+    private bool grounded = true;
+    public float dampingCoefficient = 100000f;
+
     private void Start(){
         if(mainCam==null){
             mainCam = camController.ourCamera;
         }
+        cameraInUse = mainCam;
         rigidBody = this.GetComponent<Rigidbody>();
         leftTrackMaterial = leftTrack.GetComponent<Renderer>().material;
         rightTrackMaterial = rightTrack.GetComponent<Renderer>().material;
@@ -118,14 +124,13 @@ public class VehicleController : MonoBehaviour{
         turnTorque = turnTorque * 1000000f;
         driveTorque = driveTorque * 100f;
         brakeStrength = brakeStrength * 1000f;
+
+        rigidBody.maxAngularVelocity = maxRot;
     }
 
     private void Update() {
         driveInput = Mathf.Clamp(Input.GetAxisRaw("Vertical"), -1, 1);
         turnInput = Mathf.Clamp(Input.GetAxisRaw("Horizontal"), -1, 1);
-        if(Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.D)){
-            turnInputOff = true;
-        }
         brakeInput = Input.GetKey("space");
 
         targetPosition = TurretTargetPosition;
@@ -136,44 +141,27 @@ public class VehicleController : MonoBehaviour{
     private void FixedUpdate() {
         rigidBody.centerOfMass = new Vector3(0, centerOfMassYOffset, 0);
         localZVelocity = transform.InverseTransformDirection(rigidBody.velocity).z;
+        Vector3 av = rigidBody.angularVelocity;
+        Vector3 localAngularVelocity = transform.InverseTransformDirection(av);
 
-        //how high off the ground are we
-        RaycastHit hit;
-        Ray downRay = new Ray(transform.position, -transform.up);
-        //Debug.DrawRay(downRay.origin,downRay.direction * 100, Color.red);
-        if (Physics.Raycast(downRay, out hit)){
-            height = hit.distance;
-        }
+        //set boolean to indicate whether we are on the ground
+        GetHeight();
+        grounded = (height<= maxHeight) ? true : false;
 
-        rigidBody.maxAngularVelocity = maxRot;
-        
-        if(height<= maxHeight){
+        if(grounded){
             if(driveInput<0){
-                //rigidBody.AddTorque(transform.up * -turnInput * turnTorque * Time.deltaTime);
+                rigidBody.AddTorque(transform.up * -turnInput * turnTorque * Time.deltaTime);
             }else{
-                //rigidBody.AddTorque(transform.up * turnInput * turnTorque * Time.deltaTime);
+                rigidBody.AddTorque(transform.up * turnInput * turnTorque * Time.deltaTime);
             }
 
-            if(turnInput==0 && turnInputOff){
-                //rigidBody.angularDrag=20.0f;
-                //Debug.Log("here");
-                //rigidBody.angularVelocity = Vector3.zero;
-                //rigidBody.constraints = RigidbodyConstraints.FreezeRotationY;
-                turnInputOff = false;
-            }else if(turnInput==0f){
-                //rigidBody.angularDrag=1.0f;
+            if(turnInput==0){
+                // Calculate damping torques based on that angular velocity and apply it in the opposite direction (negative)
+                Vector3 dampingTorque = localAngularVelocity * -dampingCoefficient;
+                rigidBody.AddRelativeTorque(dampingTorque);
                 //rigidBody.angularVelocity *= 0.6f;
-                //rigidBody.angularDrag *= 0.7f;
-                rigidBody.angularVelocity = transform.up * 0;
-                //Debug.Log(rigidBody.angularDrag.ToString());
-                //rigidBody.constraints = RigidbodyConstraints.None;
-            }else{
-                //rigidBody.angularDrag=0.1f;
             }
-        }else{
-            //rigidBody.angularDrag=0.1f;
         }
-        
 
         //show our velocity and angular velocity in inspector
         aVeL = rigidBody.angularVelocity.magnitude;
@@ -190,9 +178,10 @@ public class VehicleController : MonoBehaviour{
             SetRightTrackTorque(0f);
         }
         
-        //limit our max velocity
+        //limit our max velocity and angularvelocity
         rigidBody.velocity = Vector3.ClampMagnitude(rigidBody.velocity, maxSpeed);
-
+        rigidBody.angularVelocity = Vector3.ClampMagnitude(rigidBody.angularVelocity, maxRot);
+        
         if((driveInput==0 && turnInput==0) || (driveInput<0f && rigidBody.velocity.magnitude>5f)){
             rigidBody.drag = 2;
             SetBrakes(brakeStrength);
@@ -204,19 +193,26 @@ public class VehicleController : MonoBehaviour{
             SetBrakes(0);
         }
 
-        if(height > maxHeight){
-            rigidBody.drag = 0.1f;
-            //rigidBody.angularDrag = 0.1f;
-        }
-
-        curAngle = Vector3.Angle(Vector3.up, transform.up);
+        //get out current climb angle
+        GetClimbAngle();
         if(curAngle>20f && height<= maxHeight && lastAngle<curAngle){
             rigidBody.drag=curAngle*0.03f;
         }
         lastAngle = curAngle;
-        //UpdateTurret();
+    }
 
-        //Debug.Log(rigidBody.angularVelocity.y);
+    private void GetHeight(){
+        //how high off the ground are we
+        RaycastHit hit;
+        Ray downRay = new Ray(transform.position, -transform.up);
+        //Debug.DrawRay(downRay.origin,downRay.direction * 100, Color.red);
+        if (Physics.Raycast(downRay, out hit)){
+            height = hit.distance;
+        }
+    }
+
+    private void GetClimbAngle(){
+        curAngle = Vector3.Angle(Vector3.up, transform.up);
     }
 
     #region Torque, brake
@@ -245,11 +241,10 @@ public class VehicleController : MonoBehaviour{
 
     #region crosshair
     private void CrosshairMovement(){
-        Camera _mainCamera = mainCam;
         if(camController.inSniperMode){
-            _mainCamera = sniperCam;
+            cameraInUse = sniperCam;
         }else{
-            _mainCamera = mainCam;
+            cameraInUse = mainCam;
         }
         //get gun shoot pos object
         GameObject _gun = gunGO;
@@ -260,21 +255,21 @@ public class VehicleController : MonoBehaviour{
         crossHairRay = new Ray(_gun.transform.position,  _gun.transform.forward);
         if (Physics.Raycast(crossHairRay, out RaycastHit hit, _maxCrosshairDistance)){
             _forwardGun = hit.point;
-            Debug.DrawLine(crossHairRay.origin, hit.point, Color.green);
+            //Debug.DrawLine(crossHairRay.origin, hit.point, Color.green);
         }
         // placing the target's sprite in front of the cannon
-        Quaternion _lookToHit = Quaternion.LookRotation(_forwardGun - _mainCamera.transform.position);
-        Vector3 _crosshairPos = _mainCamera.transform.position + (_lookToHit * Vector3.forward);
+        Quaternion _lookToHit = Quaternion.LookRotation(_forwardGun - cameraInUse.transform.position);
+        Vector3 _crosshairPos = cameraInUse.transform.position + (_lookToHit * Vector3.forward);
         // disable the sight if the is not in front of the camera
-        float _angleBetweenGunAndCamera = Mathf.Abs(Vector3.Angle(_gun.transform.forward, _mainCamera.transform.forward));
-        //crossHair.GetComponent<Image>().enabled = _angleBetweenGunAndCamera > _mainCamera.fieldOfView ? false : true;
-        if(_angleBetweenGunAndCamera > _mainCamera.fieldOfView){
+        float _angleBetweenGunAndCamera = Mathf.Abs(Vector3.Angle(_gun.transform.forward, cameraInUse.transform.forward));
+        //crossHair.GetComponent<Image>().enabled = _angleBetweenGunAndCamera > cameraInUse.fieldOfView ? false : true;
+        if(_angleBetweenGunAndCamera > cameraInUse.fieldOfView){
             crossHair.SetActive(false);
         }else{
             crossHair.SetActive(true);
         }
         // convert the world position of the crosshairs to the position of the screen (smoothed)
-        finalCrosshairPos = Vector3.Lerp(finalCrosshairPos, _mainCamera.WorldToScreenPoint(_crosshairPos), Time.deltaTime * 10f);
+        finalCrosshairPos = Vector3.Lerp(finalCrosshairPos, cameraInUse.WorldToScreenPoint(_crosshairPos), Time.deltaTime * 10f);
         crossHair.transform.position = finalCrosshairPos;
     }
     #endregion
