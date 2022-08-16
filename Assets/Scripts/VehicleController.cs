@@ -37,6 +37,9 @@ public class VehicleController : MonoBehaviour{
     public GameObject sniperTurret;
     public GameObject sniperGun;
     public Camera sniperCam;
+    public GameObject visualGun;
+    public GameObject visualMuzzle;
+    public GameObject visualTurret;
 
     [HideInInspector]
     public Camera cameraInUse;
@@ -212,6 +215,18 @@ public class VehicleController : MonoBehaviour{
 
     private void GetClimbAngle(){
         curAngle = Vector3.Angle(Vector3.up, transform.up);
+    }
+
+    public void EnableVisuals(){
+        visualGun.GetComponent<MeshRenderer>().enabled = true;
+        visualMuzzle.GetComponent<MeshRenderer>().enabled = true;
+        visualTurret.GetComponent<MeshRenderer>().enabled = true;
+    }
+
+    public void DisableVisuals(){
+        visualGun.GetComponent<MeshRenderer>().enabled = false;
+        visualMuzzle.GetComponent<MeshRenderer>().enabled = false;
+        visualTurret.GetComponent<MeshRenderer>().enabled = false;
     }
 
     #region Torque, brake

@@ -41,11 +41,9 @@
      <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_MBT_Engine.cs" />
      <Compile Include="Assets/Assets/MMV/Samples/Scripts/WaypointsFollower.cs" />
      <Compile Include="Assets/Scripts/VehicleController.cs" />
-     <Compile Include="Assets/BulletCollisionScript.cs" />
      <Compile Include="Assets/Shared/Scripts/SimpleCharacterMotor.cs" />
      <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_MBT_WheelManager.cs" />
-     <Compile Include="Assets/Scripts/SniperRigScript.cs" />
-     <Compile Include="Assets/UGUIKit Flat/Content/Scripts/bl_ProgressBar.cs" />
+     <Compile Include="Assets/Assets/UGUIKit Flat/Content/Scripts/bl_ProgressBar.cs" />
      <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_MBT_Vehicle.cs" />
      <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_Shooter.cs" />
      <Compile Include="Assets/Scripts/SimpleCameraController.cs" />
@@ -57,57 +55,57 @@
      <Compile Include="Assets/Assets/SpookyLabs/Scorpion/Scripts/CameraOrbit.cs" />
      <Compile Include="Assets/TutorialInfo/Scripts/Readme.cs" />
      <Compile Include="Assets/Assets/MMV/Samples/Scripts/CinematicController.cs" />
-     <Compile Include="Assets/UGUICrosshair/Content/Scripts/bl_UCrosshairUtils.cs" />
+     <Compile Include="Assets/Assets/UGUICrosshair/Content/Scripts/bl_UCrosshairUtils.cs" />
      <Compile Include="Assets/Assets/MMV/Samples/Scripts/NavMeshAI.cs" />
      <Compile Include="Assets/Scripts/CameraController.cs" />
-     <Compile Include="Assets/UGUICrosshair/Content/Scripts/bl_UCrosshairInfo.cs" />
+     <Compile Include="Assets/Assets/UGUICrosshair/Content/Scripts/bl_UCrosshairInfo.cs" />
      <Compile Include="Assets/Shared/Scripts/AdjustTimeScale.cs" />
-     <Compile Include="Assets/UGUICrosshair/Content/Scripts/bl_UCrosshair.cs" />
+     <Compile Include="Assets/Assets/UGUICrosshair/Content/Scripts/bl_UCrosshair.cs" />
      <Compile Include="Assets/Assets/MMV/Samples/Scripts/CameraFollower.cs" />
      <Compile Include="Assets/Shared/Ramps/Runtime/RampAsset.cs" />
      <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_MBT_InputVehicle.cs" />
-     <Compile Include="Assets/UGUIKit Flat/Content/Scripts/bl_ToggleSwitcher.cs" />
+     <Compile Include="Assets/Assets/UGUIKit Flat/Content/Scripts/bl_ToggleSwitcher.cs" />
      <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_MBT_Wheel.cs" />
-     <Compile Include="Assets/UGUICrosshair/Content/Scripts/bl_UCrosshairInput.cs" />
+     <Compile Include="Assets/Assets/UGUICrosshair/Content/Scripts/bl_UCrosshairInput.cs" />
      <Compile Include="Assets/Scripts/BulletScript.cs" />
      <Compile Include="Assets/Assets/SpookyLabs/Scorpion/Scripts/VehicleLights.cs" />
      <Compile Include="Assets/Shared/Scripts/SimpleCameraController.cs" />
      <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_MBT_ControllVehicle.cs" />
      <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_CameraController.cs" />
      <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_Bullet.cs" />
-     <Compile Include="Assets/EffectExamples/Misc Effects/Scripts/SpawnEffect.cs" />
+     <Compile Include="Assets/Assets/EffectExamples/Misc Effects/Scripts/SpawnEffect.cs" />
      <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_ShootController.cs" />
      <Compile Include="Assets/Scripts/Wall.cs" />
      <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_TurretController.cs" />
      <Compile Include="Assets/Scripts/ShootingController.cs" />
      <Compile Include="Assets/Assets/MMV/System/Scripts/MMV_UiManager.cs" />
-     <Compile Include="Assets/ScalableCircle.cs" />
-     <None Include="Assets/TextMesh Pro/Resources/Shaders/TMPro.cginc" />
-     <None Include="Assets/TextMesh Pro/Resources/Shaders/TMP_SDF-Mobile Overlay.shader" />
-     <None Include="Assets/TextMesh Pro/Resources/Shaders/TMP_Bitmap.shader" />
-     <None Include="Assets/UGUICrosshair/Documentation/ReadMe.txt" />
-     <None Include="Assets/UGUIKit Flat/ReadMe.txt" />
+     <Compile Include="Assets/UIController.cs" />
+     <None Include="Assets/Assets/TextMesh Pro/Resources/Shaders/TMPro.cginc" />
+     <None Include="Assets/Assets/TextMesh Pro/Resources/Shaders/TMP_SDF-Mobile Overlay.shader" />
+     <None Include="Assets/Assets/TextMesh Pro/Resources/Shaders/TMP_Bitmap.shader" />
+     <None Include="Assets/Assets/UGUICrosshair/Documentation/ReadMe.txt" />
+     <None Include="Assets/Assets/UGUIKit Flat/ReadMe.txt" />
      <None Include="Assets/QuickOutline/Resources/Shaders/OutlineMask.shader" />
-     <None Include="Assets/EffectExamples/Misc Effects/Prefabs/Readme_Dissolve_Respawn_.txt" />
+     <None Include="Assets/Assets/EffectExamples/Misc Effects/Prefabs/Readme_Dissolve_Respawn_.txt" />
      <None Include="Assets/Scripts/todo.txt" />
-     <None Include="Assets/TextMesh Pro/Resources/Shaders/TMP_SDF-Surface-Mobile.shader" />
-     <None Include="Assets/EffectExamples/Magic Effects/Shaders/Ice.shader" />
-     <None Include="Assets/EffectExamples/Misc Effects/Shaders/Respawn.shader" />
-     <None Include="Assets/TextMesh Pro/Resources/Shaders/TMP_SDF-Surface.shader" />
-     <None Include="Assets/TextMesh Pro/Resources/Shaders/TMP_SDF.shader" />
-     <None Include="Assets/TextMesh Pro/Resources/LineBreaking Leading Characters.txt" />
-     <None Include="Assets/TextMesh Pro/Resources/Shaders/TMPro_Properties.cginc" />
+     <None Include="Assets/Assets/TextMesh Pro/Resources/Shaders/TMP_SDF-Surface-Mobile.shader" />
+     <None Include="Assets/Assets/EffectExamples/Magic Effects/Shaders/Ice.shader" />
+     <None Include="Assets/Assets/EffectExamples/Misc Effects/Shaders/Respawn.shader" />
+     <None Include="Assets/Assets/TextMesh Pro/Resources/Shaders/TMP_SDF-Surface.shader" />
+     <None Include="Assets/Assets/TextMesh Pro/Resources/Shaders/TMP_SDF.shader" />
+     <None Include="Assets/Assets/TextMesh Pro/Resources/LineBreaking Leading Characters.txt" />
+     <None Include="Assets/Assets/TextMesh Pro/Resources/Shaders/TMPro_Properties.cginc" />
      <None Include="Assets/QuickOutline/Readme.txt" />
-     <None Include="Assets/TextMesh Pro/Resources/Shaders/TMPro_Surface.cginc" />
-     <None Include="Assets/TextMesh Pro/Resources/LineBreaking Following Characters.txt" />
-     <None Include="Assets/TextMesh Pro/Resources/Shaders/TMP_SDF-Mobile Masking.shader" />
-     <None Include="Assets/EffectExamples/Misc Effects/Shaders/FireFly.shader" />
-     <None Include="Assets/TextMesh Pro/Resources/Shaders/TMP_SDF Overlay.shader" />
-     <None Include="Assets/TextMesh Pro/Resources/Shaders/TMP_Bitmap-Mobile.shader" />
+     <None Include="Assets/Assets/TextMesh Pro/Resources/Shaders/TMPro_Surface.cginc" />
+     <None Include="Assets/Assets/TextMesh Pro/Resources/LineBreaking Following Characters.txt" />
+     <None Include="Assets/Assets/TextMesh Pro/Resources/Shaders/TMP_SDF-Mobile Masking.shader" />
+     <None Include="Assets/Assets/EffectExamples/Misc Effects/Shaders/FireFly.shader" />
+     <None Include="Assets/Assets/TextMesh Pro/Resources/Shaders/TMP_SDF Overlay.shader" />
+     <None Include="Assets/Assets/TextMesh Pro/Resources/Shaders/TMP_Bitmap-Mobile.shader" />
      <None Include="Assets/QuickOutline/Resources/Shaders/OutlineFill.shader" />
-     <None Include="Assets/TextMesh Pro/Resources/Shaders/TMP_SDF-Mobile.shader" />
-     <None Include="Assets/EffectExamples/Misc Effects/Shaders/Dissolve.shader" />
-     <None Include="Assets/TextMesh Pro/Resources/Shaders/TMP_Sprite.shader" />
+     <None Include="Assets/Assets/TextMesh Pro/Resources/Shaders/TMP_SDF-Mobile.shader" />
+     <None Include="Assets/Assets/EffectExamples/Misc Effects/Shaders/Dissolve.shader" />
+     <None Include="Assets/Assets/TextMesh Pro/Resources/Shaders/TMP_Sprite.shader" />
     <Reference Include="UnityEngine">
         <HintPath>/Applications/Unity/Hub/Editor/2020.3.22f1/Unity.app/Contents/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>
@@ -684,13 +682,17 @@
       <Project>{0b22576f-a810-b3cf-6f21-644db97d6526}</Project>
       <Name>Unity.VSCode.Editor</Name>
     </ProjectReference>
-    <ProjectReference Include="Unity.2D.Tilemap.Editor.csproj">
-      <Project>{0207b5a8-97b0-ef15-0da7-f6e36e707a0f}</Project>
-      <Name>Unity.2D.Tilemap.Editor</Name>
+    <ProjectReference Include="Unity.InternalAPIEditorBridge.003.csproj">
+      <Project>{1f20e21d-f357-2953-cb56-ed075bc784dc}</Project>
+      <Name>Unity.InternalAPIEditorBridge.003</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.Postprocessing.Runtime.csproj">
       <Project>{89d8a673-9a9c-09ed-ad66-77e71b96ef83}</Project>
       <Name>Unity.Postprocessing.Runtime</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.2D.Tilemap.Editor.csproj">
+      <Project>{0207b5a8-97b0-ef15-0da7-f6e36e707a0f}</Project>
+      <Name>Unity.2D.Tilemap.Editor</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.TextMeshPro.Editor.csproj">
       <Project>{e3e45636-efc8-e666-6549-047702d1854e}</Project>
@@ -711,6 +713,18 @@
     <ProjectReference Include="Unity.TextMeshPro.csproj">
       <Project>{0ba20da1-18f6-6ee4-536b-11a0884b80db}</Project>
       <Name>Unity.TextMeshPro</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.VectorGraphics.Editor.csproj">
+      <Project>{85d5648f-6194-ab79-6b7d-ecd91f0208f9}</Project>
+      <Name>Unity.VectorGraphics.Editor</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.InternalAPIEngineBridge.003.csproj">
+      <Project>{cc440d2c-68fe-0fec-1488-2cb21eebe2ed}</Project>
+      <Name>Unity.InternalAPIEngineBridge.003</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.VectorGraphics.csproj">
+      <Project>{70f1d8ce-3f1d-094e-1094-b34cc767a343}</Project>
+      <Name>Unity.VectorGraphics</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.2D.Sprite.Editor.csproj">
       <Project>{2de0dd9e-6af6-1199-53d4-cd444b530ee8}</Project>
@@ -743,22 +757,6 @@
     <ProjectReference Include="Unity.ProGrids.csproj">
       <Project>{4a0425d9-14a4-b04f-e51a-db98929caf0d}</Project>
       <Name>Unity.ProGrids</Name>
-    </ProjectReference>
-    <ProjectReference Include="Unity.InternalAPIEditorBridge.003.csproj">
-      <Project>{1f20e21d-f357-2953-cb56-ed075bc784dc}</Project>
-      <Name>Unity.InternalAPIEditorBridge.003</Name>
-    </ProjectReference>
-    <ProjectReference Include="Unity.VectorGraphics.csproj">
-      <Project>{70f1d8ce-3f1d-094e-1094-b34cc767a343}</Project>
-      <Name>Unity.VectorGraphics</Name>
-    </ProjectReference>
-    <ProjectReference Include="Unity.InternalAPIEngineBridge.003.csproj">
-      <Project>{cc440d2c-68fe-0fec-1488-2cb21eebe2ed}</Project>
-      <Name>Unity.InternalAPIEngineBridge.003</Name>
-    </ProjectReference>
-    <ProjectReference Include="Unity.VectorGraphics.Editor.csproj">
-      <Project>{85d5648f-6194-ab79-6b7d-ecd91f0208f9}</Project>
-      <Name>Unity.VectorGraphics.Editor</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

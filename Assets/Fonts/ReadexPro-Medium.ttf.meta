@@ -1,0 +1,25 @@
+fileFormatVersion: 2
+guid: 0f0e0692f685449a4b72eeace51c1e26
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Readex Pro
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 0b6e3dae64c4e4feeb736c72eddddcc7, type: 3}
+  - {fileID: 12800000, guid: 331361e9307594929b89e010a93e3e33, type: 3}
+  - {fileID: 12800000, guid: d3883cdad12604a6882188d0b474b3c5, type: 3}
+  - {fileID: 12800000, guid: 7dbc310cf16b747d3bc3391e38c74aa2, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

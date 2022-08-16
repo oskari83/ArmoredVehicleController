@@ -8,12 +8,14 @@ public class ShootingController : MonoBehaviour{
 
     [Header("Bullet Prefab")]
     public GameObject bullet;
+
+    public int[] bulletsOfT = new int [3] {5,4,3};
+    public int selectedBullet = 0;
     
     public RectTransform crosshairCircleRectTransform;
-
     private AudioSource shootAudioSource;
-
     private VehicleController vehicleController;
+    private UIController uicontroller;
     private GameObject gunObject;
     private GameObject gun2;
     private Vector3 crossPos;
@@ -22,9 +24,7 @@ public class ShootingController : MonoBehaviour{
     public GameObject crosshairSpread;
     public GameObject crosshairSpreadx2;
 
-    public float fx;
-    public float fy;
-    public float fz;
+    private GameObject lastSelected;
 
     private float scaleFactor = 0.018f / 16.557f;
 
@@ -44,6 +44,7 @@ public class ShootingController : MonoBehaviour{
 
     private void Start(){
         vehicleController = gameObject.GetComponent<VehicleController>();
+        uicontroller = gameObject.GetComponent<UIController>();
         shootAudioSource = gameObject.GetComponent<AudioSource>();
         gunObject = vehicleController.gunShootPos;
         gun2 = vehicleController.gunGO;
@@ -82,6 +83,21 @@ public class ShootingController : MonoBehaviour{
         crosshairCircleRectTransform.localScale = finalPos;
 
         acceleration = (vehicleController.VeL - lastVel) / Time.fixedDeltaTime;
+
+        //show outline when aiming at tank
+        Ray tankRay;
+        tankRay = new Ray(_mainCamera.transform.position,  _mainCamera.transform.forward);
+        if (Physics.Raycast(tankRay, out RaycastHit hit5, 5000f)){
+            if(hit5.transform.root.gameObject.tag=="Shootable"){
+                lastSelected = hit5.transform.root.gameObject;
+                hit5.transform.root.gameObject.GetComponent<Outline>().enabled = true;
+            }else{
+                if(lastSelected!=null){
+                    lastSelected.GetComponent<Outline>().enabled = false;
+                }
+            }
+            //Debug.Log(hit5.transform.root.gameObject.name);
+        }
     }
 
     private void FixedUpdate(){
@@ -123,7 +139,13 @@ public class ShootingController : MonoBehaviour{
         spreadOnX *=spreadOnY;
         Quaternion rot = gunObject.transform.rotation;
         rot *= spreadOnX;
+        //actually instantiates object
         GameObject bul = Instantiate(bullet, gunObject.transform.position, rot);
+
+        //removes one from bullet amount
+        bulletsOfT[selectedBullet]-=1;
+        uicontroller.UpdateBulletCountUI();
+        //plays sound
         shootAudioSource.Play();
     }
 

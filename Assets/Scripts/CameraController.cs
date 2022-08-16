@@ -79,12 +79,19 @@ public class CameraController : MonoBehaviour{
 
         ControlCamera();
         ControlTurret(aimTarget);
-        //set camera position
+
+        //prevent main camera from clipping
         Vector3 _cameraPos = (vehicle.transform.position - (transform.forward * currentDistance)) + (Vector3.up * Height);
         if (Physics.Linecast(vehicle.transform.position, _cameraPos, out RaycastHit hit, ObstaclesLayer)){
             _cameraPos = (hit.point + transform.forward * CAMERA_COLLISION_FORWARD_HIT_OFFSET);
         }
         transform.position = _cameraPos;
+
+        if(inSniperMode){
+            vehicle.DisableVisuals();
+        }else{
+            vehicle.EnableVisuals();
+        }
     }
 
     private void ControlCamera(){
