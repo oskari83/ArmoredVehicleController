@@ -88,9 +88,9 @@ public class CameraController : MonoBehaviour{
         transform.position = _cameraPos;
 
         if(inSniperMode){
-            vehicle.DisableVisuals();
+            vehicle.ToggleGunAndTurretVisuals(false);
         }else{
-            vehicle.EnableVisuals();
+            vehicle.ToggleGunAndTurretVisuals(true);
         }
     }
 

@@ -161,12 +161,10 @@ public class VehicleController : MonoBehaviour{
             }
         }
         
-
         //show our velocity and angular velocity in inspector
         aVeL = rigidBody.angularVelocity.magnitude;
         VeL = rigidBody.velocity.magnitude * 3.6f;
 
-        
         if(driveInput!=0f){
             SetLeftTrackTorque(driveInput * driveTorque);
             SetRightTrackTorque(driveInput * driveTorque);
@@ -179,10 +177,11 @@ public class VehicleController : MonoBehaviour{
         }
         
         //limit our max velocity and angularvelocity
-        rigidBody.velocity = Vector3.ClampMagnitude(rigidBody.velocity, maxSpeed);
-        rigidBody.angularVelocity = Vector3.ClampMagnitude(rigidBody.angularVelocity, maxRot);
-        
-        
+        if(grounded){
+            rigidBody.angularVelocity = Vector3.ClampMagnitude(rigidBody.angularVelocity, maxRot);
+            rigidBody.velocity = Vector3.ClampMagnitude(rigidBody.velocity, maxSpeed);
+        }
+
         if((driveInput==0 && turnInput==0) || (driveInput<0f && rigidBody.velocity.magnitude>5f)){
             rigidBody.drag = 2;
             SetBrakes(brakeStrength);
@@ -190,17 +189,21 @@ public class VehicleController : MonoBehaviour{
             rigidBody.drag = 2f;
             SetBrakes(brakeStrength);
         }else{
-            rigidBody.drag = 0.1f;
+            rigidBody.drag = 0.01f;
             SetBrakes(0);
         }
         
-
-        //get out current climb angle
+        //get our current climb angle
         GetClimbAngle();
+
         if(curAngle>20f && height<= maxHeight && lastAngle<curAngle){
             rigidBody.drag=curAngle*0.03f;
         }
         lastAngle = curAngle;
+
+        if(!grounded){
+            rigidBody.drag = 0.1f;
+        }
     }
 
     private void GetHeight(){
@@ -217,28 +220,32 @@ public class VehicleController : MonoBehaviour{
         curAngle = Vector3.Angle(Vector3.up, transform.up);
     }
 
-    public void EnableVisuals(){
-        visualGun.GetComponent<MeshRenderer>().enabled = true;
-        visualMuzzle.GetComponent<MeshRenderer>().enabled = true;
-        visualTurret.GetComponent<MeshRenderer>().enabled = true;
-    }
-
-    public void DisableVisuals(){
-        visualGun.GetComponent<MeshRenderer>().enabled = false;
-        visualMuzzle.GetComponent<MeshRenderer>().enabled = false;
-        visualTurret.GetComponent<MeshRenderer>().enabled = false;
+    public void ToggleGunAndTurretVisuals(bool state){
+        visualGun.GetComponent<MeshRenderer>().enabled = state;
+        visualMuzzle.GetComponent<MeshRenderer>().enabled = state;
+        visualTurret.GetComponent<MeshRenderer>().enabled = state;
     }
 
     #region Torque, brake
     private void SetLeftTrackTorque(float speed) {
         for (int i = 0; i < leftWheelColliders.Length; i++) {
-            leftWheelColliders[i].motorTorque = speed;
+            if(VeL<0.25f){
+                //gives initial boost so that controls seem more responsive
+                leftWheelColliders[i].motorTorque = driveInput < 0f ? speed*20f : speed*5f;
+            }else{
+                leftWheelColliders[i].motorTorque = speed;
+            }
         }
     }
 
     private void SetRightTrackTorque(float speed) {
         for (int i = 0; i < rightWheelColliders.Length; i++) {
-            rightWheelColliders[i].motorTorque = speed;
+            if(VeL<0.25f){
+                //gives initial boost so that controls seem more responsive
+                rightWheelColliders[i].motorTorque = driveInput < 0f ? speed*20f : speed*5f;
+            }else{
+                rightWheelColliders[i].motorTorque = speed;
+            }
         }
     }
 
@@ -283,7 +290,8 @@ public class VehicleController : MonoBehaviour{
             crossHair.SetActive(true);
         }
         // convert the world position of the crosshairs to the position of the screen (smoothed)
-        finalCrosshairPos = Vector3.Lerp(finalCrosshairPos, cameraInUse.WorldToScreenPoint(_crosshairPos), Time.deltaTime * 10f);
+        finalCrosshairPos = Vector3.Lerp(finalCrosshairPos, cameraInUse.WorldToScreenPoint(_crosshairPos), Time.deltaTime * 20f);
+        //finalCrosshairPos = cameraInUse.WorldToScreenPoint(_crosshairPos);
         crossHair.transform.position = finalCrosshairPos;
     }
     #endregion
@@ -308,7 +316,9 @@ public class VehicleController : MonoBehaviour{
         Quaternion _turretFinalRotation = Quaternion.Euler(gameObject.transform.eulerAngles - _lookAtTurret.eulerAngles);
         Quaternion _gunFinalRotation = Quaternion.Euler(turretGO.transform.eulerAngles - _lookAtGun.eulerAngles);
 
-        if (Input.GetMouseButton(1)) { Debug.Log("holding down"); } else{
+        if(Input.GetMouseButton(1)){ 
+            Debug.Log("holding down"); 
+        }else{
             turretLocalRotation = Quaternion.Lerp(turretLocalRotation, _turretFinalRotation, _horizontalSpeed);
             gunLocalRotation = Quaternion.Lerp(gunLocalRotation, _gunFinalRotation, _verticalSpeed);
             Quaternion _turretRot = Quaternion.Euler(gameObject.transform.eulerAngles - turretLocalRotation.eulerAngles);

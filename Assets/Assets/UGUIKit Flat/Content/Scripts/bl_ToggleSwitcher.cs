@@ -74,7 +74,7 @@
             base.OnValidate();
             this.Set(this.m_IsOn, false);
             this.PlayEffect();
-            if ((PrefabUtility.GetPrefabType(this) != PrefabType.Prefab) && !Application.isPlaying)
+            if ((PrefabUtility.GetPrefabAssetType(this) != PrefabAssetType.Regular) && !Application.isPlaying)
             {
                 CanvasUpdateRegistry.RegisterCanvasElementForLayoutRebuild(this);
             }
