@@ -1,7 +1,5 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class VehicleController : MonoBehaviour{
     [Header("Tank power settings")]
@@ -46,18 +44,15 @@ public class VehicleController : MonoBehaviour{
     private Camera mainCam;
 
 
-    [Header("Inputs and velocity")]
+    [Header("Data")]
     public float aVeL;
     public float VeL;
     public float height;
     public float maxHeight = 1.15f;
-    private float driveInput;
-    private float turnInput;
     
     private float lastAngle;
     private float curAngle;
 
-    #region variables
     [Header("Tank Wheel and Visual/Sound effects")]
 	[SerializeField] private WheelCollider[] leftWheelColliders;
     [SerializeField] private WheelCollider[] rightWheelColliders;
@@ -80,7 +75,6 @@ public class VehicleController : MonoBehaviour{
 
 	private Vector3 colliderPos;
 	private Quaternion colliderRot;
-    private bool brakeInput;
     private int trackOffset;
     private Rigidbody rigidBody;
     private Material leftTrackMaterial;
@@ -90,17 +84,23 @@ public class VehicleController : MonoBehaviour{
     private float rightDirectionalMultiplier = 1.0f; 
     private float curPitch = 0.5f;
     private Vector3 finalCrosshairPos;
-    #endregion
 
     private bool grounded = true;
     public float dampingCoefficient = 100000f;
+
+	private InputController inputs;
 
     private void Start(){
         if(mainCam==null){
             mainCam = camController.ourCamera;
         }
         cameraInUse = mainCam;
+
         rigidBody = this.GetComponent<Rigidbody>();
+		rigidBody.centerOfMass = new Vector3(0, centerOfMassYOffset, 0);
+
+		inputs = GetComponent<InputController>();
+
         leftTrackMaterial = leftTrack.GetComponent<Renderer>().material;
         rightTrackMaterial = rightTrack.GetComponent<Renderer>().material;
 
@@ -130,67 +130,22 @@ public class VehicleController : MonoBehaviour{
     }
 
     private void Update() {
-        driveInput = Mathf.Clamp(Input.GetAxisRaw("Vertical"), -1, 1);
-        turnInput = Mathf.Clamp(Input.GetAxisRaw("Horizontal"), -1, 1);
-        brakeInput = Input.GetKey("space");
-
         targetPosition = TurretTargetPosition;
         CrosshairMovement();
         UpdateTurret();
     }
 
     private void FixedUpdate() {
-        rigidBody.centerOfMass = new Vector3(0, centerOfMassYOffset, 0);
-        localZVelocity = transform.InverseTransformDirection(rigidBody.velocity).z;
-
         //set boolean to indicate whether we are on the ground
         GetHeight();
         grounded = (height<= maxHeight) ? true : false;
 
-        //only turn if we are on the groun
-        if(grounded){
-            if(driveInput<0){
-                rigidBody.AddTorque(transform.up * -turnInput * turnTorque * Time.fixedDeltaTime);
-            }else{
-                rigidBody.AddTorque(transform.up * turnInput * turnTorque * Time.fixedDeltaTime);
-            }
-
-            if(turnInput==0){
-                //for responsive feel so that tank doest continue turning after input
-                rigidBody.AddTorque(transform.up * turnTorque * Time.fixedDeltaTime * -rigidBody.angularVelocity.y);
-            }
-        }
-        
-        //show our velocity and angular velocity in inspector
-        aVeL = rigidBody.angularVelocity.magnitude;
-        VeL = rigidBody.velocity.magnitude * 3.6f;
-
-        if(driveInput!=0f){
-            SetLeftTrackTorque(driveInput * driveTorque);
-            SetRightTrackTorque(driveInput * driveTorque);
-        }else if(turnInput!=0f){
-            SetLeftTrackTorque(0.01f * driveTorque);
-            SetRightTrackTorque(0.01f * driveTorque);
-        }else{
-            SetLeftTrackTorque(0f);
-            SetRightTrackTorque(0f);
-        }
+        MoveTank();
         
         //limit our max velocity and angularvelocity
         if(grounded){
             rigidBody.angularVelocity = Vector3.ClampMagnitude(rigidBody.angularVelocity, maxRot);
             rigidBody.velocity = Vector3.ClampMagnitude(rigidBody.velocity, maxSpeed);
-        }
-
-        if((driveInput==0 && turnInput==0) || (driveInput<0f && rigidBody.velocity.magnitude>5f)){
-            rigidBody.drag = 2;
-            SetBrakes(brakeStrength);
-        }else if (driveInput==0 && turnInput!=0 && rigidBody.velocity.magnitude>1f){
-            rigidBody.drag = 2f;
-            SetBrakes(brakeStrength);
-        }else{
-            rigidBody.drag = 0.01f;
-            SetBrakes(0);
         }
         
         //get our current climb angle
@@ -206,6 +161,44 @@ public class VehicleController : MonoBehaviour{
         }
     }
 
+	private void MoveTank(){
+		//only turn if we are on the groun
+        if(grounded){
+            if(inputs.DriveInput<0){
+                rigidBody.AddTorque(transform.up * -inputs.TurnInput * turnTorque * Time.fixedDeltaTime);
+            }else{
+                rigidBody.AddTorque(transform.up * inputs.TurnInput * turnTorque * Time.fixedDeltaTime);
+            }
+
+            if(inputs.TurnInput==0){
+                //for responsive feel so that tank doest continue turning after input
+                rigidBody.AddTorque(transform.up * turnTorque * Time.fixedDeltaTime * -rigidBody.angularVelocity.y);
+            }
+        }
+
+		if(inputs.DriveInput!=0f){
+            SetLeftTrackTorque(inputs.DriveInput * driveTorque);
+            SetRightTrackTorque(inputs.DriveInput * driveTorque);
+        }else if(inputs.TurnInput!=0f){
+            SetLeftTrackTorque(0.01f * driveTorque);
+            SetRightTrackTorque(0.01f * driveTorque);
+        }else{
+            SetLeftTrackTorque(0f);
+            SetRightTrackTorque(0f);
+        }
+
+		if((inputs.DriveInput==0 && inputs.TurnInput==0) || (inputs.DriveInput<0f && rigidBody.velocity.magnitude>5f)){
+            rigidBody.drag = 2;
+            SetBrakes(brakeStrength);
+        }else if (inputs.DriveInput==0 && inputs.TurnInput!=0 && rigidBody.velocity.magnitude>1f){
+            rigidBody.drag = 2f;
+            SetBrakes(brakeStrength);
+        }else{
+            rigidBody.drag = 0.01f;
+            SetBrakes(0);
+        }
+	}
+
     private void GetHeight(){
         //how high off the ground are we
         RaycastHit hit;
@@ -215,6 +208,13 @@ public class VehicleController : MonoBehaviour{
             height = hit.distance;
         }
     }
+
+	private void ShowDataInInspector(){
+		//show our velocity and angular velocity in inspector
+        aVeL = rigidBody.angularVelocity.magnitude;
+        VeL = rigidBody.velocity.magnitude * 3.6f;
+		localZVelocity = transform.InverseTransformDirection(rigidBody.velocity).z;
+	}
 
     private void GetClimbAngle(){
         curAngle = Vector3.Angle(Vector3.up, transform.up);
@@ -231,7 +231,7 @@ public class VehicleController : MonoBehaviour{
         for (int i = 0; i < leftWheelColliders.Length; i++) {
             if(VeL<0.25f){
                 //gives initial boost so that controls seem more responsive
-                leftWheelColliders[i].motorTorque = driveInput < 0f ? speed*20f : speed*5f;
+                leftWheelColliders[i].motorTorque = inputs.DriveInput < 0f ? speed*20f : speed*5f;
             }else{
                 leftWheelColliders[i].motorTorque = speed;
             }
@@ -242,7 +242,7 @@ public class VehicleController : MonoBehaviour{
         for (int i = 0; i < rightWheelColliders.Length; i++) {
             if(VeL<0.25f){
                 //gives initial boost so that controls seem more responsive
-                rightWheelColliders[i].motorTorque = driveInput < 0f ? speed*20f : speed*5f;
+                rightWheelColliders[i].motorTorque = inputs.DriveInput < 0f ? speed*20f : speed*5f;
             }else{
                 rightWheelColliders[i].motorTorque = speed;
             }
@@ -352,7 +352,7 @@ public class VehicleController : MonoBehaviour{
     }
     #endregion
 
-    void LateUpdate(){
+    private void LateUpdate(){
         //We set the wheel mesh and bones (track deform) positions to the positions of wheel colliders
         for (int i = 0; i < leftWheelColliders.Length; i++) {
             leftWheelColliders[i].GetWorldPose(out colliderPos, out colliderRot);

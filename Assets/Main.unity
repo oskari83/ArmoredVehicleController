@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028504, g: 0.22571531, b: 0.3069238, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028453, g: 0.22571418, b: 0.30692223, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -42249,6 +42249,7 @@ GameObject:
   - component: {fileID: 8611283086311727682}
   - component: {fileID: 8611283086311727685}
   - component: {fileID: 8611283086311727684}
+  - component: {fileID: 8611283086311727686}
   m_Layer: 0
   m_Name: Scorpion_Desert
   m_TagString: Untagged
@@ -42501,6 +42502,18 @@ MonoBehaviour:
   bultype2: {fileID: 900926821}
   bultype3: {fileID: 696508692}
   bultypes: {fileID: 890282292}
+--- !u!114 &8611283086311727686
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8611283086311727681}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 129f0b4eee9b641e4b54a3a1f43b397c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &8615678511037182069
 Transform:
   m_ObjectHideFlags: 0
