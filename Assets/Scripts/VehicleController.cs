@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class VehicleController : MonoBehaviour{
     [Header("Tank power settings")]
-    public float turnTorque = 4f;
-    public float driveTorque = 4f;
-    public float brakeStrength = 2.5f;
+    public float turnTorque = 1f;
+    public float driveTorque = 2f;
+    public float brakeStrength = 3f;
     public float maxRot = 0.75f;
     public float maxSpeed = 20f;
 
@@ -139,6 +139,8 @@ public class VehicleController : MonoBehaviour{
         //set boolean to indicate whether we are on the ground
         GetHeight();
         grounded = (height<= maxHeight) ? true : false;
+
+		ShowDataInInspector();
 
         MoveTank();
         
