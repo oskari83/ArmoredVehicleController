@@ -17,8 +17,8 @@ public class TankMovement : MonoBehaviour{
     private WheelFrictionCurve[] sFrictionRight;
 
 	[Header("Wheel Colliders")]
-	[SerializeField] private WheelCollider[] leftWheelColliders;
-    [SerializeField] private WheelCollider[] rightWheelColliders;
+	public WheelCollider[] leftWheelColliders;
+    public WheelCollider[] rightWheelColliders;
 	
 	[Header("Tank Physical Settings")]
 	public float centerOfMassYOffset = -1.0f;
@@ -26,6 +26,7 @@ public class TankMovement : MonoBehaviour{
 
 	private float lastAngle;
     private float curAngle;
+	public float LocalZVelocity { get; private set; }
 	private bool grounded;
 
 	private Rigidbody rigidBody;
@@ -43,9 +44,18 @@ public class TankMovement : MonoBehaviour{
 		rigidBody = this.GetComponent<Rigidbody>();
 		rigidBody.centerOfMass = new Vector3(0, centerOfMassYOffset, 0);
 		inputs = GetComponent<InputController>();
+
+		turnTorque = turnTorque * 1000000f;
+        driveTorque = driveTorque * 100f;
+        brakeStrength = brakeStrength * 1000f;
+
+        rigidBody.maxAngularVelocity = maxRot;
 	}
 
 	private void FixedUpdate(){
+		// Get Z-velocity for track visuals
+		LocalZVelocity = transform.InverseTransformDirection(rigidBody.velocity).z;
+
 		// Sets boolean to indicate whether we are on the ground
 		GetGroundedStatus();
 		// Sets angular and km/h velocity values to variables

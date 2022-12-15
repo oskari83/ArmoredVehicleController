@@ -42250,6 +42250,11 @@ GameObject:
   - component: {fileID: 8611283086311727685}
   - component: {fileID: 8611283086311727684}
   - component: {fileID: 8611283086311727686}
+  - component: {fileID: 8611283086311727687}
+  - component: {fileID: 8611283086311727689}
+  - component: {fileID: 8611283086311727688}
+  - component: {fileID: 8611283086311727691}
+  - component: {fileID: 8611283086311727690}
   m_Layer: 0
   m_Name: Scorpion_Desert
   m_TagString: Untagged
@@ -42514,6 +42519,150 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 129f0b4eee9b641e4b54a3a1f43b397c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &8611283086311727687
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8611283086311727681}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7d39e0c349aa463293c8ab39e3722d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  turnTorque: 1
+  driveTorque: 2
+  brakeStrength: 3
+  maxRot: 0.75
+  maxSpeed: 20
+  movementSidewaysFriction: 2.2
+  stillSidewaysFriction: 0.8
+  leftWheelColliders:
+  - {fileID: 8881104539928502791}
+  - {fileID: 8881104540383129921}
+  - {fileID: 8881104538434372942}
+  - {fileID: 8881104538292877484}
+  - {fileID: 8881104538699431459}
+  - {fileID: 8881104539176458237}
+  - {fileID: 8881104538869266895}
+  rightWheelColliders:
+  - {fileID: 8881104539260659449}
+  - {fileID: 8881104539194302285}
+  - {fileID: 8881104539115270502}
+  - {fileID: 8881104539037440139}
+  - {fileID: 8881104539920483986}
+  - {fileID: 8881104540251294736}
+  - {fileID: 8881104539898764059}
+  centerOfMassYOffset: -1
+  maxHeightStillGrounded: 1.15
+  angularVelocity: 0
+  velocityInKMH: 0
+  height: 0
+--- !u!114 &8611283086311727688
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8611283086311727681}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec13c611cb3844b93a995999664d8f9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraController: {fileID: 42033308}
+  sniperCam: {fileID: 1041285554}
+  crossHair: {fileID: 394778701}
+--- !u!114 &8611283086311727689
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8611283086311727681}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd9e0890f357c46c5ac48a342ae8d26d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  turretTraverseSpeed: 45
+  gunTraverseSpeed: 45
+  maxGunAngle_elevation: 35
+  minGunAngle_depression: 8
+  turretGO: {fileID: 8881104538375907364}
+  gunGO: {fileID: 572389176}
+--- !u!114 &8611283086311727690
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8611283086311727681}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ea8a6a24329944018c6a249125075f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  engineAudioSource: {fileID: 8881104539147289676}
+  maxPitch: 1.2
+  idlePitch: 0.4
+--- !u!114 &8611283086311727691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8611283086311727681}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bea3ba9b7bcf4506886974dc8b844d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  trackThiccness: 0.14
+  trackSpeed: 0.005
+  roadWheelSpinMultiplier: 250
+  dummyWheelSpinMultiplier: 150
+  leftWheelMeshes:
+  - {fileID: 5318614518148151054}
+  - {fileID: 8881104539204768868}
+  - {fileID: 653396409636688067}
+  - {fileID: 8881104538732741303}
+  - {fileID: 2214076289901506351}
+  - {fileID: 8881104539655349225}
+  - {fileID: 3999688473624313651}
+  leftDummyWheelMeshes:
+  - {fileID: 5079404447140595890}
+  - {fileID: 564961427167709431}
+  rightWheelMeshes:
+  - {fileID: 7272081893891544455}
+  - {fileID: 8881104539883319813}
+  - {fileID: 4894316799064726348}
+  - {fileID: 8881104539149237133}
+  - {fileID: 740265303634749534}
+  - {fileID: 8881104539571191386}
+  - {fileID: 727925876356412054}
+  rightDummyWheelMeshes:
+  - {fileID: 2015076897852954123}
+  - {fileID: 3815328711785283754}
+  leftTrackBones:
+  - {fileID: 1907475432309674556}
+  - {fileID: 5755266329367698961}
+  - {fileID: 8363407233626926350}
+  - {fileID: 7993661529045571460}
+  - {fileID: 5334328222571722601}
+  - {fileID: 1763441866213328122}
+  - {fileID: 1340300741843397815}
+  rightTrackBones:
+  - {fileID: 3115159812706487661}
+  - {fileID: 4515648385456389498}
+  - {fileID: 17949706074640954}
+  - {fileID: 3454013418797861835}
+  - {fileID: 4583432030069945619}
+  - {fileID: 3478778226052268002}
+  - {fileID: 5885271902648459802}
+  leftTrack: {fileID: 5135683729330365452}
+  rightTrack: {fileID: 6001949685140141297}
 --- !u!4 &8615678511037182069
 Transform:
   m_ObjectHideFlags: 0
