@@ -8,16 +8,22 @@ public class TurretMovement : MonoBehaviour{
     public int maxGunAngle_elevation = 35;
     public int minGunAngle_depression = 8;
 
-	[Header("Gameobjects")]
-	public GameObject turretGO;
-    public GameObject gunGO;
+	public Vector3 TurretTargetPosition { get; set; }
 
-    public Vector3 TurretTargetPosition { get; set; }
+	private VehicleControllerManager vehicleManager;
+	private GameObject turretGameObject;
+    private GameObject gunGameObject;
+	private Camera sniperModeCamera;
+
     private Vector3 targetPosition;
     private Quaternion gunLocalRotation;
     private Quaternion turretLocalRotation;
 
 	private void Awake(){
+		vehicleManager = GetComponent<VehicleControllerManager>();
+		turretGameObject = vehicleManager.tankTurretGameObject;
+		gunGameObject = vehicleManager.tankGunGameObject;
+		sniperModeCamera = vehicleManager.sniperModeCamera;
 		TurretTargetPosition = transform.position + (transform.forward * 2);
         targetPosition = TurretTargetPosition;
 	}
@@ -30,10 +36,10 @@ public class TurretMovement : MonoBehaviour{
 
 	private void MoveTurret(){
         // look to target
-        Quaternion _lookAtTurret = Quaternion.LookRotation(targetPosition - turretGO.transform.position, gameObject.transform.up);
-        Quaternion _lookAtGun = Quaternion.LookRotation(targetPosition - gunGO.transform.position, gunGO.transform.up);
+        Quaternion _lookAtTurret = Quaternion.LookRotation(targetPosition - turretGameObject.transform.position, gameObject.transform.up);
+        Quaternion _lookAtGun = Quaternion.LookRotation(targetPosition - gunGameObject.transform.position, gunGameObject.transform.up);
         Quaternion _turretRelativeRotTarget = Quaternion.Euler(gameObject.transform.eulerAngles - _lookAtTurret.eulerAngles);
-        Quaternion _gunRelativeRotTarget = Quaternion.Euler(turretGO.transform.eulerAngles - _lookAtGun.eulerAngles);
+        Quaternion _gunRelativeRotTarget = Quaternion.Euler(turretGameObject.transform.eulerAngles - _lookAtGun.eulerAngles);
         float _angleBetweenTurretAndTarget = Vector3.Angle(turretLocalRotation * Vector3.forward, _turretRelativeRotTarget * Vector3.forward);
         float _angleBetweenGunAndTarget = Vector3.Angle(gunLocalRotation * Vector3.forward, _gunRelativeRotTarget * Vector3.forward);
         float _turretVelocity = 1 / _angleBetweenTurretAndTarget;
@@ -45,7 +51,7 @@ public class TurretMovement : MonoBehaviour{
         _verticalSpeed *= _gunVelocity;
         _verticalSpeed *= Time.deltaTime;
         Quaternion _turretFinalRotation = Quaternion.Euler(gameObject.transform.eulerAngles - _lookAtTurret.eulerAngles);
-        Quaternion _gunFinalRotation = Quaternion.Euler(turretGO.transform.eulerAngles - _lookAtGun.eulerAngles);
+        Quaternion _gunFinalRotation = Quaternion.Euler(turretGameObject.transform.eulerAngles - _lookAtGun.eulerAngles);
 
         if(Input.GetMouseButton(1)){ 
             Debug.Log("holding down"); 
@@ -53,16 +59,16 @@ public class TurretMovement : MonoBehaviour{
             turretLocalRotation = Quaternion.Lerp(turretLocalRotation, _turretFinalRotation, _horizontalSpeed);
             gunLocalRotation = Quaternion.Lerp(gunLocalRotation, _gunFinalRotation, _verticalSpeed);
             Quaternion _turretRot = Quaternion.Euler(gameObject.transform.eulerAngles - turretLocalRotation.eulerAngles);
-            Quaternion _gunRot = Quaternion.Euler(turretGO.transform.eulerAngles - gunLocalRotation.eulerAngles);
-            gunGO.transform.rotation = _gunRot;
-            turretGO.transform.rotation = _turretRot;
-            Vector3 _newGunRotation = gunGO.transform.localEulerAngles;
-            Vector3 _newTurretRotation = turretGO.transform.localEulerAngles;
+            Quaternion _gunRot = Quaternion.Euler(turretGameObject.transform.eulerAngles - gunLocalRotation.eulerAngles);
+            gunGameObject.transform.rotation = _gunRot;
+            turretGameObject.transform.rotation = _turretRot;
+            Vector3 _newGunRotation = gunGameObject.transform.localEulerAngles;
+            Vector3 _newTurretRotation = turretGameObject.transform.localEulerAngles;
 
             {
                 float _max = 360 - maxGunAngle_elevation;
                 float _min = minGunAngle_depression;
-                float _currentAngle = gunGO.transform.localEulerAngles.x;
+                float _currentAngle = gunGameObject.transform.localEulerAngles.x;
                 if (_currentAngle > 180){
                         if (_currentAngle < _max) _newGunRotation.x = _max;
                 }
@@ -76,8 +82,8 @@ public class TurretMovement : MonoBehaviour{
             _newGunRotation.y = 0;
             _newGunRotation.z = 0;
             //apply local rotation
-            turretGO.transform.localRotation = Quaternion.Euler(_newTurretRotation);
-            gunGO.transform.localRotation = Quaternion.Euler(_newGunRotation);
+            turretGameObject.transform.localRotation = Quaternion.Euler(_newTurretRotation);
+            gunGameObject.transform.localRotation = Quaternion.Euler(_newGunRotation);
         }
 
     }

@@ -11,7 +11,9 @@ public class ShootingController : MonoBehaviour{
     
     public RectTransform crosshairCircleRectTransformImproved;
     private AudioSource shootAudioSource;
+
     private VehicleController vehicleController;
+
     private UIController uicontroller;
     private GameObject gunObject;
     private GameObject gun2;
@@ -33,7 +35,8 @@ public class ShootingController : MonoBehaviour{
     public float shootingDispersion = 4f;
     public float aimSpeed = 1f;
     public float dispersionIncreaseCoefficient = 40f;
-    public float crossHairLerp = 2f;
+    public float crossHairLerp = 10f;
+
     private float cx;
     private float lastVel;
     private float acceleration;
@@ -42,9 +45,7 @@ public class ShootingController : MonoBehaviour{
     private float rawdirrng;
     private float scaleddirrng;
     private float scaledrng;
-
     private bool justShot = false;
-
     private float oldX;
 
     private void Start(){

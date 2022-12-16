@@ -873,7 +873,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 42033307}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 623c169fb23e54ba888077165f4bf56c, type: 3}
+  m_Script: {fileID: 11500000, guid: 97ceb2d8596984278966779936fb46f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   vehicle: {fileID: 8611283086311727683}
@@ -901,7 +901,6 @@ MonoBehaviour:
   Height: 3
   sniperSpeedY: 0.5
   sniperSpeedX: 0.375
-  sniperZoomSpeed: 450
   ObstaclesLayer:
     serializedVersion: 2
     m_Bits: 1
@@ -42572,7 +42571,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraController: {fileID: 42033308}
-  sniperCam: {fileID: 1041285554}
   crossHair: {fileID: 394778701}
 --- !u!114 &8611283086311727689
 MonoBehaviour:
@@ -42592,6 +42590,7 @@ MonoBehaviour:
   minGunAngle_depression: 8
   turretGO: {fileID: 8881104538375907364}
   gunGO: {fileID: 572389176}
+  sniperModeCamera: {fileID: 1041285554}
 --- !u!114 &8611283086311727690
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -13,9 +13,6 @@ public class TankMovement : MonoBehaviour{
     public float movementSidewaysFriction = 2.2f;
     public float stillSidewaysFriction = 0.8f;
 	
-    private WheelFrictionCurve[] sFrictionLeft;
-    private WheelFrictionCurve[] sFrictionRight;
-
 	[Header("Wheel Colliders")]
 	public WheelCollider[] leftWheelColliders;
     public WheelCollider[] rightWheelColliders;
@@ -24,21 +21,21 @@ public class TankMovement : MonoBehaviour{
 	public float centerOfMassYOffset = -1.0f;
     public float maxHeightStillGrounded = 1.15f;
 
+	public float LocalZVelocity { get; private set; }
+
 	private float lastAngle;
     private float curAngle;
-	public float LocalZVelocity { get; private set; }
 	private bool grounded;
 
+    private WheelFrictionCurve[] sFrictionLeft;
+    private WheelFrictionCurve[] sFrictionRight;
 	private Rigidbody rigidBody;
 	private InputController inputs;
 
 	[Header("Visualised Inspector Data")]
-	[SerializeField]
-	private float angularVelocity;
-	[SerializeField] 
-    private float velocityInKMH;
-	[SerializeField] 
-	private float height;
+	[SerializeField] private float angularVelocity;
+	[SerializeField] private float velocityInKMH;
+	[SerializeField] private float height;
 
 	private void Awake(){
 		rigidBody = this.GetComponent<Rigidbody>();
