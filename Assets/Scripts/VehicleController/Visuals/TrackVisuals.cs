@@ -19,6 +19,7 @@ public class TrackVisuals : MonoBehaviour{
     [SerializeField] private Transform rightTrack;
 
 	private TankMovement tankMovementScript;
+	private VehicleControllerManager vehicleManager;
 	private WheelCollider[] leftWheelColliders;
     private WheelCollider[] rightWheelColliders;
 	private Material leftTrackMaterial;
@@ -34,6 +35,7 @@ public class TrackVisuals : MonoBehaviour{
 		leftTrackMaterial = leftTrack.GetComponent<Renderer>().material;
         rightTrackMaterial = rightTrack.GetComponent<Renderer>().material;
 		tankMovementScript = GetComponent<TankMovement>();
+		vehicleManager = GetComponent<VehicleControllerManager>();
 		_rigidbody = this.GetComponent<Rigidbody>();
 		leftWheelColliders = tankMovementScript.leftWheelColliders;
 		rightWheelColliders = tankMovementScript.rightWheelColliders;
@@ -59,21 +61,21 @@ public class TrackVisuals : MonoBehaviour{
 
         //We rotate the wheels to simulate movement - I don't use the out rot from wheel collider because I want everything to spin at the same rate
         foreach (Transform wheelMesh in leftWheelMeshes) {
-            wheelMesh.Rotate(leftDirectionalMultiplier * tankMovementScript.LocalZVelocity * trackSpeed * roadWheelSpinMultiplier, 0, 0, Space.Self);
+            wheelMesh.Rotate(leftDirectionalMultiplier * vehicleManager.LocalZVelocity * trackSpeed * roadWheelSpinMultiplier, 0, 0, Space.Self);
         }
         foreach (Transform wheelMesh in leftDummyWheelMeshes) {
-            wheelMesh.Rotate(leftDirectionalMultiplier * tankMovementScript.LocalZVelocity * trackSpeed * dummyWheelSpinMultiplier, 0, 0, Space.Self);
+            wheelMesh.Rotate(leftDirectionalMultiplier * vehicleManager.LocalZVelocity * trackSpeed * dummyWheelSpinMultiplier, 0, 0, Space.Self);
         }
 
         foreach (Transform wheelMesh in rightWheelMeshes) {
-            wheelMesh.Rotate(rightDirectionalMultiplier * tankMovementScript.LocalZVelocity * trackSpeed * roadWheelSpinMultiplier, 0, 0, Space.Self);
+            wheelMesh.Rotate(rightDirectionalMultiplier * vehicleManager.LocalZVelocity * trackSpeed * roadWheelSpinMultiplier, 0, 0, Space.Self);
         }
         foreach (Transform wheelMesh in rightDummyWheelMeshes) {
-            wheelMesh.Rotate(rightDirectionalMultiplier * tankMovementScript.LocalZVelocity * trackSpeed * dummyWheelSpinMultiplier, 0, 0, Space.Self);
+            wheelMesh.Rotate(rightDirectionalMultiplier * vehicleManager.LocalZVelocity * trackSpeed * dummyWheelSpinMultiplier, 0, 0, Space.Self);
         }
 
         //We scroll the track texture to simulate movement
-        leftTrackMaterial.SetTextureOffset("_MainTex", new Vector2(0, leftTrackMaterial.mainTextureOffset.y + (leftDirectionalMultiplier * -1.0f * _rigidbody.velocity.magnitude * trackSpeed * Mathf.Sign(tankMovementScript.LocalZVelocity))));
-        rightTrackMaterial.SetTextureOffset("_MainTex", new Vector2(0, rightTrackMaterial.mainTextureOffset.y + (rightDirectionalMultiplier * -1.0f * _rigidbody.velocity.magnitude * trackSpeed * Mathf.Sign(tankMovementScript.LocalZVelocity))));
+        leftTrackMaterial.SetTextureOffset("_MainTex", new Vector2(0, leftTrackMaterial.mainTextureOffset.y + (leftDirectionalMultiplier * -1.0f * _rigidbody.velocity.magnitude * trackSpeed * Mathf.Sign(vehicleManager.LocalZVelocity))));
+        rightTrackMaterial.SetTextureOffset("_MainTex", new Vector2(0, rightTrackMaterial.mainTextureOffset.y + (rightDirectionalMultiplier * -1.0f * _rigidbody.velocity.magnitude * trackSpeed * Mathf.Sign(vehicleManager.LocalZVelocity))));
 	}
 }

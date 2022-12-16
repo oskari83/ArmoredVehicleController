@@ -2,36 +2,33 @@ using UnityEngine;
 
 public class CrosshairUI : MonoBehaviour{
 
-	public CameraController cameraController;
-	private Camera cameraInUse;
-
-	[Header("Gameobjects")]
+	[Header("Crosshair Gameobject")]
 	public GameObject crossHair;
 
-	private Camera mainCamera;
-	private Camera sniperCamera;
+	[Header("Crosshair Dispersion Gameobjects")]
+    public RectTransform crosshairCircleRectTransformImproved;
+	public GameObject crosshairSpread;
+    public GameObject crosshairSpreadx2;
+    public GameObject crosshairSpread_v;
+    public GameObject crosshairSpreadx2_v;
+
 	private VehicleControllerManager vehicleManager;
+	private ShootingController shootingController;
+	private Camera cameraInUse;
 	private Vector3 finalCrosshairPos;
 
 	private void Awake(){
-		if(mainCamera==null){
-            mainCamera = cameraController.ourCamera;
-        }
-        cameraInUse = mainCamera;
 		vehicleManager = GetComponent<VehicleControllerManager>();
-		sniperCamera = vehicleManager.sniperModeCamera;
+		shootingController = GetComponent<ShootingController>();
 	}
 
 	private void Update(){
 		MoveCrosshair();
+		MoveDispersionCrosshairs();
 	}
 
 	private void MoveCrosshair(){
-        if(cameraController.inSniperMode){
-            cameraInUse = sniperCamera;
-        }else{
-            cameraInUse = mainCamera;
-        }
+		cameraInUse = vehicleManager.CameraInUse;
         // Get gun shoot pos object
 		GameObject _gun = vehicleManager.tankGunGameObject;
         float _maxCrosshairDistance = 10000f;
@@ -59,4 +56,12 @@ public class CrosshairUI : MonoBehaviour{
         // FinalCrosshairPos = cameraInUse.WorldToScreenPoint(_crosshairPos);
         crossHair.transform.position = finalCrosshairPos;
     }
+
+	private void MoveDispersionCrosshairs(){
+		crosshairSpread.transform.position = shootingController.CrosshairSpreadPositionLeft;
+        crosshairSpreadx2.transform.position = shootingController.CrosshairSpreadPositionRight;
+        crosshairSpread_v.transform.position = shootingController.CrosshairSpreadPositionUp;
+        crosshairSpreadx2_v.transform.position = shootingController.CrosshairSpreadPositionDown;
+		crosshairCircleRectTransformImproved.sizeDelta = shootingController.CrosshairSpreadCirclePosition;
+	}
 }

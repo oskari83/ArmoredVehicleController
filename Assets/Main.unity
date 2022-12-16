@@ -876,7 +876,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97ceb2d8596984278966779936fb46f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vehicle: {fileID: 8611283086311727683}
+  vehicleManager: {fileID: 8611283086311727692}
   MaxCamDistance: 20
   MinCamDistance: 2
   CamZoomSpeed: -10
@@ -42244,16 +42244,18 @@ GameObject:
   m_Component:
   - component: {fileID: 8992207393047771387}
   - component: {fileID: 8611283086311727680}
-  - component: {fileID: 8611283086311727683}
-  - component: {fileID: 8611283086311727682}
-  - component: {fileID: 8611283086311727685}
-  - component: {fileID: 8611283086311727684}
+  - component: {fileID: 8611283086311727692}
   - component: {fileID: 8611283086311727686}
   - component: {fileID: 8611283086311727687}
   - component: {fileID: 8611283086311727689}
+  - component: {fileID: 8611283086311727682}
   - component: {fileID: 8611283086311727688}
+  - component: {fileID: 8611283086311727693}
   - component: {fileID: 8611283086311727691}
   - component: {fileID: 8611283086311727690}
+  - component: {fileID: 8611283086311727684}
+  - component: {fileID: 8611283086311727683}
+  - component: {fileID: 8611283086311727685}
   m_Layer: 0
   m_Name: Scorpion_Desert
   m_TagString: Untagged
@@ -42270,17 +42272,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 8611283086311727681}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 028f72f7f501346ad9bb34a7beaa0323, type: 3}
+  m_Script: {fileID: 11500000, guid: df13b3e6a78ed40cb973e90b33ca5f36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   bullet: {fileID: 3740775447057437718, guid: 1693610b9fdb642bdb5a69800512fa51, type: 3}
   bulletsOfT: 050000000400000003000000
   selectedBullet: 0
-  crosshairCircleRectTransformImproved: {fileID: 1741039271}
-  crosshairSpread: {fileID: 1196113917}
-  crosshairSpreadx2: {fileID: 1999189988}
-  crosshairSpread_v: {fileID: 1934170848}
-  crosshairSpreadx2_v: {fileID: 947990537}
   gunDispersion: 1
   minDispersion: 0.5
   maxDispersion: 5
@@ -42288,6 +42285,11 @@ MonoBehaviour:
   aimSpeed: 1
   dispersionIncreaseCoefficient: 40
   crossHairLerp: 10
+  crosshairCircleRectTransformImproved: {fileID: 1741039271}
+  crosshairSpread: {fileID: 1196113917}
+  crosshairSpreadx2: {fileID: 1999189988}
+  crosshairSpread_v: {fileID: 1934170848}
+  crosshairSpreadx2_v: {fileID: 947990537}
 --- !u!114 &8611283086311727683
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -42295,7 +42297,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8611283086311727681}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ed6c84421585d433f8ca22615b40bd94, type: 3}
   m_Name: 
@@ -42495,7 +42497,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8611283086311727681}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7dab79d32e86d4e36a12fe35400e051d, type: 3}
   m_Name: 
@@ -42525,7 +42527,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8611283086311727681}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e7d39e0c349aa463293c8ab39e3722d3, type: 3}
   m_Name: 
@@ -42565,13 +42567,17 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8611283086311727681}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ec13c611cb3844b93a995999664d8f9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cameraController: {fileID: 42033308}
   crossHair: {fileID: 394778701}
+  crosshairCircleRectTransformImproved: {fileID: 1741039271}
+  crosshairSpread: {fileID: 1196113917}
+  crosshairSpreadx2: {fileID: 1999189988}
+  crosshairSpread_v: {fileID: 1934170848}
+  crosshairSpreadx2_v: {fileID: 947990537}
 --- !u!114 &8611283086311727689
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -42579,7 +42585,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8611283086311727681}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bd9e0890f357c46c5ac48a342ae8d26d, type: 3}
   m_Name: 
@@ -42588,9 +42594,6 @@ MonoBehaviour:
   gunTraverseSpeed: 45
   maxGunAngle_elevation: 35
   minGunAngle_depression: 8
-  turretGO: {fileID: 8881104538375907364}
-  gunGO: {fileID: 572389176}
-  sniperModeCamera: {fileID: 1041285554}
 --- !u!114 &8611283086311727690
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -42598,7 +42601,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8611283086311727681}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1ea8a6a24329944018c6a249125075f8, type: 3}
   m_Name: 
@@ -42613,7 +42616,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8611283086311727681}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8bea3ba9b7bcf4506886974dc8b844d4, type: 3}
   m_Name: 
@@ -42662,6 +42665,46 @@ MonoBehaviour:
   - {fileID: 5885271902648459802}
   leftTrack: {fileID: 5135683729330365452}
   rightTrack: {fileID: 6001949685140141297}
+--- !u!114 &8611283086311727692
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8611283086311727681}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb370f35e22542f89f9604b351fa684, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraController: {fileID: 42033308}
+  tankTurretGameObject: {fileID: 8881104538375907364}
+  tankGunGameObject: {fileID: 572389176}
+  gunShootingPositionGameObject: {fileID: 1436496174150848564}
+  sniperModeRigTurretGameObject: {fileID: 1312328939}
+  sniperModeRigGunGameObject: {fileID: 1590345923}
+  tankGunGameObjectVisual: {fileID: 3369186809303565324}
+  tankMuzzleGameObjectVisual: {fileID: 2127616334131683733}
+  tankTurretGameObjectVisual: {fileID: 7715266878878208534}
+  sniperModeCamera: {fileID: 1041285554}
+--- !u!114 &8611283086311727693
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8611283086311727681}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2519ecd62c00a4836bdecc3e7a10b7f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  blackSelected: {r: 0.16078432, g: 0.16078432, b: 0.16078432, a: 1}
+  blackDeselected: {r: 0.16078432, g: 0.16078432, b: 0.16078432, a: 0.49019608}
+  bultype1: {fileID: 1018743190}
+  bultype2: {fileID: 900926821}
+  bultype3: {fileID: 696508692}
+  bultypes: {fileID: 890282292}
 --- !u!4 &8615678511037182069
 Transform:
   m_ObjectHideFlags: 0

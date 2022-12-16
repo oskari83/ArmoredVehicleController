@@ -21,8 +21,6 @@ public class TankMovement : MonoBehaviour{
 	public float centerOfMassYOffset = -1.0f;
     public float maxHeightStillGrounded = 1.15f;
 
-	public float LocalZVelocity { get; private set; }
-
 	private float lastAngle;
     private float curAngle;
 	private bool grounded;
@@ -42,6 +40,21 @@ public class TankMovement : MonoBehaviour{
 		rigidBody.centerOfMass = new Vector3(0, centerOfMassYOffset, 0);
 		inputs = GetComponent<InputController>();
 
+		sFrictionLeft = new WheelFrictionCurve[leftWheelColliders.Length];
+        sFrictionRight = new WheelFrictionCurve[rightWheelColliders.Length];
+
+        for (int i = 0; i < leftWheelColliders.Length; i++) {
+            sFrictionLeft[i] = leftWheelColliders[i].sidewaysFriction;
+            sFrictionLeft[i].stiffness = stillSidewaysFriction;
+            leftWheelColliders[i].sidewaysFriction = sFrictionLeft[i];
+        }
+
+        for (int i = 0; i < rightWheelColliders.Length; i++) {
+            sFrictionRight[i] = rightWheelColliders[i].sidewaysFriction;
+            sFrictionRight[i].stiffness = stillSidewaysFriction;
+            rightWheelColliders[i].sidewaysFriction = sFrictionRight[i];
+        }
+
 		turnTorque = turnTorque * 1000000f;
         driveTorque = driveTorque * 100f;
         brakeStrength = brakeStrength * 1000f;
@@ -50,9 +63,6 @@ public class TankMovement : MonoBehaviour{
 	}
 
 	private void FixedUpdate(){
-		// Get Z-velocity for track visuals
-		LocalZVelocity = transform.InverseTransformDirection(rigidBody.velocity).z;
-
 		// Sets boolean to indicate whether we are on the ground
 		GetGroundedStatus();
 		// Sets angular and km/h velocity values to variables
@@ -73,6 +83,10 @@ public class TankMovement : MonoBehaviour{
         if(!grounded){
             rigidBody.drag = 0.1f;
         }
+	}
+
+	private void LateUpdate(){
+		SetWheelColliderFriction();
 	}
 
 	private void MoveTank(){

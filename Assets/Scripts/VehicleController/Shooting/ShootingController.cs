@@ -1,42 +1,49 @@
 using UnityEngine;
 
-[RequireComponent(typeof(VehicleController))]
+[RequireComponent(typeof(VehicleControllerManager))]
 public class ShootingController : MonoBehaviour{
+
+	public Vector3 CrosshairSpreadPositionLeft { get; private set; }
+	public Vector3 CrosshairSpreadPositionRight { get; private set; }
+	public Vector3 CrosshairSpreadPositionUp { get; private set; }
+	public Vector3 CrosshairSpreadPositionDown { get; private set; }
+	public Vector3 CrosshairSpreadCirclePosition { get; private set; }
 
     [Header("Bullet Prefab")]
     public GameObject bullet;
 
+	[Header("Bullet Attributes")]
     public int[] bulletsOfT = new int [3] {5,4,3};
     public int selectedBullet = 0;
-    
-    public RectTransform crosshairCircleRectTransformImproved;
-    private AudioSource shootAudioSource;
 
-    private VehicleController vehicleController;
-
-    private UIController uicontroller;
-    private GameObject gunObject;
-    private GameObject gun2;
-    private Vector3 crossPos;
-    private Vector3 finalPos;
-
-    public GameObject crosshairSpread;
-    public GameObject crosshairSpreadx2;
-    public GameObject crosshairSpread_v;
-    public GameObject crosshairSpreadx2_v;
-
-    private GameObject lastSelected;
-
-    private float scaleFactor = 0.018f / 16.557f;
-
-    public float gunDispersion = 1f;
+	[Header("Gun Attributes")]
+	public float gunDispersion = 1f;
     public float minDispersion = 0.5f;
     public float maxDispersion = 5f;
     public float shootingDispersion = 4f;
     public float aimSpeed = 1f;
     public float dispersionIncreaseCoefficient = 40f;
     public float crossHairLerp = 10f;
+    
+	[Header("UI Gameobjects")]
+    public RectTransform crosshairCircleRectTransformImproved;
+	public GameObject crosshairSpread;
+    public GameObject crosshairSpreadx2;
+    public GameObject crosshairSpread_v;
+    public GameObject crosshairSpreadx2_v;
 
+	private VehicleControllerManager vehicleManager;
+	private TankMovement tankMovementScript;
+	private BulletUI bulletUIScript;
+
+	private AudioSource shootAudioSource;
+    private GameObject gunObject;
+    private GameObject gun2;
+	private GameObject lastSelected;
+    private Vector3 crossPos;
+    private Vector3 finalPos;
+
+	private float SCALEFACTOR = 0.018f / 16.557f;
     private float cx;
     private float lastVel;
     private float acceleration;
@@ -45,15 +52,21 @@ public class ShootingController : MonoBehaviour{
     private float rawdirrng;
     private float scaleddirrng;
     private float scaledrng;
-    private bool justShot = false;
     private float oldX;
+	private float tankMaximumVelocity;
+
+	private bool justShot = false;
 
     private void Start(){
-        vehicleController = gameObject.GetComponent<VehicleController>();
-        uicontroller = gameObject.GetComponent<UIController>();
+		vehicleManager = GetComponent<VehicleControllerManager>();
+		tankMovementScript = GetComponent<TankMovement>();
+        bulletUIScript = gameObject.GetComponent<BulletUI>();
         shootAudioSource = gameObject.GetComponent<AudioSource>();
-        gunObject = vehicleController.gunShootPos;
-        gun2 = vehicleController.gunGO;
+
+		gunObject = vehicleManager.gunShootingPositionGameObject;
+		gun2 = vehicleManager.tankGunGameObject;
+
+		tankMaximumVelocity = tankMovementScript.maxSpeed;
         lastVel = 0f;
     }
 
@@ -77,21 +90,25 @@ public class ShootingController : MonoBehaviour{
         Vector3 rayStraight = CrosshairCast(gunObject.transform.position, aimCircle);
 
         //get world to screenpoint
-        Camera _mainCamera = vehicleController.cameraInUse;
+		Camera _mainCamera = vehicleManager.CameraInUse;
         Vector3 leftScreenPos = _mainCamera.WorldToScreenPoint(ray25left);
         Vector3 rightScreenPos = _mainCamera.WorldToScreenPoint(ray25right);
         Vector3 straightScreenPos = _mainCamera.WorldToScreenPoint(rayStraight);
-        crosshairSpread.transform.position = new Vector3(rightScreenPos.x, rightScreenPos.y, 0f);
-        crosshairSpreadx2.transform.position = new Vector3(leftScreenPos.x, leftScreenPos.y, 0f);
-        crosshairSpread_v.transform.position = new Vector3(straightScreenPos.x, straightScreenPos.y + Mathf.Abs(rightScreenPos.x-straightScreenPos.x), 0f);
-        crosshairSpreadx2_v.transform.position = new Vector3(straightScreenPos.x, straightScreenPos.y - Mathf.Abs(rightScreenPos.x-straightScreenPos.x), 0f);
+		CrosshairSpreadPositionLeft = new Vector3(rightScreenPos.x, rightScreenPos.y, 0f);
+		CrosshairSpreadPositionRight = new Vector3(leftScreenPos.x, leftScreenPos.y, 0f);
+		CrosshairSpreadPositionUp = new Vector3(straightScreenPos.x, straightScreenPos.y + Mathf.Abs(rightScreenPos.x-straightScreenPos.x), 0f);
+		CrosshairSpreadPositionDown = new Vector3(straightScreenPos.x, straightScreenPos.y - Mathf.Abs(rightScreenPos.x-straightScreenPos.x), 0f);
+        //crosshairSpread.transform.position = new Vector3(rightScreenPos.x, rightScreenPos.y, 0f);
+        //crosshairSpreadx2.transform.position = new Vector3(leftScreenPos.x, leftScreenPos.y, 0f);
+        //crosshairSpread_v.transform.position = new Vector3(straightScreenPos.x, straightScreenPos.y + Mathf.Abs(rightScreenPos.x-straightScreenPos.x), 0f);
+        //crosshairSpreadx2_v.transform.position = new Vector3(straightScreenPos.x, straightScreenPos.y - Mathf.Abs(rightScreenPos.x-straightScreenPos.x), 0f);
 
         //Debug.Log("delta: " + ((oldX-leftScreenPos.x) * Time.deltaTime * 1000f).ToString());
         //oldX = leftScreenPos.x;
         //crosshair size
         float crosshairspreadDistance = Mathf.Sqrt(Mathf.Pow((rightScreenPos.x-straightScreenPos.x),2) + Mathf.Pow(rightScreenPos.y-straightScreenPos.y,2));
 
-        cx = scaleFactor*crosshairspreadDistance;
+        cx = SCALEFACTOR*crosshairspreadDistance;
         cx = Mathf.Clamp(cx, 0,0.2f);
         crossPos = new Vector3(cx,cx,1);
 
@@ -104,10 +121,11 @@ public class ShootingController : MonoBehaviour{
         }
         
         //set UI element width and height accordingly
-        crosshairCircleRectTransformImproved.sizeDelta = new Vector2(2010f*finalPos.x * 10f, 2010f*finalPos.x*10f);
+		CrosshairSpreadCirclePosition = new Vector2(2010f*finalPos.x * 10f, 2010f*finalPos.x*10f);
+        //crosshairCircleRectTransformImproved.sizeDelta = new Vector2(2010f*finalPos.x * 10f, 2010f*finalPos.x*10f);
         
         //calculates acceleration
-        acceleration = (vehicleController.VeL - lastVel) / Time.fixedDeltaTime;
+        acceleration = (vehicleManager.VelocityInKMH - lastVel) / Time.fixedDeltaTime;
 
         //show outline when aiming at tank
         Ray tankRay;
@@ -131,12 +149,12 @@ public class ShootingController : MonoBehaviour{
 
     private void CalculateDispersion(){
         //for dispersion calculation
-        acceleration = (vehicleController.VeL - lastVel) / Time.fixedDeltaTime;
+        acceleration = (vehicleManager.VelocityInKMH - lastVel) / Time.fixedDeltaTime;
         //increase dispersion while accelerating, decrease while decelerating or almost still
         if(acceleration>1f){
-            //gunDispersion = ((vehicleController.VeL / (vehicleController.maxSpeed * 3.6f)) * (maxDispersion-minDispersion))+minDispersion;
-            gunDispersion += (vehicleController.VeL / (vehicleController.maxSpeed * 3.6f)) * dispersionIncreaseCoefficient * Time.deltaTime;
-        }else if(acceleration < -1f || vehicleController.VeL<1f){
+            //gunDispersion = ((vehicleManager.VelocityInKMH / (tankMaximumVelocity * 3.6f)) * (maxDispersion-minDispersion))+minDispersion;
+            gunDispersion += (vehicleManager.VelocityInKMH / (tankMaximumVelocity * 3.6f)) * dispersionIncreaseCoefficient * Time.deltaTime;
+        }else if(acceleration < -1f || vehicleManager.VelocityInKMH<1f){
             float delta = gunDispersion - minDispersion;
             float adjD = 1 - ( delta/(maxDispersion-minDispersion) );
             //Debug.Log("adjD: " + adjD.ToString());
@@ -148,7 +166,7 @@ public class ShootingController : MonoBehaviour{
         //clam dispersion
         gunDispersion = Mathf.Clamp(gunDispersion,minDispersion,maxDispersion);
         //for acceleration calculations
-        lastVel = vehicleController.VeL;
+        lastVel = vehicleManager.VelocityInKMH;
     }
 
     private void Shoot(){
@@ -176,7 +194,7 @@ public class ShootingController : MonoBehaviour{
 
         //removes one from bullet amount
         bulletsOfT[selectedBullet]-=1;
-        uicontroller.UpdateBulletCountUI();
+        bulletUIScript.UpdateBulletCountUI();
         //plays sound
         shootAudioSource.Play();
 
