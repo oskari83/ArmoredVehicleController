@@ -3,17 +3,17 @@ using UnityEngine;
 [RequireComponent(typeof(VehicleControllerManager))]
 public class ShootingController : MonoBehaviour{
 
-	public Vector3 CrosshairSpreadPositionLeft { get; private set; }
-	public Vector3 CrosshairSpreadPositionRight { get; private set; }
-	public Vector3 CrosshairSpreadPositionUp { get; private set; }
-	public Vector3 CrosshairSpreadPositionDown { get; private set; }
-	public Vector3 CrosshairSpreadCirclePosition { get; private set; }
+    public delegate void ShootingDelegate();
+    public ShootingDelegate shootingEvent;
 
-    [Header("Bullet Prefab")]
+    public delegate void BulletSwitchDelegate();
+    public BulletSwitchDelegate bulletSwitchEvent;
+
+    [Header("Gameobjects")]
     public GameObject bullet;
 
 	[Header("Bullet Attributes")]
-    public int[] bulletsOfT = new int [3] {5,4,3};
+    public int[] bulletCountOfType = new int [3] {5,4,3};
     public int selectedBullet = 0;
 
 	[Header("Gun Attributes")]
@@ -23,31 +23,18 @@ public class ShootingController : MonoBehaviour{
     public float shootingDispersion = 4f;
     public float aimSpeed = 1f;
     public float dispersionIncreaseCoefficient = 40f;
-    public float crossHairLerp = 10f;
-    
-	[Header("UI Gameobjects")]
-    public RectTransform crosshairCircleRectTransformImproved;
-	public GameObject crosshairSpread;
-    public GameObject crosshairSpreadx2;
-    public GameObject crosshairSpread_v;
-    public GameObject crosshairSpreadx2_v;
+
+    public bool justShot = false;
 
 	private VehicleControllerManager vehicleManager;
 	private TankMovement tankMovementScript;
-	private BulletUI bulletUIScript;
 
-	private AudioSource shootAudioSource;
-    private GameObject gunObject;
-    private GameObject gun2;
+    private GameObject gunShootingPositionObject;
 	private GameObject lastSelected;
-    private Vector3 crossPos;
-    private Vector3 finalPos;
+    private Camera _mainCamera;
 
-	private float SCALEFACTOR = 0.018f / 16.557f;
-    private float cx;
-    private float lastVel;
+    private float lastVel = 0f;
     private float acceleration;
-
     private float rawrng;
     private float rawdirrng;
     private float scaleddirrng;
@@ -55,92 +42,33 @@ public class ShootingController : MonoBehaviour{
     private float oldX;
 	private float tankMaximumVelocity;
 
-	private bool justShot = false;
-
-    private void Start(){
+    private void Awake(){
 		vehicleManager = GetComponent<VehicleControllerManager>();
 		tankMovementScript = GetComponent<TankMovement>();
-        bulletUIScript = gameObject.GetComponent<BulletUI>();
-        shootAudioSource = gameObject.GetComponent<AudioSource>();
 
-		gunObject = vehicleManager.gunShootingPositionGameObject;
-		gun2 = vehicleManager.tankGunGameObject;
-
+		gunShootingPositionObject = vehicleManager.gunShootingPositionGameObject;
 		tankMaximumVelocity = tankMovementScript.maxSpeed;
-        lastVel = 0f;
     }
 
     private void Update(){
+        // Refactor eventually into inputcontroller clas
         if (Input.GetButtonDown("Fire1")){
             Shoot();
         }
+        if (Input.GetKey(KeyCode.Alpha1)){
+            SwitchBullets(0);
+        }
+        if (Input.GetKey(KeyCode.Alpha2)){
+            SwitchBullets(1);
+        }
+        if (Input.GetKey(KeyCode.Alpha3)){
+            SwitchBullets(2);
+        }
+
+        _mainCamera = vehicleManager.CameraInUse;
 
         CalculateDispersion();
-
-        //get gun dispersion in vectors
-        Vector3 aimCircle = gunObject.transform.forward;
-        Quaternion spreadAngle = Quaternion.AngleAxis(gunDispersion, gunObject.transform.up);
-        Quaternion spreadAnglex2 = Quaternion.AngleAxis(-gunDispersion, gunObject.transform.up);
-        Vector3 newVector = spreadAngle * aimCircle;
-        Vector3 newVector2 = spreadAnglex2 * aimCircle;
-
-        //do the raycasts
-        Vector3 ray25right = CrosshairCast(gunObject.transform.position, newVector);
-        Vector3 ray25left = CrosshairCast(gunObject.transform.position, newVector2);
-        Vector3 rayStraight = CrosshairCast(gunObject.transform.position, aimCircle);
-
-        //get world to screenpoint
-		Camera _mainCamera = vehicleManager.CameraInUse;
-        Vector3 leftScreenPos = _mainCamera.WorldToScreenPoint(ray25left);
-        Vector3 rightScreenPos = _mainCamera.WorldToScreenPoint(ray25right);
-        Vector3 straightScreenPos = _mainCamera.WorldToScreenPoint(rayStraight);
-		CrosshairSpreadPositionLeft = new Vector3(rightScreenPos.x, rightScreenPos.y, 0f);
-		CrosshairSpreadPositionRight = new Vector3(leftScreenPos.x, leftScreenPos.y, 0f);
-		CrosshairSpreadPositionUp = new Vector3(straightScreenPos.x, straightScreenPos.y + Mathf.Abs(rightScreenPos.x-straightScreenPos.x), 0f);
-		CrosshairSpreadPositionDown = new Vector3(straightScreenPos.x, straightScreenPos.y - Mathf.Abs(rightScreenPos.x-straightScreenPos.x), 0f);
-        //crosshairSpread.transform.position = new Vector3(rightScreenPos.x, rightScreenPos.y, 0f);
-        //crosshairSpreadx2.transform.position = new Vector3(leftScreenPos.x, leftScreenPos.y, 0f);
-        //crosshairSpread_v.transform.position = new Vector3(straightScreenPos.x, straightScreenPos.y + Mathf.Abs(rightScreenPos.x-straightScreenPos.x), 0f);
-        //crosshairSpreadx2_v.transform.position = new Vector3(straightScreenPos.x, straightScreenPos.y - Mathf.Abs(rightScreenPos.x-straightScreenPos.x), 0f);
-
-        //Debug.Log("delta: " + ((oldX-leftScreenPos.x) * Time.deltaTime * 1000f).ToString());
-        //oldX = leftScreenPos.x;
-        //crosshair size
-        float crosshairspreadDistance = Mathf.Sqrt(Mathf.Pow((rightScreenPos.x-straightScreenPos.x),2) + Mathf.Pow(rightScreenPos.y-straightScreenPos.y,2));
-
-        cx = SCALEFACTOR*crosshairspreadDistance;
-        cx = Mathf.Clamp(cx, 0,0.2f);
-        crossPos = new Vector3(cx,cx,1);
-
-        //dont interpolate UI when just shot
-        if(justShot){
-            finalPos = crossPos;
-            justShot = false;
-        }else{
-            finalPos = Vector3.Lerp(finalPos, crossPos, crossHairLerp * Time.deltaTime);
-        }
-        
-        //set UI element width and height accordingly
-		CrosshairSpreadCirclePosition = new Vector2(2010f*finalPos.x * 10f, 2010f*finalPos.x*10f);
-        //crosshairCircleRectTransformImproved.sizeDelta = new Vector2(2010f*finalPos.x * 10f, 2010f*finalPos.x*10f);
-        
-        //calculates acceleration
-        acceleration = (vehicleManager.VelocityInKMH - lastVel) / Time.fixedDeltaTime;
-
-        //show outline when aiming at tank
-        Ray tankRay;
-        tankRay = new Ray(_mainCamera.transform.position,  _mainCamera.transform.forward);
-        if (Physics.Raycast(tankRay, out RaycastHit hit5, 5000f)){
-            if(hit5.transform.root.gameObject.tag=="Shootable"){
-                lastSelected = hit5.transform.root.gameObject;
-                hit5.transform.root.gameObject.GetComponent<Outline>().enabled = true;
-            }else{
-                if(lastSelected!=null){
-                    lastSelected.GetComponent<Outline>().enabled = false;
-                }
-            }
-            //Debug.Log(hit5.transform.root.gameObject.name);
-        }
+        EnableOutlineOnEnemy();
     }
 
     private void FixedUpdate(){
@@ -148,9 +76,10 @@ public class ShootingController : MonoBehaviour{
     }
 
     private void CalculateDispersion(){
-        //for dispersion calculation
+        // For dispersion calculation
         acceleration = (vehicleManager.VelocityInKMH - lastVel) / Time.fixedDeltaTime;
-        //increase dispersion while accelerating, decrease while decelerating or almost still
+
+        // Increase dispersion while accelerating, decrease while decelerating or almost still
         if(acceleration>1f){
             //gunDispersion = ((vehicleManager.VelocityInKMH / (tankMaximumVelocity * 3.6f)) * (maxDispersion-minDispersion))+minDispersion;
             gunDispersion += (vehicleManager.VelocityInKMH / (tankMaximumVelocity * 3.6f)) * dispersionIncreaseCoefficient * Time.deltaTime;
@@ -163,58 +92,70 @@ public class ShootingController : MonoBehaviour{
             gunDispersion -= (aimSpeed * coeffAdjuster) * Time.deltaTime;
             //gunDispersion -= aimSpeed * Time.deltaTime;
         }
-        //clam dispersion
+
         gunDispersion = Mathf.Clamp(gunDispersion,minDispersion,maxDispersion);
-        //for acceleration calculations
         lastVel = vehicleManager.VelocityInKMH;
     }
 
+    private void EnableOutlineOnEnemy(){
+        // Show outline when aiming at tank
+        Ray tankRay;
+        tankRay = new Ray(_mainCamera.transform.position,  _mainCamera.transform.forward);
+        if (Physics.Raycast(tankRay, out RaycastHit hit5, 5000f)){
+            if(hit5.transform.root.gameObject.tag=="Shootable"){
+                lastSelected = hit5.transform.root.gameObject;
+                hit5.transform.root.gameObject.GetComponent<Outline>().enabled = true;
+            }else{
+                if(lastSelected!=null){
+                    lastSelected.GetComponent<Outline>().enabled = false;
+                }
+            }
+        }
+    }
+
     private void Shoot(){
-        //implements accuracy rng by getting first distance from center and then angle around unit circle
+        // Implements accuracy rng by getting first distance from center and then angle around unit circle
         rawrng = Random.value;
         rawdirrng = Random.value;
         scaleddirrng = 2 * Mathf.PI * rawdirrng;
         float xval = Mathf.Cos(scaleddirrng);
         float yval = Mathf.Sin(scaleddirrng);
-        // do x^3 so that extreme values are exponentially more rare
+
+        // Do y = a * x^3 so that extreme values are exponentially more rare, determines how accuracy is distributed
+        // Basically a pdf-function
         scaledrng = gunDispersion * (rawrng*rawrng*rawrng);
-        Debug.Log("raw rng:" + rawrng + " scl rng:" + scaledrng);
+        //Debug.Log("raw rng:" + rawrng + " scl rng:" + scaledrng);
         xval = xval * scaledrng;
         yval = yval * scaledrng;
-        // shoots relative to our gun rotation
-        //shoots on x-axis
+
+        // Shoots relative to our gun rotation if we are on a hill etc.
         Quaternion spreadOnX = Quaternion.AngleAxis(xval, Vector3.up);
-        //shoots on y-axis
         Quaternion spreadOnY = Quaternion.AngleAxis(yval, Vector3.left);
         spreadOnX *=spreadOnY;
-        Quaternion rot = gunObject.transform.rotation;
+        Quaternion rot = gunShootingPositionObject.transform.rotation;
         rot *= spreadOnX;
-        //actually instantiates object
-        GameObject bul = Instantiate(bullet, gunObject.transform.position, rot);
+        GameObject bul = Instantiate(bullet, gunShootingPositionObject.transform.position, rot);
 
-        //removes one from bullet amount
-        bulletsOfT[selectedBullet]-=1;
-        bulletUIScript.UpdateBulletCountUI();
-        //plays sound
-        shootAudioSource.Play();
-
-        //add dispersion after shooting
+        // Adds dispersion after shooting
         ShootDispersion();
+        // Removes one from bullet amount
+        bulletCountOfType[selectedBullet]-=1;
+
+        // Invoke shootingEvent so that UI and Audio can function
+        if(shootingEvent!=null){
+            shootingEvent();
+        }
+    }
+
+    private void SwitchBullets(int type){
+        selectedBullet = type;
+        if(bulletSwitchEvent!=null){
+            bulletSwitchEvent();
+        }
     }
 
     private void ShootDispersion(){
         gunDispersion = shootingDispersion;
         justShot = true;
-    }
-
-    private Vector3 CrosshairCast(Vector3 pos, Vector3 dirVector){
-        Ray crosshairCast;
-        crosshairCast = new Ray(pos,  dirVector);
-        Vector3 hitp = new Vector3();
-        if (Physics.Raycast(crosshairCast, out RaycastHit hit, 5000f)){
-            //Debug.DrawLine(crosshairCast.origin, hit.point, Color.yellow);
-            hitp = hit.point;
-        }
-        return hitp;
     }
 }

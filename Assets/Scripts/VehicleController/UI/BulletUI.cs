@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class BulletUI : MonoBehaviour{
+
 	public Color blackSelected;
     public Color blackDeselected;
 
@@ -12,43 +13,36 @@ public class BulletUI : MonoBehaviour{
 
 	private ShootingController shootingController;
 
-    private void Start(){
+    private void Awake(){
         shootingController = gameObject.GetComponent<ShootingController>();
         InitializeBulletSelectedUI();
         UpdateBulletSelectedUI();
     }
 
-    private void Update(){
-        if (Input.GetKey(KeyCode.Alpha1)){
-            shootingController.selectedBullet = 0;
-            UpdateBulletSelectedUI();
-        }
+    private void OnEnable() {
+        shootingController.shootingEvent += UpdateBulletCountUI;
+        shootingController.bulletSwitchEvent += UpdateBulletSelectedUI;
+    }
 
-        if (Input.GetKey(KeyCode.Alpha2)){
-            shootingController.selectedBullet = 1;
-            UpdateBulletSelectedUI();
-        }
-
-        if (Input.GetKey(KeyCode.Alpha3)){
-            shootingController.selectedBullet = 2;
-            UpdateBulletSelectedUI();
-        }
+    private void OnDisable() {
+        shootingController.shootingEvent -= UpdateBulletCountUI;
+        shootingController.bulletSwitchEvent -= UpdateBulletSelectedUI;
     }
 
     public void UpdateBulletCountUI(){
         if(shootingController.selectedBullet==0){
-            bultype1.text = $"AP - {shootingController.bulletsOfT[shootingController.selectedBullet]}";
+            bultype1.text = $"AP - {shootingController.bulletCountOfType[shootingController.selectedBullet]}";
         }else if(shootingController.selectedBullet==1){
-            bultype2.text = $"HV - {shootingController.bulletsOfT[shootingController.selectedBullet]}";
+            bultype2.text = $"HV - {shootingController.bulletCountOfType[shootingController.selectedBullet]}";
         }else{
-            bultype3.text = $"HE - {shootingController.bulletsOfT[shootingController.selectedBullet]}";
+            bultype3.text = $"HE - {shootingController.bulletCountOfType[shootingController.selectedBullet]}";
         }
     }
 
     private void InitializeBulletSelectedUI(){
-        bultype1.text = $"AP - {shootingController.bulletsOfT[0]}";
-        bultype2.text = $"HV - {shootingController.bulletsOfT[1]}";
-        bultype3.text = $"HE - {shootingController.bulletsOfT[2]}";
+        bultype1.text = $"AP - {shootingController.bulletCountOfType[0]}";
+        bultype2.text = $"HV - {shootingController.bulletCountOfType[1]}";
+        bultype3.text = $"HE - {shootingController.bulletCountOfType[2]}";
     }
 
     private void UpdateBulletSelectedUI(){
