@@ -1,17 +1,14 @@
 using UnityEngine;
 
 public class BulletScript : MonoBehaviour{
+
     [Header("Bullet Speed")]
-    public float bulletSpeed = 5f;
+    public float bulletSpeed = 22f;
     public float lerpAmount = 5f;
 
     private float oldDist;
     private float deltaDist;
     private Vector3 newPos;
-
-    private void Start(){
-        newPos = transform.position;
-    }
 
     private void FixedUpdate(){
         newPos = transform.position + (transform.forward*bulletSpeed);
@@ -26,12 +23,11 @@ public class BulletScript : MonoBehaviour{
 
             float dst = hit2.distance;
             deltaDist = oldDist - dst;
-
             //Debug.Log("dist: " + hit2.distance.ToString() + "deltaDist: " + deltaDist.ToString());
 
             if(dst<= 2f * deltaDist){
-                Debug.Log("hit something");
                 Destroy(gameObject);
+                //Debug.Log("hit something");
             }
 
             oldDist = dst;
