@@ -23,7 +23,9 @@ public class ShootingController : MonoBehaviour{
     public float maxDispersion = 5f;
     public float shootingDispersion = 4f;
     public float aimSpeed = 1f;
-
+    public float reloadTime = 5f;
+    public float reloadTimeLeft;
+    public bool isReloading = false;
     public bool justShot = false;
 
 	private VehicleControllerManager vehicleManager;
@@ -40,9 +42,6 @@ public class ShootingController : MonoBehaviour{
     private float oldX;
 	private float tankMaximumVelocity;
 
-    public float reloadTime = 5f;
-    public float reloadTimeLeft;
-    public bool isReloading = false;
     private int currentAmmunition = 0;
     private int maxAmmo = 1;
 
@@ -56,7 +55,7 @@ public class ShootingController : MonoBehaviour{
     }
 
     private void Update(){
-        // Refactor eventually into inputcontroller clas
+        // Refactor eventually into inputcontroller class
         if (Input.GetButton("Fire1") && currentAmmunition>0){
             Shoot();
         }
