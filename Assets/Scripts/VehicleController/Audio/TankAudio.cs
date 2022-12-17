@@ -1,6 +1,7 @@
 using UnityEngine;
 
 public class TankAudio : MonoBehaviour{
+
 	public AudioSource engineAudioSource;
 	public float maxPitch = 1.2f;
     public float idlePitch = 0.4f;
@@ -17,7 +18,6 @@ public class TankAudio : MonoBehaviour{
 	}
 
 	private void PlayEngineAudio(){
-		// Set engine audio
         currentPitch = Mathf.Clamp(idlePitch + rigidBody.velocity.magnitude / 40.0f, idlePitch, maxPitch);
         engineAudioSource.pitch = currentPitch;
 	}

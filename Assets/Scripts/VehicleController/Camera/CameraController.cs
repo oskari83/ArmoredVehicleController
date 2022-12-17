@@ -5,7 +5,6 @@ public class CameraController : MonoBehaviour{
     [Header("Target")]
 	public VehicleControllerManager vehicleManager;
 
-	//public VehicleController vehicle;
 	private TurretMovement turretMovementScript;
 	private Transform tankTransform;
 
@@ -24,11 +23,11 @@ public class CameraController : MonoBehaviour{
     public LayerMask ObstaclesLayer = default; // Default in inspector
     public LayerMask StabilizerLayer = default; // Nothing in inspector
 
-    private Camera sniperCamera;
-    [HideInInspector] public Camera ourCamera;
-
     [Header("Currently in snipermode?")]
     public bool inSniperMode = false;
+
+    private Camera sniperCamera;
+    [HideInInspector] public Camera ourCamera;
 
     // distance from the front of the camera radius collision
     private const float CAMERA_COLLISION_FORWARD_HIT_OFFSET = 1.0f;
@@ -53,50 +52,37 @@ public class CameraController : MonoBehaviour{
     private int zoomPointerNormal = 0;
 
     private void Start(){
-        // Set cursor
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
         if(sniperCamera==null){
-            //sniperCamera = vehicle.sniperCam;
 			sniperCamera = vehicleManager.sniperModeCamera;
         }
-
-        // Initial camera position
         ourCamera = gameObject.GetComponent<Camera>();
 
 		turretMovementScript = vehicleManager.TurretMovementScript;
-
 		tankTransform = vehicleManager.TankTransform;
-
-        //sniperRig = vehicle.sniperTurret;
-        //sniperRigGun = vehicle.sniperGun;
-
 		sniperRig = vehicleManager.sniperModeRigTurretGameObject;
 		sniperRigGun = vehicleManager.sniperModeRigGunGameObject;
-
-        //minGunAngle = vehicle.minGunAngle;
-        //maxGunAngle = vehicle.maxGunAngle;
-
 		minGunAngle = turretMovementScript.minGunAngle_depression;
 		maxGunAngle = turretMovementScript.maxGunAngle_elevation;
 
         transform.position = (tankTransform.position + -tankTransform.forward) + (Vector3.up * 2);
         transform.LookAt(tankTransform.position + (Vector3.up * Height));
-        //old
-        //currentDistance = MinCamDistance + (MaxCamDistance - MinCamDistance) / 2;
         currentDistance = zoomStepsNormal[zoomPointerNormal];
     }
 
     private void Update(){
+        // Refactor later to inputcontroller
         _mouseY = Input.GetAxis("Mouse Y");
         _mouseX = Input.GetAxis("Mouse X");
         _mouseScroll = Input.GetAxis("Mouse ScrollWheel");
 
+        Zoom(inSniperMode);
         ControlCamera();
         ControlTurret(aimTarget);
 
-        //prevent main camera from clipping
+        // Prevent main camera from clipping
         Vector3 _cameraPos = (tankTransform.position - (transform.forward * currentDistance)) + (Vector3.up * Height);
         if (Physics.Linecast(tankTransform.position, _cameraPos, out RaycastHit hit, ObstaclesLayer)){
             _cameraPos = (hit.point + transform.forward * CAMERA_COLLISION_FORWARD_HIT_OFFSET);
@@ -105,58 +91,53 @@ public class CameraController : MonoBehaviour{
 
         if(inSniperMode){
 			vehicleManager.ToggleGunAndTurretVisuals(false);
-            //vehicle.ToggleGunAndTurretVisuals(false);
         }else{
 			vehicleManager.ToggleGunAndTurretVisuals(true);
-            //vehicle.ToggleGunAndTurretVisuals(true);
         }
     }
 
     private void ControlCamera(){
-        //do camera zoom
-        Zoom(inSniperMode);
-
         if(!inSniperMode){
-            //get and set out rotation
+            // Get and set out rotation
             currentRotX = _mouseX * RotSpeed;   
             currentRotY = -(_mouseY * RotSpeed);
             transform.eulerAngles += new Vector3(currentRotY,currentRotX);
-            //clamp to angles, remember to actually make these be variable based
+            // Clamp to angles, remember to actually make these be variable based
             Vector3 clampthis = transform.eulerAngles;
             if(clampthis.x>MaxAngle && clampthis.x<300f){ clampthis.x=MaxAngle;}
             if(clampthis.x<(360f-MinAngle) && clampthis.x>300f){ clampthis.x=(360f-MinAngle);}
             transform.eulerAngles = clampthis;
-            //set our snipercam rotation while we are not in it
+            // Set our snipercam rotation while we are not in it
             aimTarget = GetTargetPosition();
-            //rotate the sniperRig turret -> does not affect our camera
+            // Rotate the sniperRig turret -> does not affect our camera
             sniperRig.transform.LookAt(aimTarget);
             sniperRig.transform.localRotation = Quaternion.Euler(SniperRigTurretEulerSingleAxis());
-            //rotate the sniperRig gun -> does not affect our camera
+            // Rotate the sniperRig gun -> does not affect our camera
             sniperRigGun.transform.LookAt(aimTarget);
             sniperRigGun.transform.localRotation = Quaternion.Euler(SniperRigGunEulerSingleAxis());
         }else{
-            //make main camera look at target when we are not in sniper mode
+            // Make main camera look at target when we are not in sniper mode
             aimTarget = GetTargetPosition();
             gameObject.transform.LookAt(aimTarget);
-            //rotate the sniperRig turret -> affects our camera
+            // Rotate the sniperRig turret -> affects our camera
             sniperRig.transform.LookAt(stabilizerPos);
             sniperRig.transform.localRotation = Quaternion.Euler(SniperRigTurretEulerSingleAxis());
-            //rotate the sniperRig gun -> affects our camera
+            // Rotate the sniperRig gun -> affects our camera
             sniperRigGun.transform.LookAt(stabilizerPos2);
             sniperRigGun.transform.localRotation = Quaternion.Euler(SniperRigGunEulerSingleAxis());
 
-            //control snipercam (I dont know why 61 is the float there)
+            // Control snipercam (I dont know why 61 is the float there)
             camRotY = sniperSpeedY * _mouseY * (sniperCamera.fieldOfView/61f);
             camRotX = sniperSpeedX * _mouseX * (sniperCamera.fieldOfView/61f);
-            // localEulerAngles so that when our tank is rotated e.g. on a hill the mouse movement is natural
+            // LocalEulerAngles so that when our tank is rotated e.g. on a hill the mouse movement is natural
             sniperRig.transform.localEulerAngles += new Vector3(0f, camRotX, 0f);
             sniperRigGun.transform.localEulerAngles -= new Vector3(camRotY, 0f, 0f);
-            //attempt at clamping
+            // Attempt at clamping
             Vector3 clampthis = sniperRigGun.transform.localEulerAngles;
             if(clampthis.x>minGunAngle && clampthis.x<300f){ clampthis.x=minGunAngle;}
             if(clampthis.x<(360f-maxGunAngle) && clampthis.x>300f){ clampthis.x=(360f-maxGunAngle);}
             sniperRigGun.transform.localEulerAngles = clampthis;
-            //I dont remember what this is 
+            // I dont remember what this is 
             stabilizerPos=GetStabilizerPosition();
             if(camRotY!=0f){
                 stabilizerPos2=stabilizerPos;
@@ -183,6 +164,7 @@ public class CameraController : MonoBehaviour{
 		int maxlen;
         pointer = isSniperMode ? zoomPointer : zoomPointerNormal;
         maxlen = isSniperMode ? zoomStepsSniperMode.Length-1 : zoomStepsNormal.Length-1;
+
         // Check if we used scrollwheel
         if(_mouseScroll!=0f){
             if(_mouseScroll>0f){
@@ -191,6 +173,7 @@ public class CameraController : MonoBehaviour{
                 pointer-=1;
             }
         }
+
         // Check whether we exceeded limits and wanted to change modes
         if(pointer<0){
             pointer=0;
@@ -204,7 +187,8 @@ public class CameraController : MonoBehaviour{
                 GetOutOfNormalMode();
             }
         }
-        //apply zoom
+
+        // Apply zoom
         if(isSniperMode){
             sniperCamera.fieldOfView = zoomStepsSniperMode[pointer];
             zoomPointer = pointer;
@@ -232,7 +216,6 @@ public class CameraController : MonoBehaviour{
 
     private void ControlTurret(Vector3 target){
 		turretMovementScript.TurretTargetPosition = target;
-        //vehicle.TurretTargetPosition = target;
     }
 
     public Vector3 GetTargetPosition(){

@@ -5,6 +5,7 @@ public class BulletUI : MonoBehaviour{
 
 	public Color blackSelected;
     public Color blackDeselected;
+    public Color blue;
 
     public Text bultype1;
     public Text bultype2;

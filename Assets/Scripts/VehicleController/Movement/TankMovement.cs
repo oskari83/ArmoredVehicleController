@@ -62,11 +62,14 @@ public class TankMovement : MonoBehaviour{
         rigidBody.maxAngularVelocity = maxRot;
 	}
 
+    private void Update(){
+        // Sets angular and km/h velocity values to variables
+		GetVelocities();
+    }
+
 	private void FixedUpdate(){
 		// Sets boolean to indicate whether we are on the ground
 		GetGroundedStatus();
-		// Sets angular and km/h velocity values to variables
-		GetVelocities();
 		// Physically moves the tank
         MoveTank();
         // Limit our max velocity and angularvelocity

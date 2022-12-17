@@ -65,10 +65,11 @@ public class CrosshairUI : MonoBehaviour{
     }
 
 	private void MoveDispersionCrosshairs(){
+        float currentDispersion = shootingController.gunDispersion;
         // Get gun current dispersion in vectors
         Vector3 aimCircle = _gunShootingPositionObject.transform.forward;
-        Quaternion spreadAngle = Quaternion.AngleAxis(shootingController.gunDispersion, _gunShootingPositionObject.transform.up);
-        Quaternion spreadAnglex2 = Quaternion.AngleAxis(-shootingController.gunDispersion, _gunShootingPositionObject.transform.up);
+        Quaternion spreadAngle = Quaternion.AngleAxis(currentDispersion, _gunShootingPositionObject.transform.up);
+        Quaternion spreadAnglex2 = Quaternion.AngleAxis(-currentDispersion, _gunShootingPositionObject.transform.up);
         Vector3 newVector = spreadAngle * aimCircle;
         Vector3 newVector2 = spreadAnglex2 * aimCircle;
 

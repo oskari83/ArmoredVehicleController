@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 [RequireComponent(typeof(VehicleControllerManager))]
 public class ShootingController : MonoBehaviour{
@@ -22,7 +23,6 @@ public class ShootingController : MonoBehaviour{
     public float maxDispersion = 5f;
     public float shootingDispersion = 4f;
     public float aimSpeed = 1f;
-    public float dispersionIncreaseCoefficient = 40f;
 
     public bool justShot = false;
 
@@ -33,8 +33,6 @@ public class ShootingController : MonoBehaviour{
 	private GameObject lastSelected;
     private Camera _mainCamera;
 
-    private float lastVel = 0f;
-    private float acceleration;
     private float rawrng;
     private float rawdirrng;
     private float scaleddirrng;
@@ -42,17 +40,24 @@ public class ShootingController : MonoBehaviour{
     private float oldX;
 	private float tankMaximumVelocity;
 
+    public float reloadTime = 5f;
+    public float reloadTimeLeft;
+    public bool isReloading = false;
+    private int currentAmmunition = 0;
+    private int maxAmmo = 1;
+
     private void Awake(){
 		vehicleManager = GetComponent<VehicleControllerManager>();
 		tankMovementScript = GetComponent<TankMovement>();
 
 		gunShootingPositionObject = vehicleManager.gunShootingPositionGameObject;
 		tankMaximumVelocity = tankMovementScript.maxSpeed;
+        reloadTimeLeft = reloadTime;
     }
 
     private void Update(){
         // Refactor eventually into inputcontroller clas
-        if (Input.GetButtonDown("Fire1")){
+        if (Input.GetButton("Fire1") && currentAmmunition>0){
             Shoot();
         }
         if (Input.GetKey(KeyCode.Alpha1)){
@@ -67,34 +72,36 @@ public class ShootingController : MonoBehaviour{
 
         _mainCamera = vehicleManager.CameraInUse;
 
+        if(!isReloading && currentAmmunition<=0){
+            StartCoroutine(Reload());
+        }
+        if(isReloading){
+            reloadTimeLeft-=Time.deltaTime;
+            if(reloadTimeLeft<0f){
+                reloadTimeLeft=0f;
+            }
+        }
+
         CalculateDispersion();
         EnableOutlineOnEnemy();
     }
 
-    private void FixedUpdate(){
-        //CalculateDispersion();
-    }
-
     private void CalculateDispersion(){
-        // For dispersion calculation
-        acceleration = (vehicleManager.VelocityInKMH - lastVel) / Time.fixedDeltaTime;
-
-        // Increase dispersion while accelerating, decrease while decelerating or almost still
-        if(acceleration>1f){
-            //gunDispersion = ((vehicleManager.VelocityInKMH / (tankMaximumVelocity * 3.6f)) * (maxDispersion-minDispersion))+minDispersion;
-            gunDispersion += (vehicleManager.VelocityInKMH / (tankMaximumVelocity * 3.6f)) * dispersionIncreaseCoefficient * Time.deltaTime;
-        }else if(acceleration < -1f || vehicleManager.VelocityInKMH<1f){
-            float delta = gunDispersion - minDispersion;
-            float adjD = 1 - ( delta/(maxDispersion-minDispersion) );
-            //Debug.Log("adjD: " + adjD.ToString());
-            float coeffAdjuster = 1.6f - (1.2f * adjD);
-            delta = Mathf.Clamp(delta, 1f,1.1f);
-            gunDispersion -= (aimSpeed * coeffAdjuster) * Time.deltaTime;
-            //gunDispersion -= aimSpeed * Time.deltaTime;
+        // Adds dispersion when moving relative to velocity
+        float velocityProportion = vehicleManager.VelocityInKMH / (tankMaximumVelocity * 3.6f);
+        float dispersionTarget = ((maxDispersion-minDispersion) * velocityProportion) + minDispersion;
+        if (gunDispersion<(dispersionTarget)){
+            gunDispersion = dispersionTarget;
         }
 
+        // Deducts dispersion as a result of aiming
+        float delta = gunDispersion - minDispersion;
+        float adjD = 1 - ( delta/(maxDispersion-minDispersion) );
+        //Debug.Log("adjD: " + adjD.ToString());
+        float coeffAdjuster = 1.6f - (1.2f * adjD);
+        gunDispersion -= (aimSpeed * coeffAdjuster) * Time.deltaTime;
+
         gunDispersion = Mathf.Clamp(gunDispersion,minDispersion,maxDispersion);
-        lastVel = vehicleManager.VelocityInKMH;
     }
 
     private void EnableOutlineOnEnemy(){
@@ -140,11 +147,22 @@ public class ShootingController : MonoBehaviour{
         ShootDispersion();
         // Removes one from bullet amount
         bulletCountOfType[selectedBullet]-=1;
+        // Removes one ammunition from "clip"
+        currentAmmunition -= 1;
 
         // Invoke shootingEvent so that UI and Audio can function
         if(shootingEvent!=null){
             shootingEvent();
         }
+    }
+
+    private IEnumerator Reload(){
+        isReloading = true;
+        yield return new WaitForSeconds(reloadTime);
+
+        currentAmmunition = maxAmmo;
+        isReloading = false;
+        reloadTimeLeft = reloadTime;
     }
 
     private void SwitchBullets(int type){

@@ -35,27 +35,28 @@ public class TurretMovement : MonoBehaviour{
     }
 
 	private void MoveTurret(){
-        // look to target
-        Quaternion _lookAtTurret = Quaternion.LookRotation(targetPosition - turretGameObject.transform.position, gameObject.transform.up);
-        Quaternion _lookAtGun = Quaternion.LookRotation(targetPosition - gunGameObject.transform.position, gunGameObject.transform.up);
-        Quaternion _turretRelativeRotTarget = Quaternion.Euler(gameObject.transform.eulerAngles - _lookAtTurret.eulerAngles);
-        Quaternion _gunRelativeRotTarget = Quaternion.Euler(turretGameObject.transform.eulerAngles - _lookAtGun.eulerAngles);
-        float _angleBetweenTurretAndTarget = Vector3.Angle(turretLocalRotation * Vector3.forward, _turretRelativeRotTarget * Vector3.forward);
-        float _angleBetweenGunAndTarget = Vector3.Angle(gunLocalRotation * Vector3.forward, _gunRelativeRotTarget * Vector3.forward);
-        float _turretVelocity = 1 / _angleBetweenTurretAndTarget;
-        float _gunVelocity = 1 / _angleBetweenGunAndTarget;
-        float _horizontalSpeed = turretTraverseSpeed;
-        _horizontalSpeed *= _turretVelocity;
-        _horizontalSpeed *= Time.deltaTime;
-        float _verticalSpeed = gunTraverseSpeed;
-        _verticalSpeed *= _gunVelocity;
-        _verticalSpeed *= Time.deltaTime;
-        Quaternion _turretFinalRotation = Quaternion.Euler(gameObject.transform.eulerAngles - _lookAtTurret.eulerAngles);
-        Quaternion _gunFinalRotation = Quaternion.Euler(turretGameObject.transform.eulerAngles - _lookAtGun.eulerAngles);
-
         if(Input.GetMouseButton(1)){ 
+            // Refactor later to inputcontroller
             Debug.Log("holding down"); 
         }else{
+            // look to target
+            Quaternion _lookAtTurret = Quaternion.LookRotation(targetPosition - turretGameObject.transform.position, gameObject.transform.up);
+            Quaternion _lookAtGun = Quaternion.LookRotation(targetPosition - gunGameObject.transform.position, gunGameObject.transform.up);
+            Quaternion _turretRelativeRotTarget = Quaternion.Euler(gameObject.transform.eulerAngles - _lookAtTurret.eulerAngles);
+            Quaternion _gunRelativeRotTarget = Quaternion.Euler(turretGameObject.transform.eulerAngles - _lookAtGun.eulerAngles);
+            float _angleBetweenTurretAndTarget = Vector3.Angle(turretLocalRotation * Vector3.forward, _turretRelativeRotTarget * Vector3.forward);
+            float _angleBetweenGunAndTarget = Vector3.Angle(gunLocalRotation * Vector3.forward, _gunRelativeRotTarget * Vector3.forward);
+            float _turretVelocity = 1 / _angleBetweenTurretAndTarget;
+            float _gunVelocity = 1 / _angleBetweenGunAndTarget;
+            float _horizontalSpeed = turretTraverseSpeed;
+            _horizontalSpeed *= _turretVelocity;
+            _horizontalSpeed *= Time.deltaTime;
+            float _verticalSpeed = gunTraverseSpeed;
+            _verticalSpeed *= _gunVelocity;
+            _verticalSpeed *= Time.deltaTime;
+            Quaternion _turretFinalRotation = Quaternion.Euler(gameObject.transform.eulerAngles - _lookAtTurret.eulerAngles);
+            Quaternion _gunFinalRotation = Quaternion.Euler(turretGameObject.transform.eulerAngles - _lookAtGun.eulerAngles);
+
             turretLocalRotation = Quaternion.Lerp(turretLocalRotation, _turretFinalRotation, _horizontalSpeed);
             gunLocalRotation = Quaternion.Lerp(gunLocalRotation, _gunFinalRotation, _verticalSpeed);
             Quaternion _turretRot = Quaternion.Euler(gameObject.transform.eulerAngles - turretLocalRotation.eulerAngles);
