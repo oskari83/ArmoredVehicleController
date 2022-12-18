@@ -94,6 +94,9 @@ public class TankMovement : MonoBehaviour{
 	}
 
     private void MoveTank2(){
+
+        float localZVelocity = transform.InverseTransformDirection(rigidBody.velocity).z;
+
         float normalizedRotationVelocity = rigidBody.angularVelocity.y / turningForceCoefficient;
         normalizedRotationVelocity = Math.Abs(normalizedRotationVelocity);
         if (normalizedRotationVelocity>1){
@@ -124,6 +127,11 @@ public class TankMovement : MonoBehaviour{
             }
 
             if(inputs.DriveInput!=0f){
+                if(inputs.DriveInput<0f && localZVelocity>0f){
+                    rigidBody.AddForce(transform.forward * driveTorque * Time.fixedDeltaTime * -velocityInDirection * 2000f);
+                }else if(inputs.DriveInput>0f && localZVelocity<0f){
+                    rigidBody.AddForce(transform.forward * driveTorque * Time.fixedDeltaTime * -velocityInDirection * 2000f);
+                }
                 SetLeftTrackTorque(inputs.DriveInput * driveTorque * dragCoefficient);
                 SetRightTrackTorque(inputs.DriveInput * driveTorque * dragCoefficient);
             }else if(inputs.TurnInput!=0f){

@@ -39206,7 +39206,7 @@ MonoBehaviour:
   driveTorque: 2
   brakeStrength: 3
   maxRot: 0.75
-  maxSpeed: 20
+  maxSpeed: 12
   movementSidewaysFriction: 0.8
   stillSidewaysFriction: 0.8
   leftWheelColliders:
