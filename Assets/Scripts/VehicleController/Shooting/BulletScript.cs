@@ -10,6 +10,10 @@ public class BulletScript : MonoBehaviour{
     private float deltaDist;
     private Vector3 newPos;
 
+    private void Start(){
+        newPos = transform.position;
+    }
+
     private void FixedUpdate(){
         newPos = transform.position + (transform.forward*bulletSpeed);
     }

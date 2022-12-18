@@ -1,6 +1,12 @@
 using UnityEngine;
+using System;
 
 public class TankMovement : MonoBehaviour{
+
+    public GameObject leftTrackForceObject;
+    public GameObject rightTrackForceObject;
+    public float turningForceCoefficient = 1f;
+    public float forwardForceCoefficient = 1f;
 
 	[Header("Tank Power Settings")]
     public float turnTorque = 1f;
@@ -59,7 +65,7 @@ public class TankMovement : MonoBehaviour{
         driveTorque = driveTorque * 100f;
         brakeStrength = brakeStrength * 1000f;
 
-        rigidBody.maxAngularVelocity = maxRot;
+        //rigidBody.maxAngularVelocity = maxRot;
 	}
 
     private void Update(){
@@ -71,29 +77,69 @@ public class TankMovement : MonoBehaviour{
 		// Sets boolean to indicate whether we are on the ground
 		GetGroundedStatus();
 		// Physically moves the tank
-        MoveTank();
+        //MoveTank();
+        MoveTank2();
         // Limit our max velocity and angularvelocity
-        LimitMaximumVelocities();
+        //LimitMaximumVelocities();
         // Get our current climb angle
         GetClimbAngle();
 
-		// Adjusts drag when we are climbing vertically to slow us down
-        if(curAngle>20f && height<= maxHeightStillGrounded && lastAngle<curAngle){
-            rigidBody.drag=curAngle*0.03f;
-        }
-        lastAngle = curAngle;
+        //AdjustDrag();
 
-        if(!grounded){
-            rigidBody.drag = 0.1f;
-        }
+        lastAngle = curAngle;
 	}
 
 	private void LateUpdate(){
 		SetWheelColliderFriction();
 	}
 
+    private void MoveTank2(){
+        float normalizedRotationVelocity = rigidBody.angularVelocity.y / turningForceCoefficient;
+        normalizedRotationVelocity = Math.Abs(normalizedRotationVelocity);
+        if (normalizedRotationVelocity>1){
+            normalizedRotationVelocity=1;
+        }
+        float dragTurnCoefficient = 1 - normalizedRotationVelocity;
+
+        float velocityInDirection = Vector3.Dot(rigidBody.velocity, transform.forward);
+        float angularVelocityInDirection = Vector3.Dot(rigidBody.angularVelocity, transform.up);
+
+        float normalizedVelocity = velocityInDirection / forwardForceCoefficient;
+        normalizedVelocity = Math.Abs(normalizedVelocity);
+        if (normalizedVelocity>1){
+            normalizedVelocity=1;
+        }
+        float dragCoefficient = 1 - normalizedVelocity;
+
+        if(grounded){
+            if(inputs.DriveInput<0){
+                rigidBody.AddTorque(transform.up * -inputs.TurnInput * turnTorque * dragTurnCoefficient * Time.fixedDeltaTime);
+            }else{
+                rigidBody.AddTorque(transform.up * inputs.TurnInput * turnTorque * dragTurnCoefficient * Time.fixedDeltaTime);
+            }
+
+            if(inputs.TurnInput==0){
+                // For responsive feel so that tank doest continue turning after input
+                rigidBody.AddTorque(transform.up * turnTorque * Time.fixedDeltaTime * -angularVelocityInDirection);
+            }
+
+            if(inputs.DriveInput!=0f){
+                SetLeftTrackTorque(inputs.DriveInput * driveTorque * dragCoefficient);
+                SetRightTrackTorque(inputs.DriveInput * driveTorque * dragCoefficient);
+            }else if(inputs.TurnInput!=0f){
+                SetLeftTrackTorque(0.01f * driveTorque);
+                SetRightTrackTorque(0.01f * driveTorque);
+                rigidBody.AddForce(transform.forward * driveTorque * Time.fixedDeltaTime * -velocityInDirection * 1000f);
+            }else{
+                SetLeftTrackTorque(0f);
+                SetRightTrackTorque(0f);
+                rigidBody.AddForce(transform.forward * driveTorque * Time.fixedDeltaTime * -velocityInDirection * 1000f);
+            }
+        }
+    }
+
 	private void MoveTank(){
-		// Only turn if we are on the groun
+		// Only turn if we are on the ground
         if(grounded){
             if(inputs.DriveInput<0){
                 rigidBody.AddTorque(transform.up * -inputs.TurnInput * turnTorque * Time.fixedDeltaTime);
@@ -161,9 +207,20 @@ public class TankMovement : MonoBehaviour{
         }
 	}
 
+    private void AdjustDrag(){
+        // Adjusts drag when we are climbing vertically to slow us down
+        if(curAngle>20f && height<= maxHeightStillGrounded && lastAngle<curAngle){
+            rigidBody.drag=curAngle*0.03f;
+        }
+
+        if(!grounded){
+            rigidBody.drag = 0.1f;
+        }
+    }
+
 	private void SetLeftTrackTorque(float speed) {
         for (int i = 0; i < leftWheelColliders.Length; i++) {
-            if(velocityInKMH<0.25f){
+            if(velocityInKMH<-0.25f){
                 // Gives initial boost so that controls seem more responsive
                 leftWheelColliders[i].motorTorque = inputs.DriveInput < 0f ? speed*20f : speed*5f;
             }else{
@@ -174,7 +231,7 @@ public class TankMovement : MonoBehaviour{
 
     private void SetRightTrackTorque(float speed) {
         for (int i = 0; i < rightWheelColliders.Length; i++) {
-            if(velocityInKMH<0.25f){
+            if(velocityInKMH<-0.25f){
                 // Gives initial boost so that controls seem more responsive
                 rightWheelColliders[i].motorTorque = inputs.DriveInput < 0f ? speed*20f : speed*5f;
             }else{
