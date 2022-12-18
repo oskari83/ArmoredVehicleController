@@ -110,6 +110,7 @@ public class ShootingController : MonoBehaviour{
         if (Physics.Raycast(tankRay, out RaycastHit hit5, 5000f)){
             if(hit5.transform.root.gameObject.tag=="Shootable"){
                 lastSelected = hit5.transform.root.gameObject;
+                //Debug.Log("hit: " + lastSelected.name);
                 hit5.transform.root.gameObject.GetComponent<QuickOutline>().enabled = true;
             }else{
                 if(lastSelected!=null){
