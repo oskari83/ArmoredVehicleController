@@ -3,15 +3,12 @@ using System;
 
 public class TankMovement : MonoBehaviour{
 
-    public GameObject leftTrackForceObject;
-    public GameObject rightTrackForceObject;
-    public float turningForceCoefficient = 1f;
-    public float forwardForceCoefficient = 1f;
-
 	[Header("Tank Power Settings")]
     public float turnTorque = 1f;
     public float driveTorque = 2f;
     public float brakeStrength = 3f;
+    public float turningForceCoefficient = 0.7f;
+    public float forwardForceCoefficient = 12f;
     public float maxRot = 0.75f;
     public float maxSpeed = 20f;
 
@@ -64,8 +61,6 @@ public class TankMovement : MonoBehaviour{
 		turnTorque = turnTorque * 1000000f;
         driveTorque = driveTorque * 100f;
         brakeStrength = brakeStrength * 1000f;
-
-        //rigidBody.maxAngularVelocity = maxRot;
 	}
 
     private void Update(){
@@ -77,15 +72,9 @@ public class TankMovement : MonoBehaviour{
 		// Sets boolean to indicate whether we are on the ground
 		GetGroundedStatus();
 		// Physically moves the tank
-        //MoveTank();
-        MoveTank2();
-        // Limit our max velocity and angularvelocity
-        //LimitMaximumVelocities();
+        MoveTank();
         // Get our current climb angle
         GetClimbAngle();
-
-        //AdjustDrag();
-
         lastAngle = curAngle;
 	}
 
@@ -93,100 +82,97 @@ public class TankMovement : MonoBehaviour{
 		SetWheelColliderFriction();
 	}
 
-    private void MoveTank2(){
-
-        float localZVelocity = transform.InverseTransformDirection(rigidBody.velocity).z;
-
-        float normalizedRotationVelocity = rigidBody.angularVelocity.y / turningForceCoefficient;
-        normalizedRotationVelocity = Math.Abs(normalizedRotationVelocity);
-        if (normalizedRotationVelocity>1){
-            normalizedRotationVelocity=1;
-        }
-        float dragTurnCoefficient = 1 - normalizedRotationVelocity;
-
+    private void MoveTank(){
+        // Gets the forward/backward velocity
         float velocityInDirection = Vector3.Dot(rigidBody.velocity, transform.forward);
-        float angularVelocityInDirection = Vector3.Dot(rigidBody.angularVelocity, transform.up);
+        float dragCoefficient = CalculateDragCoefficient(velocityInDirection, forwardForceCoefficient);
 
-        float normalizedVelocity = velocityInDirection / forwardForceCoefficient;
-        normalizedVelocity = Math.Abs(normalizedVelocity);
-        if (normalizedVelocity>1){
-            normalizedVelocity=1;
-        }
-        float dragCoefficient = 1 - normalizedVelocity;
+        // Gets the turning angular velocity
+        float angularVelocityInDirection = Vector3.Dot(rigidBody.angularVelocity, transform.up);
+        float dragTurnCoefficient = CalculateDragCoefficient(angularVelocityInDirection, turningForceCoefficient);;
+
+        float turnForwardVelocityCoefficient = 2 * dragCoefficient;
+        turnForwardVelocityCoefficient = turnForwardVelocityCoefficient > 1f ? 1f : turnForwardVelocityCoefficient;
 
         if(grounded){
+            // Turns tank using turnTorque * dragTurnCoefficient, which is a scaled value from 0..1 depending on angular velocity
+            // First part makes sure direction and rotation of turning is correct
+            Vector3 turningTorqueValue = (transform.up * inputs.TurnInput * Time.fixedDeltaTime) * turnTorque * dragTurnCoefficient * turnForwardVelocityCoefficient;
             if(inputs.DriveInput<0){
-                rigidBody.AddTorque(transform.up * -inputs.TurnInput * turnTorque * dragTurnCoefficient * Time.fixedDeltaTime);
+                rigidBody.AddTorque(turningTorqueValue * -1f);
             }else{
-                rigidBody.AddTorque(transform.up * inputs.TurnInput * turnTorque * dragTurnCoefficient * Time.fixedDeltaTime);
+                rigidBody.AddTorque(turningTorqueValue);
             }
 
+            // For responsive feel, stops tank rotation when we do not want to turn, otherwise would continue turning 
             if(inputs.TurnInput==0){
-                // For responsive feel so that tank doest continue turning after input
                 rigidBody.AddTorque(transform.up * turnTorque * Time.fixedDeltaTime * -angularVelocityInDirection);
             }
 
+            // If we switch from forwards to backwards, we want tank to move responsively instead of sliding
             if(inputs.DriveInput!=0f){
-                if(inputs.DriveInput<0f && localZVelocity>0f){
+                if(inputs.DriveInput<0f && velocityInDirection>0f){
                     rigidBody.AddForce(transform.forward * driveTorque * Time.fixedDeltaTime * -velocityInDirection * 2000f);
-                }else if(inputs.DriveInput>0f && localZVelocity<0f){
+                }else if(inputs.DriveInput>0f && velocityInDirection<0f){
                     rigidBody.AddForce(transform.forward * driveTorque * Time.fixedDeltaTime * -velocityInDirection * 2000f);
                 }
+
+                // Moves tank using driveTorque * dragCoefficient, which is a scaled value from 0..1 depending on velocity
+                // Disable brakes first so we can move
+                SetBrakes(0);
                 SetLeftTrackTorque(inputs.DriveInput * driveTorque * dragCoefficient);
                 SetRightTrackTorque(inputs.DriveInput * driveTorque * dragCoefficient);
             }else if(inputs.TurnInput!=0f){
+                // Moves tank slightly forward if we are only turning, otherwise friction would not allow AddTorque to function properly
+                // Disable brakes (idk if necessary here)
+                SetBrakes(0);
                 SetLeftTrackTorque(0.01f * driveTorque);
                 SetRightTrackTorque(0.01f * driveTorque);
+
+                // Stops tank if we stop wanting to move forwards/backwards instead of slowly coming to a stop like a car
                 rigidBody.AddForce(transform.forward * driveTorque * Time.fixedDeltaTime * -velocityInDirection * 1000f);
             }else{
+                // Enable brakes so that we dont slide on a slope or a hill when still
+                SetBrakes(brakeStrength);
                 SetLeftTrackTorque(0f);
                 SetRightTrackTorque(0f);
+
+                // Stops tank if we stop wanting to move forwards/backwards instead of slowly coming to a stop like a car
                 rigidBody.AddForce(transform.forward * driveTorque * Time.fixedDeltaTime * -velocityInDirection * 1000f);
             }
         }
     }
 
-	private void MoveTank(){
-		// Only turn if we are on the ground
-        if(grounded){
-            if(inputs.DriveInput<0){
-                rigidBody.AddTorque(transform.up * -inputs.TurnInput * turnTorque * Time.fixedDeltaTime);
-            }else{
-                rigidBody.AddTorque(transform.up * inputs.TurnInput * turnTorque * Time.fixedDeltaTime);
-            }
-
-            if(inputs.TurnInput==0){
-                // For responsive feel so that tank doest continue turning after input
-                rigidBody.AddTorque(transform.up * turnTorque * Time.fixedDeltaTime * -rigidBody.angularVelocity.y);
-            }
+    private float CalculateDragCoefficient(float _velocity, float _coefficient){
+        float normalizedVelocity = _velocity / _coefficient;
+        normalizedVelocity = Math.Abs(normalizedVelocity);
+        if (normalizedVelocity>1f){
+            normalizedVelocity=1f;
         }
+        return (1 - normalizedVelocity);
+    }
 
-		if(inputs.DriveInput!=0f){
-            SetLeftTrackTorque(inputs.DriveInput * driveTorque);
-            SetRightTrackTorque(inputs.DriveInput * driveTorque);
-        }else if(inputs.TurnInput!=0f){
-            SetLeftTrackTorque(0.01f * driveTorque);
-            SetRightTrackTorque(0.01f * driveTorque);
-        }else{
-            SetLeftTrackTorque(0f);
-            SetRightTrackTorque(0f);
-        }
-
-		if((inputs.DriveInput==0 && inputs.TurnInput==0) || (inputs.DriveInput<0f && rigidBody.velocity.magnitude>5f)){
-            rigidBody.drag = 2;
-            SetBrakes(brakeStrength);
-        }else if (inputs.DriveInput==0 && inputs.TurnInput!=0 && rigidBody.velocity.magnitude>1f){
-            rigidBody.drag = 2f;
-            SetBrakes(brakeStrength);
-        }else{
-            rigidBody.drag = 0.01f;
-            SetBrakes(0);
-        }
+    private void GetVelocities(){
+        angularVelocity = rigidBody.angularVelocity.magnitude;
+        velocityInKMH = rigidBody.velocity.magnitude * 3.6f;
 	}
 
 	private void GetGroundedStatus(){
 		GetHeight();
-        grounded = (height<= maxHeightStillGrounded) ? true : false;
+
+        // Assumes equal amount of wheelcolliders on left and right side
+        int countOfWheelColliders = leftWheelColliders.Length * 2;
+        int notGroundedCount = 0;
+        for (int i = 0; i < leftWheelColliders.Length; i++) {
+            if(!leftWheelColliders[i].isGrounded){
+                notGroundedCount+=1;
+            }
+            if(!rightWheelColliders[i].isGrounded){
+                notGroundedCount+=1;
+            }
+        }
+        //grounded = (height<= maxHeightStillGrounded) ? true : false;
+        grounded = notGroundedCount>=countOfWheelColliders-2 ? false : true;
 	}
 
     private void GetHeight(){
@@ -196,35 +182,14 @@ public class TankMovement : MonoBehaviour{
         // Debug.DrawRay(downRay.origin,downRay.direction * 100, Color.red);
         if (Physics.Raycast(downRay, out hit)){
             height = hit.distance;
+            //Debug.Log(height.ToString());
         }
     }
-
-	private void GetVelocities(){
-        angularVelocity = rigidBody.angularVelocity.magnitude;
-        velocityInKMH = rigidBody.velocity.magnitude * 3.6f;
-	}
 
     private void GetClimbAngle(){
         curAngle = Vector3.Angle(Vector3.up, transform.up);
     }
 
-	private void LimitMaximumVelocities(){
-		if(grounded){
-            rigidBody.angularVelocity = Vector3.ClampMagnitude(rigidBody.angularVelocity, maxRot);
-            rigidBody.velocity = Vector3.ClampMagnitude(rigidBody.velocity, maxSpeed);
-        }
-	}
-
-    private void AdjustDrag(){
-        // Adjusts drag when we are climbing vertically to slow us down
-        if(curAngle>20f && height<= maxHeightStillGrounded && lastAngle<curAngle){
-            rigidBody.drag=curAngle*0.03f;
-        }
-
-        if(!grounded){
-            rigidBody.drag = 0.1f;
-        }
-    }
 
 	private void SetLeftTrackTorque(float speed) {
         for (int i = 0; i < leftWheelColliders.Length; i++) {

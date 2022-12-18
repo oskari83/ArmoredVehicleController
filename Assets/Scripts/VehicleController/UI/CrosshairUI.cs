@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CrosshairUI : MonoBehaviour{
 
@@ -24,6 +25,11 @@ public class CrosshairUI : MonoBehaviour{
     private GameObject _gunShootingPositionObject;
     private GameObject _gunGameObject;
 
+    private Image crosshairSpreadLeftImage;
+    private Image crosshairSpreadRightImage;
+    private Image crosshairSpreadUpImage;
+    private Image crosshairSpreadDownImage;
+
     private float SCALEFACTOR = 0.018f / 16.557f;
     private float cx;
 
@@ -32,6 +38,11 @@ public class CrosshairUI : MonoBehaviour{
 		shootingController = GetComponent<ShootingController>();
         _gunShootingPositionObject = vehicleManager.gunShootingPositionGameObject;
         _gunGameObject = vehicleManager.tankGunGameObject;
+
+        crosshairSpreadLeftImage = crosshairSpread.GetComponent<Image>();
+        crosshairSpreadRightImage = crosshairSpreadx2.GetComponent<Image>();
+        crosshairSpreadUpImage = crosshairSpread_v.GetComponent<Image>();
+        crosshairSpreadDownImage = crosshairSpreadx2_v.GetComponent<Image>();
 	}
 
 	private void Update(){
@@ -40,6 +51,18 @@ public class CrosshairUI : MonoBehaviour{
 		MoveCrosshair();
 		MoveDispersionCrosshairs();
         DisableCrosshairsIfNotInSight();
+
+        if(shootingController.isReloading){
+            crosshairSpreadLeftImage.color = UIColours.blackSelected;
+            crosshairSpreadRightImage.color = UIColours.blackSelected;
+            crosshairSpreadUpImage.color = UIColours.blackSelected;
+            crosshairSpreadDownImage.color = UIColours.blackSelected;
+        }else{
+            crosshairSpreadLeftImage.color = UIColours.blue;
+            crosshairSpreadRightImage.color = UIColours.blue;
+            crosshairSpreadUpImage.color = UIColours.blue;
+            crosshairSpreadDownImage.color = UIColours.blue;
+        }
 	}
 
 	private void MoveCrosshair(){
