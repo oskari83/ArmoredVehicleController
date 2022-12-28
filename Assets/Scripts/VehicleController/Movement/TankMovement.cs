@@ -24,7 +24,6 @@ public class TankMovement : MonoBehaviour{
 	public float centerOfMassYOffset = -1.0f;
     public float maxHeightStillGrounded = 1.15f;
 
-	private float lastAngle;
     private float curAngle;
 	private bool grounded;
 
@@ -39,7 +38,7 @@ public class TankMovement : MonoBehaviour{
 	[SerializeField] private float height;
 
 	private void Awake(){
-		rigidBody = this.GetComponent<Rigidbody>();
+		rigidBody = GetComponent<Rigidbody>();
 		rigidBody.centerOfMass = new Vector3(0, centerOfMassYOffset, 0);
 		inputs = GetComponent<InputController>();
 
@@ -75,7 +74,6 @@ public class TankMovement : MonoBehaviour{
         MoveTank();
         // Get our current climb angle
         GetClimbAngle();
-        lastAngle = curAngle;
 	}
 
 	private void LateUpdate(){
@@ -97,7 +95,7 @@ public class TankMovement : MonoBehaviour{
         if(grounded){
             // Turns tank using turnTorque * dragTurnCoefficient, which is a scaled value from 0..1 depending on angular velocity
             // First part makes sure direction and rotation of turning is correct
-            Vector3 turningTorqueValue = (transform.up * inputs.TurnInput * Time.fixedDeltaTime) * turnTorque * dragTurnCoefficient * turnForwardVelocityCoefficient;
+            Vector3 turningTorqueValue = dragTurnCoefficient * turnForwardVelocityCoefficient * turnTorque * (inputs.TurnInput * Time.fixedDeltaTime * transform.up);
             if(inputs.DriveInput<0){
                 rigidBody.AddTorque(turningTorqueValue * -1f);
             }else{
@@ -106,15 +104,15 @@ public class TankMovement : MonoBehaviour{
 
             // For responsive feel, stops tank rotation when we do not want to turn, otherwise would continue turning 
             if(inputs.TurnInput==0){
-                rigidBody.AddTorque(transform.up * turnTorque * Time.fixedDeltaTime * -angularVelocityInDirection);
+                rigidBody.AddTorque(-angularVelocityInDirection * Time.fixedDeltaTime * turnTorque * transform.up);
             }
 
             // If we switch from forwards to backwards, we want tank to move responsively instead of sliding
             if(inputs.DriveInput!=0f){
                 if(inputs.DriveInput<0f && velocityInDirection>0f){
-                    rigidBody.AddForce(transform.forward * driveTorque * Time.fixedDeltaTime * -velocityInDirection * 2000f);
+                    rigidBody.AddForce(2000f * driveTorque * Time.fixedDeltaTime * -velocityInDirection * transform.forward);
                 }else if(inputs.DriveInput>0f && velocityInDirection<0f){
-                    rigidBody.AddForce(transform.forward * driveTorque * Time.fixedDeltaTime * -velocityInDirection * 2000f);
+                    rigidBody.AddForce(2000f * driveTorque * Time.fixedDeltaTime * -velocityInDirection * transform.forward);
                 }
 
                 // Moves tank using driveTorque * dragCoefficient, which is a scaled value from 0..1 depending on velocity
@@ -130,7 +128,7 @@ public class TankMovement : MonoBehaviour{
                 SetRightTrackTorque(0.01f * driveTorque);
 
                 // Stops tank if we stop wanting to move forwards/backwards instead of slowly coming to a stop like a car
-                rigidBody.AddForce(transform.forward * driveTorque * Time.fixedDeltaTime * -velocityInDirection * 1000f);
+                rigidBody.AddForce(1000f * driveTorque * Time.fixedDeltaTime * -velocityInDirection * transform.forward);
             }else{
                 // Enable brakes so that we dont slide on a slope or a hill when still
                 SetBrakes(brakeStrength);
@@ -138,7 +136,7 @@ public class TankMovement : MonoBehaviour{
                 SetRightTrackTorque(0f);
 
                 // Stops tank if we stop wanting to move forwards/backwards instead of slowly coming to a stop like a car
-                rigidBody.AddForce(transform.forward * driveTorque * Time.fixedDeltaTime * -velocityInDirection * 1000f);
+                rigidBody.AddForce(1000f * driveTorque * Time.fixedDeltaTime * -velocityInDirection * transform.forward);
             }
         }
     }
@@ -172,7 +170,7 @@ public class TankMovement : MonoBehaviour{
             }
         }
         //grounded = (height<= maxHeightStillGrounded) ? true : false;
-        grounded = notGroundedCount>=countOfWheelColliders-2 ? false : true;
+        grounded = notGroundedCount >= countOfWheelColliders-2 ? false : true;
 	}
 
     private void GetHeight(){

@@ -162,7 +162,7 @@ public class CrosshairUI : MonoBehaviour{
 
     private Vector3 CrosshairCast(Vector3 pos, Vector3 dirVector){
         Ray crosshairCast;
-        crosshairCast = new Ray(pos,  dirVector);
+        crosshairCast = new Ray(pos, dirVector);
         Vector3 hitp = new Vector3();
         if (Physics.Raycast(crosshairCast, out RaycastHit hit, 5000f)){
             //Debug.DrawLine(crosshairCast.origin, hit.point, Color.yellow);

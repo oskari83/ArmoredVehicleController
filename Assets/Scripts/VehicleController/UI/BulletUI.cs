@@ -1,19 +1,29 @@
 using UnityEngine;
 using UnityEngine.UI;
-
+using System.Collections.Generic;
 public class BulletUI : MonoBehaviour{
 
     public GameObject bulletChoiceAmountGameObject;
+    public GameObject clipBulletParentObject;
+    public GameObject clipBulletIconPrefab;
 
     private Text bulletChoiceAmountText;
     private Outline bulletTextOutline;
 	private ShootingController shootingController;
+
+    private List<Image> clipBulletUIList = new List<Image>();
 
     private void Awake(){
         shootingController = gameObject.GetComponent<ShootingController>();
         bulletChoiceAmountText = bulletChoiceAmountGameObject.GetComponent<Text>();
         bulletTextOutline = bulletChoiceAmountGameObject.GetComponent<Outline>();
         UpdateBulletSelectedUI();
+
+        for(int i=0; i<shootingController.clipSize; i++){
+            Image bulletUI = Instantiate(clipBulletIconPrefab, clipBulletParentObject.transform).GetComponent<Image>();
+            bulletUI.color = UIColours.blackDeselected;
+            clipBulletUIList.Add(bulletUI);
+        }
     }
 
     private void Update(){
@@ -23,6 +33,11 @@ public class BulletUI : MonoBehaviour{
         }else{
             bulletTextOutline.enabled = true;
             bulletChoiceAmountText.color = UIColours.blue;
+        }
+
+        if(shootingController.finishedFullReload){
+            UpdateClipBulletsOnReload();
+            shootingController.finishedFullReload = false;
         }
     }
 
@@ -44,16 +59,28 @@ public class BulletUI : MonoBehaviour{
         }else{
             bulletChoiceAmountText.text = $"HE - [{shootingController.bulletCountOfType[shootingController.selectedBullet]}]";
         }
+
+        UpdateClipBulletUI();
     }
 
     private void UpdateBulletSelectedUI(){
-        // Do something
         if(shootingController.selectedBullet==0){
             bulletChoiceAmountText.text = $"AP - [{shootingController.bulletCountOfType[shootingController.selectedBullet]}]";
         }else if(shootingController.selectedBullet==1){
             bulletChoiceAmountText.text = $"HV - [{shootingController.bulletCountOfType[shootingController.selectedBullet]}]";
         }else{
             bulletChoiceAmountText.text = $"HE - [{shootingController.bulletCountOfType[shootingController.selectedBullet]}]";
+        }
+    }
+
+    private void UpdateClipBulletUI(){
+        int clipShootingIndex = shootingController.clipSize - 1 - shootingController.currentAmmunition;
+        clipBulletUIList[clipShootingIndex].color = UIColours.blackDeselected;
+    }
+
+    private void UpdateClipBulletsOnReload(){
+        for (int i = 0; i < shootingController.clipSize; i++){
+            clipBulletUIList[i].color = UIColours.blue;
         }
     }
 }
