@@ -13,7 +13,6 @@ public class TurretMovement : MonoBehaviour{
 	private VehicleControllerManager vehicleManager;
 	private GameObject turretGameObject;
     private GameObject gunGameObject;
-	private Camera sniperModeCamera;
 
     private Vector3 targetPosition;
     private Quaternion gunLocalRotation;
@@ -23,7 +22,6 @@ public class TurretMovement : MonoBehaviour{
 		vehicleManager = GetComponent<VehicleControllerManager>();
 		turretGameObject = vehicleManager.tankTurretGameObject;
 		gunGameObject = vehicleManager.tankGunGameObject;
-		sniperModeCamera = vehicleManager.sniperModeCamera;
 		TurretTargetPosition = transform.position + (transform.forward * 2);
         targetPosition = TurretTargetPosition;
 	}
@@ -86,6 +84,5 @@ public class TurretMovement : MonoBehaviour{
             turretGameObject.transform.localRotation = Quaternion.Euler(_newTurretRotation);
             gunGameObject.transform.localRotation = Quaternion.Euler(_newGunRotation);
         }
-
     }
 }

@@ -25773,6 +25773,7 @@ GameObject:
   - component: {fileID: 8611283086311727691}
   - component: {fileID: 8611283086311727690}
   - component: {fileID: 8611283086311727684}
+  - component: {fileID: 8611283086311727683}
   m_Layer: 0
   m_Name: Scorpion_Desert
   m_TagString: Untagged
@@ -25795,6 +25796,7 @@ MonoBehaviour:
   bullet: {fileID: 3740775447057437718, guid: 1693610b9fdb642bdb5a69800512fa51, type: 3}
   bulletCountOfType: 0f0000000500000005000000
   selectedBullet: 0
+  bulletSwitchCheck: 0
   gunDispersion: 1
   minDispersion: 0.5
   maxDispersion: 5
@@ -25809,6 +25811,18 @@ MonoBehaviour:
   isReloading: 0
   justShot: 0
   finishedFullReload: 0
+--- !u!114 &8611283086311727683
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8611283086311727681}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 253caa6b794ceb44d8afacfb60d854a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &8611283086311727684
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -241,3 +241,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletSpeed: 22
   lerpAmount: 5
+  hitPointImpactPrefab: {fileID: 5251594460543011604, guid: 335081c3920649545ad8bf1af57c20a1,
+    type: 3}
