@@ -31,7 +31,7 @@ public class ReloadUI : MonoBehaviour{
         if(shootingController.isReloading){
             outlineReloadtext.enabled = false;
             reloadTimerText.color = UIColours.blackSelected;
-            float fillAmountBasedOnReloadLeft = 1f - (shootingController.reloadTimeLeft / shootingController.reloadTime);
+            float fillAmountBasedOnReloadLeft = 1f - (shootingController.reloadTimeLeft / shootingController.currentMaxReload);
             blueFillLeft.fillAmount = fillAmountBasedOnReloadLeft;
             blueFillRight.fillAmount = fillAmountBasedOnReloadLeft;
         }else{

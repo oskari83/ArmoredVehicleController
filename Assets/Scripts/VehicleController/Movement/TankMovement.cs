@@ -89,6 +89,7 @@ public class TankMovement : MonoBehaviour{
         float angularVelocityInDirection = Vector3.Dot(rigidBody.angularVelocity, transform.up);
         float dragTurnCoefficient = CalculateDragCoefficient(angularVelocityInDirection, turningForceCoefficient);;
 
+        // what is this?
         float turnForwardVelocityCoefficient = 2 * dragCoefficient;
         turnForwardVelocityCoefficient = turnForwardVelocityCoefficient > 1f ? 1f : turnForwardVelocityCoefficient;
 

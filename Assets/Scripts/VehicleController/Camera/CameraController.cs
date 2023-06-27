@@ -51,6 +51,11 @@ public class CameraController : MonoBehaviour{
     private int zoomPointer = 0;
     private int zoomPointerNormal = 0;
 
+    private InputController inputs;
+
+    private void Awake(){
+        inputs = GetComponent<MouseInputController>();
+    }
     private void Start(){
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -73,10 +78,9 @@ public class CameraController : MonoBehaviour{
     }
 
     private void Update(){
-        // Refactor later to inputcontroller
-        _mouseY = Input.GetAxis("Mouse Y");
-        _mouseX = Input.GetAxis("Mouse X");
-        _mouseScroll = Input.GetAxis("Mouse ScrollWheel");
+        _mouseX = inputs.MouseXInput;
+        _mouseY = inputs.MouseYInput;
+        _mouseScroll = inputs.MouseScrollInput;
 
         Zoom(inSniperMode);
         ControlCamera();

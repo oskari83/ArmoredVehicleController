@@ -8,6 +8,9 @@ public class TurretMovement : MonoBehaviour{
     public int maxGunAngle_elevation = 35;
     public int minGunAngle_depression = 8;
 
+    public bool hasTurret = true;
+    public float maxGunHorizontalRotationAngle = 45f;
+
 	public Vector3 TurretTargetPosition { get; set; }
 
 	private VehicleControllerManager vehicleManager;
@@ -26,10 +29,14 @@ public class TurretMovement : MonoBehaviour{
         targetPosition = TurretTargetPosition;
 	}
 
-	private void Update() {
+	private void Update(){
         targetPosition = TurretTargetPosition;
 
-        MoveTurret();
+        if(hasTurret){
+            MoveTurret();
+        }else{
+            MoveTDGun();
+        }
     }
 
 	private void MoveTurret(){
@@ -82,6 +89,61 @@ public class TurretMovement : MonoBehaviour{
             _newGunRotation.z = 0;
             //apply local rotation
             turretGameObject.transform.localRotation = Quaternion.Euler(_newTurretRotation);
+            gunGameObject.transform.localRotation = Quaternion.Euler(_newGunRotation);
+        }
+    }
+
+    private void MoveTDGun(){
+        if (Input.GetMouseButton(1)){
+            // Refactor later to inputcontroller
+            Debug.Log("holding down");
+        }else{
+            // look to target
+            Quaternion _lookAtGun = Quaternion.LookRotation(targetPosition - gunGameObject.transform.position, gunGameObject.transform.up);
+            Quaternion _gunRelativeRotTarget = Quaternion.Euler(turretGameObject.transform.eulerAngles - _lookAtGun.eulerAngles);
+
+            float _angleBetweenGunAndTarget = Vector3.Angle(gunLocalRotation * Vector3.forward, _gunRelativeRotTarget * Vector3.forward);
+            float _gunVelocity = 1 / _angleBetweenGunAndTarget;
+            float _verticalSpeed = gunTraverseSpeed;
+            _verticalSpeed *= _gunVelocity;
+            _verticalSpeed *= Time.deltaTime;
+
+            Quaternion _gunFinalRotation = Quaternion.Euler(turretGameObject.transform.eulerAngles - _lookAtGun.eulerAngles);
+            gunLocalRotation = Quaternion.Lerp(gunLocalRotation, _gunFinalRotation, _verticalSpeed);
+            Quaternion _gunRot = Quaternion.Euler(turretGameObject.transform.eulerAngles - gunLocalRotation.eulerAngles);
+            gunGameObject.transform.rotation = _gunRot;
+            Vector3 _newGunRotation = gunGameObject.transform.localEulerAngles;
+
+            {
+                float _max = 360 - maxGunAngle_elevation;
+                float _min = minGunAngle_depression;
+                float _currentAngle = gunGameObject.transform.localEulerAngles.x;
+                if (_currentAngle > 180)
+                {
+                    if (_currentAngle < _max) _newGunRotation.x = _max;
+                }
+                else
+                {
+                    if (_currentAngle > _min) _newGunRotation.x = _min;
+                }
+            }
+
+            {
+                float _max = 360 - maxGunHorizontalRotationAngle;
+                float _min = maxGunHorizontalRotationAngle;
+                float _currentAngle = gunGameObject.transform.localEulerAngles.y;
+                if (_currentAngle > 180)
+                {
+                    if (_currentAngle < _max) _newGunRotation.y = _max;
+                }
+                else
+                {
+                    if (_currentAngle > _min) _newGunRotation.y = _min;
+                }
+            }
+
+            _newGunRotation.z = 0;
+            //apply local rotation
             gunGameObject.transform.localRotation = Quaternion.Euler(_newGunRotation);
         }
     }

@@ -30,6 +30,7 @@ public class ShootingController : MonoBehaviour{
     public float reloadTime = 5f;
     public float intraClipReloadTime = 2f;
     public float reloadTimeLeft;
+    public float currentMaxReload;
     public int clipSize = 5;
     public int currentAmmunition = 0;
     public bool isReloading = false;
@@ -58,7 +59,8 @@ public class ShootingController : MonoBehaviour{
         reloadTimeLeft = reloadTime;
 
         FullReload();
-    }
+        currentMaxReload = reloadTime;
+    } 
 
     private void Update(){
         // Refactor eventually into inputcontroller class
@@ -115,6 +117,7 @@ public class ShootingController : MonoBehaviour{
         // calculates percentage of dispersion i.e 0% = fully aimed, 100% = maximum dispersion, and then does 1 - that
         float adjD = 1 - ( delta/(maxDispersion-minDispersion) );
         //Debug.Log("adjD: " + adjD.ToString());
+        // what are 1.6 and 1.2???
         float coeffAdjuster = 1.6f - (1.2f * adjD);
         gunDispersion -= (aimSpeed * coeffAdjuster) * Time.deltaTime;
 
@@ -189,12 +192,13 @@ public class ShootingController : MonoBehaviour{
 
     private IEnumerator Reload(){
         isReloading = true;
+        currentMaxReload = reloadTime;
         yield return new WaitForSeconds(reloadTime);
 
-        if(bulletCountOfType[currentAmmunition] >= clipSize){
+        if(bulletCountOfType[selectedBullet] >= clipSize){
             currentAmmunition = clipSize;
         }else{
-            currentAmmunition = bulletCountOfType[currentAmmunition];
+            currentAmmunition = bulletCountOfType[selectedBullet];
         }
 
         isReloading = false;
@@ -202,9 +206,9 @@ public class ShootingController : MonoBehaviour{
         finishedFullReload = true;
     }
 
-    private IEnumerator IntraClipReload()
-    {
+    private IEnumerator IntraClipReload(){
         isReloading = true;
+        currentMaxReload = intraClipReloadTime;
         yield return new WaitForSeconds(intraClipReloadTime);
 
         isReloading = false;

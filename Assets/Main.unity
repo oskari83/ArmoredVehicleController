@@ -892,6 +892,7 @@ GameObject:
   - component: {fileID: 42033311}
   - component: {fileID: 42033310}
   - component: {fileID: 42033308}
+  - component: {fileID: 42033309}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -944,6 +945,18 @@ MonoBehaviour:
     m_Bits: 0
   inSniperMode: 0
   ourCamera: {fileID: 42033311}
+--- !u!114 &42033309
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 42033307}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e621d8bd160065442991b18967f27de3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!81 &42033310
 AudioListener:
   m_ObjectHideFlags: 0
@@ -25806,6 +25819,7 @@ MonoBehaviour:
   reloadTime: 10
   intraClipReloadTime: 2
   reloadTimeLeft: 0
+  currentMaxReload: 0
   clipSize: 5
   currentAmmunition: 0
   isReloading: 0
@@ -25940,6 +25954,8 @@ MonoBehaviour:
   gunTraverseSpeed: 45
   maxGunAngle_elevation: 35
   minGunAngle_depression: 8
+  hasTurret: 0
+  maxGunHorizontalRotationAngle: 25
 --- !u!114 &8611283086311727690
 MonoBehaviour:
   m_ObjectHideFlags: 0
