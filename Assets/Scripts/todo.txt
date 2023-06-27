@@ -1,5 +1,6 @@
 TODO List:
-Fix intraclip reload animation [FIXED]
-maybe implement armor?
-implement TD-mode
-implement spotting mechanics
+[DONE]	Fix intraclip reload animation
+[DONE]	implement basic armor
+[DONE]	implement TD-mode
+[WIP]	implement health bars
+[WIP]	implement spotting mechanics

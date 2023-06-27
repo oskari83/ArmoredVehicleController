@@ -3,8 +3,9 @@ using UnityEngine;
 public class Armor : MonoBehaviour{
 
     public float tankHealth = 1000f;
+    public float initialTankHealth;
     private void Start(){
-        
+        initialTankHealth = tankHealth;
     }
 
     private void Update(){
