@@ -35,13 +35,17 @@ public class BulletScript : MonoBehaviour{
 
                 if(hit2.transform.root.gameObject.tag == "Shootable"){
                     GameObject tankObject = hit2.transform.root.gameObject;
+          
                     Instantiate(hitPointImpactPrefab, hit2.point, hit2.transform.rotation, tankObject.transform);
 
                     float cosine = Vector3.Dot(transform.forward, hit2.normal);
                     float cosineDegrees = Mathf.Acos(cosine);
-
                     // Give hit angle where 0 means straight on, 90 means autobounce
-                    Debug.Log("Angle: " + ( 180f - (cosineDegrees * Mathf.Rad2Deg)).ToString());
+                    float cleanedAngle = 180f - (cosineDegrees * Mathf.Rad2Deg);
+
+                    tankObject.GetComponent<Armor>().TakeHit(100f, cleanedAngle, "Scorpion");
+
+                    Debug.Log("Angle: " + (cleanedAngle).ToString());
 
                 }
                 //Debug.Log("hit something");

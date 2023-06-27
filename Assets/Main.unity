@@ -945,6 +945,7 @@ MonoBehaviour:
     m_Bits: 0
   inSniperMode: 0
   ourCamera: {fileID: 42033311}
+  sniperRigGun: {fileID: 0}
 --- !u!114 &42033309
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15758,6 +15759,19 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 90919322}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1464954925
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1464954924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 253caa6b794ceb44d8afacfb60d854a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tankHealth: 1000
 --- !u!114 &1464954926
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26025,6 +26039,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 253caa6b794ceb44d8afacfb60d854a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tankHealth: 1000
 --- !u!114 &8611283086311727684
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26144,7 +26159,7 @@ MonoBehaviour:
   gunTraverseSpeed: 45
   maxGunAngle_elevation: 35
   minGunAngle_depression: 8
-  hasTurret: 0
+  hasTurret: 1
   maxGunHorizontalRotationAngle: 25
 --- !u!114 &8611283086311727690
 MonoBehaviour:

@@ -39,6 +39,7 @@ public class CrosshairUI : MonoBehaviour{
     private float cx;
 
     private bool hasTurret = true;
+    private float tdModeMaxYValue;
 
 	private void Awake(){
 		vehicleManager = GetComponent<VehicleControllerManager>();
@@ -54,6 +55,7 @@ public class CrosshairUI : MonoBehaviour{
 
     private void Start(){
         hasTurret = vehicleManager.TurretMovementScript.hasTurret;
+        tdModeMaxYValue = vehicleManager.TurretMovementScript.maxGunHorizontalRotationAngle;
         _gunRigGunObject = vehicleManager.cameraController.sniperRigGun;
     }
 
@@ -115,9 +117,10 @@ public class CrosshairUI : MonoBehaviour{
         }
         float gunAdjustedZValueLeft;
         float gunAdjustedZValueRight;
-        if(gunZvalue>-30f && gunZvalue < 30f){
-            gunAdjustedZValueLeft = 11f * (25f - gunZvalue);
-            gunAdjustedZValueRight = 11f * (-25f - gunZvalue);
+        if(gunZvalue>-tdModeMaxYValue - 5f && gunZvalue < tdModeMaxYValue + 5f){
+            // TODO adjust the 11f scale number to take into account zoom level to improve how the UI functions
+            gunAdjustedZValueLeft = 11f * (tdModeMaxYValue - gunZvalue);
+            gunAdjustedZValueRight = 11f * (-tdModeMaxYValue - gunZvalue);
         }else{
             gunAdjustedZValueLeft = 1000f; //just to get it out of sight
             gunAdjustedZValueRight = 1000f;
