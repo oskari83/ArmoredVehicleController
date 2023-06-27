@@ -16,6 +16,10 @@ public class CrosshairUI : MonoBehaviour{
     public GameObject crosshairSpread_v;
     public GameObject crosshairSpreadx2_v;
 
+    [Header("Crosshair TD Mode Gameobjects")]
+	public GameObject crosshairTDLimit;
+    public GameObject crosshairTDLimit2;
+
 	private VehicleControllerManager vehicleManager;
 	private ShootingController shootingController;
 	private Camera cameraInUse;
@@ -24,6 +28,7 @@ public class CrosshairUI : MonoBehaviour{
     private Vector3 finalPos;
     private GameObject _gunShootingPositionObject;
     private GameObject _gunGameObject;
+    private GameObject _gunRigGunObject;
 
     private Image crosshairSpreadLeftImage;
     private Image crosshairSpreadRightImage;
@@ -32,6 +37,8 @@ public class CrosshairUI : MonoBehaviour{
 
     private float SCALEFACTOR = 0.018f / 16.557f;
     private float cx;
+
+    private bool hasTurret = true;
 
 	private void Awake(){
 		vehicleManager = GetComponent<VehicleControllerManager>();
@@ -45,11 +52,25 @@ public class CrosshairUI : MonoBehaviour{
         crosshairSpreadDownImage = crosshairSpreadx2_v.GetComponent<Image>();
 	}
 
-	private void Update(){
+    private void Start(){
+        hasTurret = vehicleManager.TurretMovementScript.hasTurret;
+        _gunRigGunObject = vehicleManager.cameraController.sniperRigGun;
+    }
+
+    private void Update(){
         cameraInUse = vehicleManager.CameraInUse;
 
 		MoveCrosshair();
 		MoveDispersionCrosshairs();
+        // expensive, try to solve getting this in update through 2 references
+        if(!hasTurret && vehicleManager.cameraController.inSniperMode) {
+            crosshairTDLimit.SetActive(true);
+            crosshairTDLimit2.SetActive(true);
+            MoveTDLimitCrosshairs();
+        } else {
+            crosshairTDLimit.SetActive(false);
+            crosshairTDLimit2.SetActive(false);
+        }
         DisableCrosshairsIfNotInSight();
 
         if(shootingController.isReloading){
@@ -85,6 +106,28 @@ public class CrosshairUI : MonoBehaviour{
         finalCrosshairPos = Vector3.Lerp(finalCrosshairPos, cameraInUse.WorldToScreenPoint(_crosshairPos), Time.deltaTime * 20f);
         // finalCrosshairPos = cameraInUse.WorldToScreenPoint(_crosshairPos);
         crossHair.transform.position = finalCrosshairPos;
+    }
+
+    private void MoveTDLimitCrosshairs(){
+        float gunZvalue = _gunRigGunObject.transform.localEulerAngles.y;
+        if(gunZvalue > 300) {
+            gunZvalue -= 360f;
+        }
+        float gunAdjustedZValueLeft;
+        float gunAdjustedZValueRight;
+        if(gunZvalue>-30f && gunZvalue < 30f){
+            gunAdjustedZValueLeft = 11f * (25f - gunZvalue);
+            gunAdjustedZValueRight = 11f * (-25f - gunZvalue);
+        }else{
+            gunAdjustedZValueLeft = 1000f; //just to get it out of sight
+            gunAdjustedZValueRight = 1000f;
+        }
+
+        Debug.Log("horizontal td angle" + gunAdjustedZValueRight.ToString());
+        Vector3 tdLimitCrosshairPos = new Vector3(Screen.width/2 + gunAdjustedZValueLeft, Screen.height/2, 0f);
+        Vector3 tdLimitCrosshairPos2 = new Vector3(Screen.width/2 + gunAdjustedZValueRight, Screen.height/2, 0f);
+        crosshairTDLimit.transform.position = tdLimitCrosshairPos;
+        crosshairTDLimit2.transform.position = tdLimitCrosshairPos2;
     }
 
 	private void MoveDispersionCrosshairs(){

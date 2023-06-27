@@ -42,14 +42,16 @@ public class CameraController : MonoBehaviour{
     private float _mouseScroll;
     private float minGunAngle;
     private float maxGunAngle;
+    private float maxTDHorizontalAngle;
     private Vector3 aimTarget;
     private GameObject sniperRig;
-    private GameObject sniperRigGun;
+    [HideInInspector] public GameObject sniperRigGun; // used by the crosshair script to help in TD mode
     private Vector3 stabilizerPos;
     private Vector3 stabilizerPos2;
 	private int MaxDistance = 5000;
     private int zoomPointer = 0;
     private int zoomPointerNormal = 0;
+    private bool hasTurretCached = false;
 
     private InputController inputs;
 
@@ -75,6 +77,9 @@ public class CameraController : MonoBehaviour{
         transform.position = (tankTransform.position + -tankTransform.forward) + (Vector3.up * 2);
         transform.LookAt(tankTransform.position + (Vector3.up * Height));
         currentDistance = zoomStepsNormal[zoomPointerNormal];
+
+        hasTurretCached = turretMovementScript.hasTurret;
+        maxTDHorizontalAngle = turretMovementScript.maxGunHorizontalRotationAngle;
     }
 
     private void Update(){
@@ -106,42 +111,78 @@ public class CameraController : MonoBehaviour{
             currentRotX = _mouseX * RotSpeed;   
             currentRotY = -(_mouseY * RotSpeed);
             transform.eulerAngles += new Vector3(currentRotY,currentRotX);
-            // Clamp to angles, remember to actually make these be variable based
+            // Clamp camera angles, remember to actually make these be variable based
             Vector3 clampthis = transform.eulerAngles;
             if(clampthis.x>MaxAngle && clampthis.x<300f){ clampthis.x=MaxAngle;}
             if(clampthis.x<(360f-MinAngle) && clampthis.x>300f){ clampthis.x=(360f-MinAngle);}
             transform.eulerAngles = clampthis;
+
             // Set our snipercam rotation while we are not in it
             aimTarget = GetTargetPosition();
-            // Rotate the sniperRig turret -> does not affect our camera
-            sniperRig.transform.LookAt(aimTarget);
-            sniperRig.transform.localRotation = Quaternion.Euler(SniperRigTurretEulerSingleAxis());
-            // Rotate the sniperRig gun -> does not affect our camera
-            sniperRigGun.transform.LookAt(aimTarget);
-            sniperRigGun.transform.localRotation = Quaternion.Euler(SniperRigGunEulerSingleAxis());
+            if(hasTurretCached){
+                // Rotate the sniperRig turret -> does not affect our camera
+                sniperRig.transform.LookAt(aimTarget);
+                sniperRig.transform.localRotation = Quaternion.Euler(SniperRigTurretEulerSingleAxis());
+                // Rotate the sniperRig gun -> does not affect our camera
+                sniperRigGun.transform.LookAt(aimTarget);
+                sniperRigGun.transform.localRotation = Quaternion.Euler(SniperRigGunEulerSingleAxis());
+            }else{
+                // Rotate the sniperRig gun in td mode -> does not affect our camera
+                sniperRigGun.transform.LookAt(aimTarget);
+                sniperRigGun.transform.localRotation = Quaternion.Euler(SniperRigTDEulerSingleAxis());
+
+                // clamp the snipermode camera even when we are not in snipermode, to eliminate weird behaviour
+                Vector3 clampthisTDMode = sniperRigGun.transform.localEulerAngles;
+                if(clampthis.y>maxTDHorizontalAngle && clampthis.y<300f){ clampthis.y=maxTDHorizontalAngle;}
+                if(clampthis.y<(360f-maxTDHorizontalAngle) && clampthis.y>300f){ clampthis.y=(360f-maxTDHorizontalAngle);}
+
+                sniperRigGun.transform.localEulerAngles = clampthisTDMode;
+            }
         }else{
             // Make main camera look at target when we are not in sniper mode
             aimTarget = GetTargetPosition();
             gameObject.transform.LookAt(aimTarget);
-            // Rotate the sniperRig turret -> affects our camera
-            sniperRig.transform.LookAt(stabilizerPos);
-            sniperRig.transform.localRotation = Quaternion.Euler(SniperRigTurretEulerSingleAxis());
-            // Rotate the sniperRig gun -> affects our camera
-            sniperRigGun.transform.LookAt(stabilizerPos2);
-            sniperRigGun.transform.localRotation = Quaternion.Euler(SniperRigGunEulerSingleAxis());
 
-            // Control snipercam (I dont know why 61 is the float there)
+            // Control snipercam (I dont know why 61 is the float there (why not 60?, something to do with default FOV?))
             camRotY = sniperSpeedY * _mouseY * (sniperCamera.fieldOfView/61f);
             camRotX = sniperSpeedX * _mouseX * (sniperCamera.fieldOfView/61f);
-            // LocalEulerAngles so that when our tank is rotated e.g. on a hill the mouse movement is natural
-            sniperRig.transform.localEulerAngles += new Vector3(0f, camRotX, 0f);
-            sniperRigGun.transform.localEulerAngles -= new Vector3(camRotY, 0f, 0f);
+
+            if(hasTurretCached){
+                // Rotate the sniperRig turret -> affects our camera
+                sniperRig.transform.LookAt(stabilizerPos);
+                sniperRig.transform.localRotation = Quaternion.Euler(SniperRigTurretEulerSingleAxis());
+                // Rotate the sniperRig gun -> affects our camera
+                sniperRigGun.transform.LookAt(stabilizerPos2);
+                sniperRigGun.transform.localRotation = Quaternion.Euler(SniperRigGunEulerSingleAxis());
+
+                // LocalEulerAngles so that when our tank is rotated e.g. on a hill the mouse movement is natural
+                sniperRig.transform.localEulerAngles += new Vector3(0f, camRotX, 0f);
+                sniperRigGun.transform.localEulerAngles -= new Vector3(camRotY, 0f, 0f);
+            }else{
+                // Rotate the sniperRig gun in TD mode -> affects our camera
+                sniperRigGun.transform.LookAt(stabilizerPos);
+                sniperRigGun.transform.localRotation = Quaternion.Euler(SniperRigTDEulerSingleAxis());
+
+                 // LocalEulerAngles so that when our tank is rotated e.g. on a hill the mouse movement is natural
+                sniperRigGun.transform.localEulerAngles -= new Vector3(camRotY, -camRotX, 0f);
+            }
+
             // Attempt at clamping
             Vector3 clampthis = sniperRigGun.transform.localEulerAngles;
+
             if(clampthis.x>minGunAngle && clampthis.x<300f){ clampthis.x=minGunAngle;}
             if(clampthis.x<(360f-maxGunAngle) && clampthis.x>300f){ clampthis.x=(360f-maxGunAngle);}
+            if(!hasTurretCached){
+                if(clampthis.y>maxTDHorizontalAngle && clampthis.y<300f){ clampthis.y=maxTDHorizontalAngle;}
+                if(clampthis.y<(360f-maxTDHorizontalAngle) && clampthis.y>300f){ clampthis.y=(360f-maxTDHorizontalAngle);}
+            }
+
+            //Debug.Log("horizontal td angle" + clampthis.y.ToString());
+
             sniperRigGun.transform.localEulerAngles = clampthis;
-            // I dont remember what this is 
+            // I dont remember what this is, moreover, the stabilizerpos2 variable seems useless and could be removed but im scared
+            // basically, if we dont move the mouse to the left or the right, it keeps old stabilizer position, Im guessing it does not help with
+            // the newest stabilizing method and could be removed but im scared to try it rn
             stabilizerPos=GetStabilizerPosition();
             if(camRotY!=0f){
                 stabilizerPos2=stabilizerPos;
@@ -159,6 +200,12 @@ public class CameraController : MonoBehaviour{
     private Vector3 SniperRigGunEulerSingleAxis(){
         Vector3 _newGunRot = sniperRigGun.transform.localEulerAngles;
         _newGunRot.y = 0;
+        _newGunRot.z = 0;
+        return _newGunRot;
+    }
+
+    private Vector3 SniperRigTDEulerSingleAxis(){
+        Vector3 _newGunRot = sniperRigGun.transform.localEulerAngles;
         _newGunRot.z = 0;
         return _newGunRot;
     }
