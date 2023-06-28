@@ -10,6 +10,9 @@ public class ShootingController : MonoBehaviour{
     public delegate void BulletSwitchDelegate();
     public BulletSwitchDelegate bulletSwitchEvent;
 
+    public delegate void FullReloadDelegate();
+    public FullReloadDelegate fullReloadEvent;
+
     [Header("Gameobjects")]
     public GameObject bullet;
 
@@ -187,6 +190,9 @@ public class ShootingController : MonoBehaviour{
         if(currentAmmunition > 0){
             currentAmmunition = 0;
         }
+        if(fullReloadEvent!=null){
+            fullReloadEvent();
+        }
         StartCoroutine(Reload());
     }
 
@@ -195,14 +201,20 @@ public class ShootingController : MonoBehaviour{
         currentMaxReload = reloadTime;
         yield return new WaitForSeconds(reloadTime);
 
-        if(bulletCountOfType[selectedBullet] >= clipSize){
-            currentAmmunition = clipSize;
+        if(hasClip){
+            if(bulletCountOfType[selectedBullet] >= clipSize){
+                currentAmmunition = clipSize;
+            }else{
+                currentAmmunition = bulletCountOfType[selectedBullet];
+            }
+
+            reloadTimeLeft = intraClipReloadTime;
         }else{
-            currentAmmunition = bulletCountOfType[selectedBullet];
+            currentAmmunition = 1;
+            reloadTimeLeft = reloadTime;
         }
 
         isReloading = false;
-        reloadTimeLeft = intraClipReloadTime;
         finishedFullReload = true;
     }
 

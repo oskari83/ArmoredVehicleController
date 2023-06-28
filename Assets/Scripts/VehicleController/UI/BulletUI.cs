@@ -19,10 +19,12 @@ public class BulletUI : MonoBehaviour{
         bulletTextOutline = bulletChoiceAmountGameObject.GetComponent<Outline>();
         UpdateBulletSelectedUI();
 
-        for(int i=0; i<shootingController.clipSize; i++){
-            Image bulletUI = Instantiate(clipBulletIconPrefab, clipBulletParentObject.transform).GetComponent<Image>();
-            bulletUI.color = UIColours.blackDeselected;
-            clipBulletUIList.Add(bulletUI);
+        if(shootingController.hasClip){
+            for(int i=0; i<shootingController.clipSize; i++){
+                Image bulletUI = Instantiate(clipBulletIconPrefab, clipBulletParentObject.transform).GetComponent<Image>();
+                bulletUI.color = UIColours.blackDeselected;
+                clipBulletUIList.Add(bulletUI);
+            }
         }
     }
 
@@ -36,7 +38,9 @@ public class BulletUI : MonoBehaviour{
         }
 
         if(shootingController.finishedFullReload){
-            UpdateClipBulletsOnReload();
+            if(shootingController.hasClip){
+                UpdateClipBulletsOnReload();
+            }
             shootingController.finishedFullReload = false;
         }
     }
@@ -44,11 +48,13 @@ public class BulletUI : MonoBehaviour{
     private void OnEnable() {
         shootingController.shootingEvent += UpdateBulletCountUI;
         shootingController.bulletSwitchEvent += UpdateBulletSelectedUI;
+        shootingController.fullReloadEvent += EmptyClipBulletUI;
     }
 
     private void OnDisable() {
         shootingController.shootingEvent -= UpdateBulletCountUI;
         shootingController.bulletSwitchEvent -= UpdateBulletSelectedUI;
+        shootingController.fullReloadEvent -= EmptyClipBulletUI;
     }
 
     public void UpdateBulletCountUI(){
@@ -60,7 +66,9 @@ public class BulletUI : MonoBehaviour{
             bulletChoiceAmountText.text = $"HE - [{shootingController.bulletCountOfType[shootingController.selectedBullet]}]";
         }
 
-        UpdateClipBulletUI();
+        if(shootingController.hasClip){
+            UpdateClipBulletUI();
+        }
     }
 
     private void UpdateBulletSelectedUI(){
@@ -76,6 +84,14 @@ public class BulletUI : MonoBehaviour{
     private void UpdateClipBulletUI(){
         int clipShootingIndex = shootingController.clipSize - 1 - shootingController.currentAmmunition;
         clipBulletUIList[clipShootingIndex].color = UIColours.blackDeselected;
+    }
+
+    private void EmptyClipBulletUI() {
+        if(shootingController.hasClip){
+            for (int i = 0; i < shootingController.clipSize; i++){
+                clipBulletUIList[i].color = UIColours.blackDeselected;
+            }
+        }
     }
 
     private void UpdateClipBulletsOnReload(){

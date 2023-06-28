@@ -3255,10 +3255,10 @@ RectTransform:
   m_Father: {fileID: 987993295}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &271836425
 PrefabInstance:
@@ -11247,9 +11247,9 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 25
+  m_AdditionalShaderChannelsFlag: 1
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_TargetDisplay: 0
 --- !u!224 &987993295
 RectTransform:
@@ -15839,9 +15839,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f9a6766ad87feb41b9980ab9a3d511d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthBarObject: {fileID: 3043007599875471933, guid: a44b490a9f2d5ab47b54b0e975f81924,
+  healthScript: {fileID: 0}
+  healthBarObject: {fileID: 3708024838665078439, guid: a44b490a9f2d5ab47b54b0e975f81924,
     type: 3}
   UICanvasObject: {fileID: 269632437}
+  health_bar_image: {fileID: 0}
+  health_bar_text: {fileID: 0}
 --- !u!1001 &1468692507
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -26070,8 +26073,8 @@ MonoBehaviour:
   maxDispersion: 5
   shootingDispersion: 4
   aimSpeed: 1
-  hasClip: 1
-  reloadTime: 10
+  hasClip: 0
+  reloadTime: 3
   intraClipReloadTime: 2
   reloadTimeLeft: 0
   currentMaxReload: 0
@@ -26213,7 +26216,7 @@ MonoBehaviour:
   gunTraverseSpeed: 45
   maxGunAngle_elevation: 35
   minGunAngle_depression: 8
-  hasTurret: 1
+  hasTurret: 0
   maxGunHorizontalRotationAngle: 25
 --- !u!114 &8611283086311727690
 MonoBehaviour:
@@ -26331,14 +26334,17 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8611283086311727681}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2f9a6766ad87feb41b9980ab9a3d511d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthBarObject: {fileID: 3043007599875471933, guid: a44b490a9f2d5ab47b54b0e975f81924,
+  healthScript: {fileID: 0}
+  healthBarObject: {fileID: 3708024838665078439, guid: a44b490a9f2d5ab47b54b0e975f81924,
     type: 3}
   UICanvasObject: {fileID: 269632437}
+  health_bar_image: {fileID: 0}
+  health_bar_text: {fileID: 0}
 --- !u!4 &8615678511037182069
 Transform:
   m_ObjectHideFlags: 0
