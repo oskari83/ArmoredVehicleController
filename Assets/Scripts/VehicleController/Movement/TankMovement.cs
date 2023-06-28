@@ -34,7 +34,7 @@ public class TankMovement : MonoBehaviour{
 
 	[Header("Visualised Inspector Data")]
 	[SerializeField] private float angularVelocity;
-	[SerializeField] private float velocityInKMH;
+	[SerializeField] public float velocityInKMH;
 	[SerializeField] private float height;
 
 	private void Awake(){

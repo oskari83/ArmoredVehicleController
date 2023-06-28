@@ -4,7 +4,7 @@ using UnityEngine.UI;
 public class HealthUI : MonoBehaviour{
 
     private VehicleControllerManager vehicleManager;
-    private Camera camera;
+    private Camera cameraUsedCurrently;
     public Armor healthScript;
     public GameObject healthBarObject;
     public GameObject UICanvasObject;
@@ -21,8 +21,8 @@ public class HealthUI : MonoBehaviour{
     }
 
     private void LateUpdate(){
-        camera = vehicleManager.CameraInUse;
-        Vector3 screenPointFromCamera = camera.WorldToScreenPoint(transform.position + new Vector3(0f, 5f, 0f));
+        cameraUsedCurrently = vehicleManager.CameraInUse;
+        Vector3 screenPointFromCamera = cameraUsedCurrently.WorldToScreenPoint(transform.position + new Vector3(0f, 5f, 0f));
         if(screenPointFromCamera.z < 0f) {
             health_bar.SetActive(false);
         } else {

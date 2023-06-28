@@ -201,6 +201,7 @@ GameObject:
   - component: {fileID: 3188901302899249203}
   - component: {fileID: 557555905077348316}
   - component: {fileID: 7381180899366681245}
+  - component: {fileID: 3214401132747793674}
   m_Layer: 5
   m_Name: TankName
   m_TagString: Untagged
@@ -271,6 +272,21 @@ MonoBehaviour:
   m_Text: 'Scorpion
 
 '
+--- !u!114 &3214401132747793674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4702938767354260667}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 1}
+  m_EffectDistance: {x: 0.5, y: -0.5}
+  m_UseGraphicAlpha: 1
 --- !u!1 &7967064728661318879
 GameObject:
   m_ObjectHideFlags: 0
@@ -361,6 +377,7 @@ GameObject:
   - component: {fileID: 1052824427151908885}
   - component: {fileID: 3096499225332423923}
   - component: {fileID: 6365290390544511029}
+  - component: {fileID: 2062011592611555659}
   m_Layer: 5
   m_Name: PlayerName
   m_TagString: Untagged
@@ -429,3 +446,18 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: TestPlayer
+--- !u!114 &2062011592611555659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9131727895106699710}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 1}
+  m_EffectDistance: {x: 0.5, y: -0.5}
+  m_UseGraphicAlpha: 1
