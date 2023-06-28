@@ -4,3 +4,4 @@ TODO List:
 [DONE]	implement TD-mode
 [WIP]	implement health bars
 [WIP]	implement spotting mechanics
+[WIP]	implement tank status UI for TD mode

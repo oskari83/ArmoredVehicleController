@@ -46,6 +46,7 @@ public class CameraController : MonoBehaviour{
     private Vector3 aimTarget;
     private GameObject sniperRig;
     [HideInInspector] public GameObject sniperRigGun; // used by the crosshair script to help in TD mode
+    public float turretRigRotation; // used by the tank status UI script
     private Vector3 stabilizerPos;
     private Vector3 stabilizerPos2;
 	private int MaxDistance = 5000;
@@ -123,6 +124,8 @@ public class CameraController : MonoBehaviour{
                 // Rotate the sniperRig turret -> does not affect our camera
                 sniperRig.transform.LookAt(aimTarget);
                 sniperRig.transform.localRotation = Quaternion.Euler(SniperRigTurretEulerSingleAxis());
+                // for tank status UI script
+                turretRigRotation = sniperRig.transform.localEulerAngles.y;
                 // Rotate the sniperRig gun -> does not affect our camera
                 sniperRigGun.transform.LookAt(aimTarget);
                 sniperRigGun.transform.localRotation = Quaternion.Euler(SniperRigGunEulerSingleAxis());
@@ -151,6 +154,10 @@ public class CameraController : MonoBehaviour{
                 // Rotate the sniperRig turret -> affects our camera
                 sniperRig.transform.LookAt(stabilizerPos);
                 sniperRig.transform.localRotation = Quaternion.Euler(SniperRigTurretEulerSingleAxis());
+
+                // for tank status UI script
+                turretRigRotation = sniperRig.transform.localEulerAngles.y;
+
                 // Rotate the sniperRig gun -> affects our camera
                 sniperRigGun.transform.LookAt(stabilizerPos2);
                 sniperRigGun.transform.localRotation = Quaternion.Euler(SniperRigGunEulerSingleAxis());
